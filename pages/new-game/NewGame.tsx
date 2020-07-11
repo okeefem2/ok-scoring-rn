@@ -4,7 +4,7 @@ import PlayerInput from './PlayerInput'
 import PlayerListItem from './PlayerListItem'
 import { Player } from '../../model/player'
 import Header from '../../components/Header'
-import NavFooter from '../../components/NavFooter'
+import NavBar from '../../components/NavBar'
 import GameSettings from './GameSettings'
 import { sharedStyles } from '../../styles/shared'
 import Game from '../game/Game'
@@ -54,7 +54,7 @@ const NewGame = () => {
                         </View>
                         </ScrollView> */}
                         <GameSettings setSetting={setSetting} settings={settings}/>
-                        <NavFooter rightButton={{ title: 'Start Game', clickHandler: () => setGameStarted(true)}}/>
+                        <NavBar rightButton={{ title: 'Start Game', clickHandler: () => setGameStarted(true)}}/>
                     </>
             }
 

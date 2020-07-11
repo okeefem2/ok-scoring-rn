@@ -6,19 +6,19 @@ export interface ButtonConfig {
     clickHandler: () => void;
     title: string;
 }
-interface FooterProps {
+interface NavBarProps {
     leftButton?: ButtonConfig;
     rightButton?: ButtonConfig;
 }
-const NavFooter = ({ leftButton, rightButton } : FooterProps) => {
+const NavBar = ({ leftButton, rightButton } : NavBarProps) => {
     return (
-        <View style={styles.footerContainer}>
-            <View style={styles.footerButtonContainerLeft}>
+        <View style={styles.navBarContainer}>
+            <View style={styles.navBarButtonContainerLeft}>
                 {
                     leftButton ? <Button title={leftButton.title} onPress={leftButton.clickHandler} color='#FCA47C'/> : <></>
                 }
             </View>
-            <View style={styles.footerButtonContainerRight}>
+            <View style={styles.navBarButtonContainerRight}>
                 {
                     rightButton ? <Button title={rightButton.title} onPress={rightButton.clickHandler} color='#FCA47C'/> : <></>
                 }
@@ -27,21 +27,21 @@ const NavFooter = ({ leftButton, rightButton } : FooterProps) => {
     )
 }
 
-export default NavFooter;
+export default NavBar;
 
 const styles = StyleSheet.create({
-    footerContainer: {
+    navBarContainer: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    footerButtonContainerLeft: {
+    navBarButtonContainerLeft: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
         width: '50%',
     },
-    footerButtonContainerRight: {
+    navBarButtonContainerRight: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-end',

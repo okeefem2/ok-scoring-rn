@@ -21,5 +21,8 @@ export const sharedStyles = StyleSheet.create({
     },
     scroll: {
         width: '100%',
+    },
+    primaryText: {
+        color: '#FCA47C',
     }
 });

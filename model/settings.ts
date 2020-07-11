@@ -1,4 +1,4 @@
-interface Settings {
+export interface Settings {
     rounds?: number;
     roundTimeLimit?: number;
     startingScore?: number;
