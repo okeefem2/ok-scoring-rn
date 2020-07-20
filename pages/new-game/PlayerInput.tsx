@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { sharedStyles } from '../../styles/shared'
 import { View, TextInput, Button, StyleSheet, Keyboard } from 'react-native'
+import IconButton from '../../components/IconButton';
 
 interface PlayerInputProps {
     onAddPlayer: (name?: string) => void
@@ -10,6 +11,7 @@ function PlayerInput({ onAddPlayer }: PlayerInputProps) {
     const [newPlayer, setNewPlayer] = useState<string>();
 
     const addPlayer = () => {
+        console.log('Adding player!');
         onAddPlayer(newPlayer);
         setNewPlayer(undefined);
         Keyboard.dismiss();
@@ -18,10 +20,10 @@ function PlayerInput({ onAddPlayer }: PlayerInputProps) {
     return (
         <>
             <View style={sharedStyles.row}>
-                <TextInput placeholder='New Player' onChangeText={setNewPlayer} value={newPlayer}/>
+                <TextInput style={sharedStyles.bodyText} placeholder='New Player' onChangeText={setNewPlayer} value={newPlayer}/>
             </View>
             <View style={styles.addButton}>
-                <Button title='Add Player' onPress={addPlayer} color='#FCA47C'/>
+                <IconButton icon={'account'} title={'Add Player'} clickHandler={addPlayer} iconSide='left'/>
             </View>
         </>
     );

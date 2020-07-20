@@ -27,5 +27,6 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: 36,
+        fontFamily: 'Quicksand'
     }
 })

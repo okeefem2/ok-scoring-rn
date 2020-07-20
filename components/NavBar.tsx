@@ -1,11 +1,7 @@
 import React, { ReactNode } from 'react'
 import { StyleSheet, Text, View, Button } from 'react-native'
+import IconButton, { ButtonConfig } from './IconButton';
 
-export interface ButtonConfig {
-    icon?: string;
-    clickHandler: () => void;
-    title: string;
-}
 interface NavBarProps {
     leftButton?: ButtonConfig;
     rightButton?: ButtonConfig;
@@ -15,12 +11,12 @@ const NavBar = ({ leftButton, rightButton } : NavBarProps) => {
         <View style={styles.navBarContainer}>
             <View style={styles.navBarButtonContainerLeft}>
                 {
-                    leftButton ? <Button title={leftButton.title} onPress={leftButton.clickHandler} color='#FCA47C'/> : <></>
+                    leftButton ? <IconButton disabled={leftButton.disabled} icon={leftButton.icon} title={leftButton.title} clickHandler={leftButton.clickHandler} iconSide='left' /> : <></>
                 }
             </View>
             <View style={styles.navBarButtonContainerRight}>
                 {
-                    rightButton ? <Button title={rightButton.title} onPress={rightButton.clickHandler} color='#FCA47C'/> : <></>
+                    rightButton ? <IconButton disabled={rightButton.disabled} icon={rightButton.icon} title={rightButton.title} clickHandler={rightButton.clickHandler} iconSide='right' /> : <></>
                 }
             </View>
         </View>

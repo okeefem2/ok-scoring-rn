@@ -1,8 +1,8 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { Player } from '../../model/player';
 import { sharedStyles } from '../../styles/shared';
+import IconButton from '../../components/IconButton';
 
 interface PlayerListItemProps {
     player: Player,
@@ -11,12 +11,27 @@ interface PlayerListItemProps {
 
 function PlayerListItem({ player, onDeletePlayer }: PlayerListItemProps) {
     return (
-        <TouchableOpacity onLongPress={() => onDeletePlayer(player.key)}>
-            <View style={sharedStyles.row}>
-                <Text>{player.name}</Text>
+        <View style={sharedStyles.row}>
+            <View style={styles.leftGroup}>
+                <IconButton icon="trash-can-outline" clickHandler={() => onDeletePlayer(player.key)} />
+                <Text style={styles.playerName} >{player.name}</Text>
             </View>
-        </TouchableOpacity>
+            <IconButton icon="menu" clickHandler={() => console.log('menu click')} />
+        </View>
     );
 }
 
 export default PlayerListItem;
+
+const styles = StyleSheet.create({
+    leftGroup: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    playerName: {
+        marginLeft: 5,
+        fontFamily: 'Quicksand'
+    }
+});

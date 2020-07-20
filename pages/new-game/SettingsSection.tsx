@@ -2,10 +2,11 @@ import React, { ReactNode, useState } from 'react'
 import { StyleSheet, Text, View, Switch } from 'react-native'
 import { sharedStyles } from '../../styles/shared';
 import { colors } from '../../styles/colors';
+import { WrapperComponentProps } from '../../model/component';
+import BodyText from '../../components/BodyText';
 
-interface SettingsSectionProps {
+interface SettingsSectionProps extends WrapperComponentProps {
     sectionTitle: string;
-    children: ReactNode;
 }
 
 const SettingsSection = ({ sectionTitle, children }: SettingsSectionProps) => {
@@ -18,7 +19,7 @@ const SettingsSection = ({ sectionTitle, children }: SettingsSectionProps) => {
     return (
         <View style={styles.sectionContainer}>
             <View style={sharedStyles.row}>
-                <Text>{ sectionTitle }</Text>
+                <BodyText>{ sectionTitle }</BodyText>
                 <Switch
                     trackColor={{ false: colors.greyMid, true: colors.primaryLight }}
                     thumbColor={showSection ? colors.primaryLight : colors.greyLight}

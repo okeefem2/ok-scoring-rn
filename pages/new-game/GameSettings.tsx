@@ -5,12 +5,16 @@ import Header from '../../components/Header';
 import { sharedStyles } from '../../styles/shared';
 import { colors } from '../../styles/colors';
 import { SetSettingFunction } from './NewGame';
+import { Settings } from '../../model/settings';
+import BodyText from '../../components/BodyText';
+import NavBar from '../../components/NavBar';
 
 interface GameSettingsProps {
     settings: Settings;
     setSetting: SetSettingFunction;
+    exitSettings: () => void;
 }
-const GameSettings = ({ settings, setSetting }: GameSettingsProps) => {
+const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps) => {
 
     return (
         <>
@@ -18,7 +22,7 @@ const GameSettings = ({ settings, setSetting }: GameSettingsProps) => {
             <ScrollView style={sharedStyles.scroll} keyboardShouldPersistTaps='always'>
                 <SettingsSection sectionTitle='Round Settings'>
                     <View style={sharedStyles.rowNoBorder}>
-                        <Text>Round Limit</Text>
+                        <BodyText>Round Limit</BodyText>
                         <TextInput
                             placeholder='∞'
                             onChangeText={(n) => setSetting('rounds', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : undefined)}
@@ -27,7 +31,7 @@ const GameSettings = ({ settings, setSetting }: GameSettingsProps) => {
                             keyboardType='number-pad'/>
                     </View>
                     <View style={sharedStyles.rowNoBorder}>
-                        <Text>Round Time Limit</Text>
+                        <BodyText>Round Time Limit</BodyText>
                         <TextInput
                             placeholder='∞'
                             onChangeText={(n) => setSetting('roundTimeLimit', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : undefined)}
@@ -36,7 +40,7 @@ const GameSettings = ({ settings, setSetting }: GameSettingsProps) => {
                             keyboardType='number-pad'/>
                     </View>
                     <View style={sharedStyles.rowNoBorder}>
-                        <Text>Round Time Limit</Text>
+                        <BodyText>Round Time Limit</BodyText>
                         <TextInput
                             placeholder='N/A'
                             onChangeText={(n) => setSetting('par', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : undefined)}
@@ -47,7 +51,7 @@ const GameSettings = ({ settings, setSetting }: GameSettingsProps) => {
                 </SettingsSection>
                 <SettingsSection sectionTitle='Score Settings'>
                     <View style={sharedStyles.rowNoBorder}>
-                        <Text>Starting Score</Text>
+                        <BodyText>Starting Score</BodyText>
                         <TextInput
                             placeholder='0'
                             onChangeText={(n) => setSetting('startingScore', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 0)}
@@ -56,7 +60,7 @@ const GameSettings = ({ settings, setSetting }: GameSettingsProps) => {
                             keyboardType='number-pad'/>
                     </View>
                     <View style={sharedStyles.rowNoBorder}>
-                        <Text>Default Score Step</Text>
+                        <BodyText>Default Score Step</BodyText>
                         <TextInput
                             placeholder='1'
                             onChangeText={(n) => setSetting('defaultScoreStep', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 1)}
@@ -65,7 +69,7 @@ const GameSettings = ({ settings, setSetting }: GameSettingsProps) => {
                             keyboardType='number-pad'/>
                     </View>
                     <View style={sharedStyles.rowNoBorder}>
-                        <Text>Score Increases By Default</Text>
+                        <BodyText>Score Increases By Default</BodyText>
                         <Switch
                             trackColor={{ false: colors.greyMid, true: colors.primaryLight }}
                             thumbColor={settings?.scoreIncreases ? colors.primaryLight : colors.greyLight}
@@ -76,6 +80,9 @@ const GameSettings = ({ settings, setSetting }: GameSettingsProps) => {
                     </View>
                 </SettingsSection>
             </ScrollView>
+            <NavBar
+                leftButton={{ icon: 'account-group', title: 'Players', clickHandler: exitSettings }}
+            />
         </>
     );
 }

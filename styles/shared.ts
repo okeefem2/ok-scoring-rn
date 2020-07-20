@@ -1,4 +1,5 @@
 import { StyleSheet, } from 'react-native';
+import { colors } from './colors';
 
 export const sharedStyles = StyleSheet.create({
     row: {
@@ -19,10 +20,21 @@ export const sharedStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
+    centeredContent: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     scroll: {
         width: '100%',
     },
     primaryText: {
-        color: '#FCA47C',
+        color: colors.primary,
+        fontFamily: 'Quicksand',
+    },
+    bodyText: {
+        fontFamily: 'Quicksand',
     }
 });
