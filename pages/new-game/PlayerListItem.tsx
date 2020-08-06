@@ -1,37 +1,29 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text } from 'react-native'
 import { Player } from '../../model/player';
 import { sharedStyles } from '../../styles/shared';
 import IconButton from '../../components/IconButton';
+import { colors } from '../../styles/colors';
 
 interface PlayerListItemProps {
     player: Player,
     onDeletePlayer: (playerKey: string) => void
+    onShiftPlayer: (playerKey: string, direction: 1 | -1) => void
 }
 
-function PlayerListItem({ player, onDeletePlayer }: PlayerListItemProps) {
+function PlayerListItem({ player, onDeletePlayer, onShiftPlayer }: PlayerListItemProps) {
     return (
         <View style={sharedStyles.row}>
-            <View style={styles.leftGroup}>
-                <IconButton icon="trash-can-outline" clickHandler={() => onDeletePlayer(player.key)} />
-                <Text style={styles.playerName} >{player.name}</Text>
+            <View style={sharedStyles.rowGroup}>
+                <IconButton icon="trash-can-outline" color={colors.tertiary} clickHandler={() => onDeletePlayer(player.key)} />
+                <Text style={[sharedStyles.bodyText, sharedStyles.ml5]} >{player.name}</Text>
             </View>
-            <IconButton icon="menu" clickHandler={() => console.log('menu click')} />
+            <View>
+                <IconButton icon="chevron-up" size={28} clickHandler={() => onShiftPlayer(player.key, -1)} />
+                <IconButton icon="chevron-down" size={28} clickHandler={() => onShiftPlayer(player.key, 1)} />
+            </View>
         </View>
     );
 }
 
 export default PlayerListItem;
-
-const styles = StyleSheet.create({
-    leftGroup: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    playerName: {
-        marginLeft: 5,
-        fontFamily: 'Quicksand'
-    }
-});

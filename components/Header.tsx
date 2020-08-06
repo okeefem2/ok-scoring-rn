@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native'
 
 interface HeaderProps {
     title?: string;
+    padding?: number;
 }
 
 const Header = ({ title }: HeaderProps) => {

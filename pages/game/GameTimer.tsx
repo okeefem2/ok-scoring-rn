@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, Button } from 'react-native'
-import { Subject, BehaviorSubject, interval, of, Observable } from 'rxjs';
+import { StyleSheet, Text, View } from 'react-native'
+import { Subject, BehaviorSubject, interval, of } from 'rxjs';
 import { takeUntil, switchMap, filter, tap, scan } from 'rxjs/operators';
 import { sharedStyles } from '../../styles/shared';
+import IconButton from '../../components/IconButton';
 
 function padNumber(num: number): string {
     return num.toString().padStart(2, '0');
@@ -22,7 +23,6 @@ function formatSeconds(totalSeconds: number): string {
 const toggleTimer = new BehaviorSubject<boolean>(false);
 
 const killTimer = new Subject();
-// const timer = inter(
 
 const timer = toggleTimer.asObservable()
     .pipe(
@@ -33,9 +33,10 @@ const timer = toggleTimer.asObservable()
     );
 
 const GameTimer = () => {
-    const [timerActive, setTimerActive] = useState(true)
+    const [timerActive, setTimerActive] = useState(false)
     const [timerData, setTimer] = useState({ timerText: '00:00', timerValue: 0})
     const onToggleTimer = () => {
+        console.log('Toggle timer from', timerActive);
         toggleTimer.next(!timerActive);
         setTimerActive(!timerActive);
     };
@@ -54,8 +55,10 @@ const GameTimer = () => {
     }, []);
     return (
         <View style={styles.timerContainer}>
-            <Text style={sharedStyles.primaryText}>{timerData.timerText}</Text>
-            <Button title='Toggle timer' onPress={onToggleTimer} color='#FCA47C'/>
+            <Text style={[sharedStyles.primaryText, styles.timerText]}>{timerData.timerText}</Text>
+            <IconButton icon='clock-outline' clickHandler={onToggleTimer} size={32}/>
+
+            {/* <Button title='Toggle timer' onPress={onToggleTimer} color='#FCA47C'/> */}
         </View>
     )
 }
@@ -69,4 +72,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    timerText: {
+        marginBottom: 30
+    }
 })

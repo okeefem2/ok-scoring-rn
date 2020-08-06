@@ -5,7 +5,7 @@ export const sharedStyles = StyleSheet.create({
     row: {
         padding: 15,
         width: '100%',
-        borderBottomColor: 'black',
+        borderBottomColor: colors.greyMid,
         borderBottomWidth: 1,
         display: 'flex',
         flexDirection: 'row',
@@ -13,12 +13,24 @@ export const sharedStyles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     rowNoBorder: {
-        padding: 15,
+        paddingTop: 15,
+        paddingBottom: 15,
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    rowGroup: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    column: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
     },
     centeredContent: {
         width: '100%',
@@ -36,5 +48,21 @@ export const sharedStyles = StyleSheet.create({
     },
     bodyText: {
         fontFamily: 'Quicksand',
+    },
+    ml5: {
+        marginLeft: 5,
+    },
+    mr5: {
+        marginRight: 5,
+    },
+    mt25: {
+        marginTop: 25
+    },
+    headerText: {
+        fontSize: 36,
+        fontFamily: 'Quicksand'
+    },
+    centeredText: {
+        textAlign: 'center',
     }
 });

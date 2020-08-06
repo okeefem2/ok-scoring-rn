@@ -2,7 +2,6 @@ import React from 'react'
 import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../styles/colors';
-import BodyText from './BodyText';
 
 export interface ButtonConfig {
     icon?: string;
@@ -10,8 +9,18 @@ export interface ButtonConfig {
     iconSide?: 'left' | 'right';
     clickHandler: () => void;
     title?: string;
+    size?: number;
+    color?: string;
 }
-const IconButton = ({icon, iconSide = 'left', clickHandler, title, disabled = false}: ButtonConfig) => {
+const IconButton = ({
+    icon,
+    iconSide = 'left',
+    clickHandler,
+    title,
+    disabled = false,
+    size = 24,
+    color = colors.primary,
+}: ButtonConfig) => {
     const textStyles: any[] = [styles.buttonText];
     if (disabled) {
         textStyles.push(styles.disabled);
@@ -19,9 +28,9 @@ const IconButton = ({icon, iconSide = 'left', clickHandler, title, disabled = fa
     return (
         <TouchableOpacity onPress={() => !disabled && clickHandler()} disabled={disabled}>
             <View style={styles.buttonRow}>
-                { !!icon && iconSide === 'left' ? <MaterialCommunityIcons name={icon} size={24} color={disabled ? colors.greyMid : colors.primary} /> : <></>}
+                { !!icon && iconSide === 'left' ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
                 { !!title ? <Text style={textStyles}>{title}</Text> : <></> }
-                { !!icon && iconSide === 'right'  ? <MaterialCommunityIcons name={icon} size={24} color={disabled ? colors.greyMid : colors.primary} /> : <></>}
+                { !!icon && iconSide === 'right'  ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
             </View>
         </TouchableOpacity>
 

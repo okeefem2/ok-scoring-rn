@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, FlatList } from 'react-native'
 import PlayerInput from './PlayerInput'
 import PlayerListItem from './PlayerListItem'
@@ -10,9 +10,13 @@ import { sharedStyles } from '../../styles/shared'
 import Game from '../game/Game'
 import { Settings } from '../../model/settings'
 import CenterContent from '../../components/CenterContent'
+import { swap } from '../../util/array.util'
+import { useDiceIcon } from '../../hooks/useDiceIcon'
 
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
 const NewGame = () => {
+
+    const diceIcon = useDiceIcon();
 
     const [players, setPlayers] = useState<Player[]>([]);
     const [gameStarted, setGameStarted] = useState<boolean>(false);
@@ -34,6 +38,21 @@ const NewGame = () => {
             setPlayers(players.filter(p => p.key !== playerKey));
         }
     }
+
+    const shiftPlayer = (playerKey: string, direction: 1 | -1) => {
+        if (playerKey) {
+            const playerIndex = players.findIndex(p => p.key === playerKey);
+            let newIndex = playerIndex + direction;
+            if (newIndex < 0) {
+                newIndex = players.length - 1;
+            } else if (newIndex >= players.length) {
+                newIndex = 0;
+            }
+
+            setPlayers(swap(players, playerIndex, newIndex));
+        }
+    }
+
     if (gameStarted) {
         return (
             <Game players={players} settings={settings} endGame={() => setGameStarted(false)}/>
@@ -57,7 +76,10 @@ const NewGame = () => {
                     <FlatList
                         style={sharedStyles.scroll}
                         data={players}
-                        renderItem={(itemData) => <PlayerListItem player={itemData.item} onDeletePlayer={deletePlayer}/>}
+                        renderItem={
+                            (itemData) =>
+                                <PlayerListItem player={itemData.item} onDeletePlayer={deletePlayer} onShiftPlayer={shiftPlayer}/>
+                        }
                     />
                     {/* <ScrollView style={styles.scroll} keyboardShouldPersistTaps='always'>
                     {players.map((p) => <View key={p} style={styles.row}><Text>{p}</Text></View>)}
@@ -70,7 +92,7 @@ const NewGame = () => {
                     </ScrollView> */}
                     <NavBar
                         leftButton={{ icon: 'settings', title: 'Settings', clickHandler: () => setShowSettings(true)}}
-                        rightButton={{ disabled: !players?.length, icon: 'dice-5', title: 'Start Game', clickHandler: () => setGameStarted(true)}}
+                        rightButton={{ disabled: !players?.length, icon: diceIcon, title: 'Start Game', clickHandler: () => setGameStarted(true)}}
                     />
                 </>
             }
