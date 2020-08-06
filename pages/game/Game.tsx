@@ -153,11 +153,11 @@ const Game = ({players, settings, endGame}: GameProps) => {
                 </View>
                 {
                     winningScore.playerKey === activePlayerScore.player.key &&
-                    <View style={sharedStyles.centeredContent}>
+                    <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
                         <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
                     </View>
                 }
-                <View style={sharedStyles.centeredContent}>
+                <View style={[sharedStyles.centeredContent, sharedStyles.mb25]}>
                     <Header title={activePlayerScore.player.name}/>
                 </View>
                 {/* <View style={sharedStyles.rowNoBorder}> */}
@@ -176,14 +176,10 @@ const Game = ({players, settings, endGame}: GameProps) => {
                             </View>
 
                             <View style={styles.middleTextOuter}>
-                                <Text style={styles.turnScore}>
+                                <Text style={[styles.turnScore, sharedStyles.ml5]}>
                                     { turnScore >= 0 ? `+${turnScore}` : turnScore} points
                                 </Text>
                             </View>
-
-
-
-
                         {/* </View> */}
                     {/* </View> */}
                 </View>

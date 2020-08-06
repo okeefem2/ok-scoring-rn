@@ -55,8 +55,14 @@ export const sharedStyles = StyleSheet.create({
     mr5: {
         marginRight: 5,
     },
+    mt10: {
+        marginTop: 10
+    },
     mt25: {
         marginTop: 25
+    },
+    mb25: {
+        marginBottom: 25
     },
     headerText: {
         fontSize: 36,

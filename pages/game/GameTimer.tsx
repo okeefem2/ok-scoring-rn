@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Subject, BehaviorSubject, interval, of } from 'rxjs';
-import { takeUntil, switchMap, filter, tap, scan } from 'rxjs/operators';
+import { Subject, BehaviorSubject, interval, of, Observable, NEVER } from 'rxjs';
+import { takeUntil, switchMap, filter, tap, scan, startWith, map } from 'rxjs/operators';
 import { sharedStyles } from '../../styles/shared';
 import IconButton from '../../components/IconButton';
 
@@ -20,29 +20,45 @@ function formatSeconds(totalSeconds: number): string {
     return `${padNumber(minutes)}:${padNumber(seconds)}`;
 }
 
-const toggleTimer = new BehaviorSubject<boolean>(false);
+interface TimerState {
+    on: boolean;
+    value: number;
+}
+
+const events = new BehaviorSubject<TimerState>({
+    on: false,
+    value: 0,
+});
 
 const killTimer = new Subject();
 
-const timer = toggleTimer.asObservable()
-    .pipe(
-        takeUntil(killTimer),
-        switchMap((timerOn: boolean) => timerOn ? interval(1000) : of(undefined)),
-        filter((t: number | undefined) => t !== undefined),
-        scan((totalTime: number) => totalTime + 1, 0),
-    );
-
 const GameTimer = () => {
-    const [timerActive, setTimerActive] = useState(false)
-    const [timerData, setTimer] = useState({ timerText: '00:00', timerValue: 0})
+    const [timerActive, setTimerActive] = useState(false);
+    const [timerData, setTimer] = useState({ timerText: '00:00', timerValue: 0});
     const onToggleTimer = () => {
         console.log('Toggle timer from', timerActive);
-        toggleTimer.next(!timerActive);
+        events.next({ value: timerData.timerValue, on: !timerActive});
         setTimerActive(!timerActive);
     };
 
+    const onResetTimer = () => {
+        setTimer({timerText: '00:00', timerValue: 0 });
+        events.next({ value: 0, on: false});
+        setTimerActive(false);
+    }
+
     useEffect(() => {
-        timer.subscribe((totalTime: number) => {
+        const timer = events.pipe(
+            switchMap(timeState =>
+                timeState.on
+                ? interval(1000).pipe(
+                    scan((totalTime): number => totalTime + 1, timeState.value),
+                )
+                : NEVER
+            )
+        );
+        timer.pipe(takeUntil(killTimer)).subscribe((totalTime: number) => {
+            console.log('timer val', totalTime);
             setTimer({timerText: formatSeconds(totalTime), timerValue: totalTime });
         });
 
@@ -50,13 +66,22 @@ const GameTimer = () => {
             console.log('kill timer!');
             killTimer.next();
             killTimer.complete();
-            toggleTimer.complete();
+            events.complete();
         }
     }, []);
     return (
         <View style={styles.timerContainer}>
             <Text style={[sharedStyles.primaryText, styles.timerText]}>{timerData.timerText}</Text>
-            <IconButton icon='clock-outline' clickHandler={onToggleTimer} size={32}/>
+            <View>
+                {
+                    timerActive ?
+                    <IconButton icon='pause' clickHandler={onToggleTimer} size={32}/> :
+                    <IconButton icon='play-outline' clickHandler={onToggleTimer} size={32}/>
+                }
+                <View style={sharedStyles.mt10}>
+                    <IconButton icon='restart' clickHandler={onResetTimer} size={32}/>
+                </View>
+            </View>
 
             {/* <Button title='Toggle timer' onPress={onToggleTimer} color='#FCA47C'/> */}
         </View>
@@ -73,6 +98,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     timerText: {
-        marginBottom: 30
+        marginBottom: 10
     }
 })

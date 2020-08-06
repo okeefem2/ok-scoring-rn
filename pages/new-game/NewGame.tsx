@@ -81,15 +81,6 @@ const NewGame = () => {
                                 <PlayerListItem player={itemData.item} onDeletePlayer={deletePlayer} onShiftPlayer={shiftPlayer}/>
                         }
                     />
-                    {/* <ScrollView style={styles.scroll} keyboardShouldPersistTaps='always'>
-                    {players.map((p) => <View key={p} style={styles.row}><Text>{p}</Text></View>)}
-                    <View style={styles.row}>
-                        <TextInput placeholder='New Player' onChangeText={setNewPlayer} value={newPlayer}/>
-                    </View>
-                    <View style={styles.addButton}>
-                        <Button title='Add Player' onPress={() => addPlayer(newPlayer)} color='#FCA47C'/>
-                    </View>
-                    </ScrollView> */}
                     <NavBar
                         leftButton={{ icon: 'settings', title: 'Settings', clickHandler: () => setShowSettings(true)}}
                         rightButton={{ disabled: !players?.length, icon: diceIcon, title: 'Start Game', clickHandler: () => setGameStarted(true)}}
