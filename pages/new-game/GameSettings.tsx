@@ -20,7 +20,7 @@ const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps)
         <>
             <Header title='Settings'/>
             <ScrollView style={sharedStyles.scroll} keyboardShouldPersistTaps='always'>
-                <SettingsSection sectionTitle='Round Settings'>
+                {/* <SettingsSection sectionTitle='Round Settings'>
                     <View style={sharedStyles.rowNoBorder}>
                         <BodyText>Round Limit</BodyText>
                         <TextInput
@@ -48,7 +48,7 @@ const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps)
                             autoCorrect={false}
                             keyboardType='number-pad'/>
                     </View>
-                </SettingsSection>
+                </SettingsSection> */}
                 <SettingsSection sectionTitle='Score Settings'>
                     <View style={sharedStyles.rowNoBorder}>
                         <BodyText>Starting Score</BodyText>
@@ -68,7 +68,7 @@ const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps)
                             autoCorrect={false}
                             keyboardType='number-pad'/>
                     </View>
-                    <View style={sharedStyles.rowNoBorder}>
+                    {/* <View style={sharedStyles.rowNoBorder}>
                         <BodyText>Score Increases By Default</BodyText>
                         <Switch
                             trackColor={{ false: colors.greyMid, true: colors.primaryLight }}
@@ -77,7 +77,7 @@ const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps)
                             onValueChange={(n: boolean) => setSetting('scoreIncreases', n)}
                             value={settings?.scoreIncreases}
                         />
-                    </View>
+                    </View> */}
                 </SettingsSection>
             </ScrollView>
             <NavBar

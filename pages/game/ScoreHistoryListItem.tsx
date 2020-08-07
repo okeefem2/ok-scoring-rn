@@ -11,14 +11,13 @@ import ScoreHistoryListItemRound from './ScoreHistoryListItemRound';
 interface ScoreHistoryListItemProps {
     player: Player;
     playerScoreHistory: PlayerScoreHistory;
-    updateRoundScore: (playerKey: string, roundIndex: number, newScore: number) => void;
-    removeRound: (playerKey: string, roundIndex: number) => void;
+    updateRoundScore?: (playerKey: string, roundIndex: number, newScore: number) => void;
+    removeRound?: (playerKey: string, roundIndex: number) => void;
     winning: boolean;
-    losing: boolean;
 }
-const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, removeRound, winning, losing }: ScoreHistoryListItemProps) => {
+const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, removeRound, winning }: ScoreHistoryListItemProps) => {
     console.log(playerScoreHistory);
-    const [showHistory, setShowHistory] = useState(false);
+    // const [showHistory, setShowHistory] = useState(false);
 
     return (
         <View style={sharedStyles.row}>
@@ -43,8 +42,8 @@ const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, rem
                             <ScoreHistoryListItemRound
                                 score={s}
                                 round={i + 1}
-                                updateRoundScore={(newScore: number) => updateRoundScore(player.key, i, newScore)}
-                                removeRound={() => removeRound(player.key, i)}
+                                updateRoundScore={updateRoundScore && ((newScore: number) => updateRoundScore(player.key, i, newScore))}
+                                removeRound={removeRound && (() => removeRound(player.key, i))}
                             />
                         )
                     }

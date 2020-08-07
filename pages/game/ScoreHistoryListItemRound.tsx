@@ -23,14 +23,16 @@ const ScoreHistoryListItemRound = ({ score, round, updateRoundScore, removeRound
     return (
         <View style={sharedStyles.rowNoBorder} key={round + score}>
             <View style={sharedStyles.rowGroup}>
-                <IconButton icon="trash-can-outline" color={colors.tertiary} clickHandler={removeRound} />
+                { removeRound && <IconButton icon="trash-can-outline" color={colors.tertiary} clickHandler={removeRound} />}
                 <Text style={[sharedStyles.bodyText, sharedStyles.ml5]}>Round {round}</Text>
             </View>
             <View style={sharedStyles.rowGroup}>
                 {
-                    editingPoints ?
-                        <IconButton icon="content-save-edit-outline" color={colors.primary} clickHandler={onSaveNewScore} /> :
-                        <IconButton icon="pencil-outline" color={colors.primary} clickHandler={() => setEditingPoints(true)} />
+                    updateRoundScore && (
+                        editingPoints ?
+                            <IconButton icon="content-save-edit-outline" color={colors.primary} clickHandler={onSaveNewScore} /> :
+                            <IconButton icon="pencil-outline" color={colors.primary} clickHandler={() => setEditingPoints(true)} />
+                    )
                 }
                 {
                     editingPoints ?

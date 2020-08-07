@@ -11,18 +11,20 @@ interface ScoreHistoryProps {
     players: Player[];
     scoreHistory: GameScoreHistory;
     exitScoreHistory: () => void;
-    updateRoundScore: (playerKey: string, roundIndex: number, newScore: number) => void;
-    removeRound: (playerKey: string, roundIndex: number) => void;
+    updateRoundScore?: (playerKey: string, roundIndex: number, newScore: number) => void;
+    removeRound?: (playerKey: string, roundIndex: number) => void;
     winningPlayerKey: string;
     losingPlayerKey: string;
+    gameOver?: boolean;
 }
-const ScoreHistory = ({ players, exitScoreHistory, scoreHistory, updateRoundScore, removeRound, winningPlayerKey, losingPlayerKey }: ScoreHistoryProps) => {
+const ScoreHistory = ({ players, exitScoreHistory, scoreHistory, updateRoundScore, removeRound, winningPlayerKey, losingPlayerKey, gameOver = false }: ScoreHistoryProps) => {
     const diceIcon = useDiceIcon();
 
     return (
         <>
             <NavBar
-                leftButton={{ icon: diceIcon, title: 'Back To Game', clickHandler: exitScoreHistory }}
+                leftButton={!gameOver ? { icon: diceIcon, title: 'Back To Game', clickHandler: exitScoreHistory } : undefined}
+                rightButton={gameOver ? { icon: diceIcon, title: 'Start New Game', clickHandler: exitScoreHistory } : undefined}
             />
             <FlatList
                 style={sharedStyles.scroll}

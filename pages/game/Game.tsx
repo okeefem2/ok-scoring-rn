@@ -38,6 +38,7 @@ function buildInitialHistory(players: Player[], startingScore: number): GameScor
 }
 const Game = ({players, settings, endGame}: GameProps) => {
     const [showScoreHistory, setShowScoreHistory] = useState<boolean>(false);
+    const [gameOver, setGameOver] = useState<boolean>(false);
     const [showGameSettings, setShowGameSettings] = useState<boolean>(false);
     const [scoreHistory, updateScoreHistory] = useState<GameScoreHistory>({});
     const [activePlayerScore, setActivePlayerScore] = useState<ActivePlayerScore | undefined>();
@@ -137,13 +138,26 @@ const Game = ({players, settings, endGame}: GameProps) => {
         );
     }
 
+    if (gameOver) {
+        return (
+            <ScoreHistory
+                players={players}
+                scoreHistory={scoreHistory}
+                exitScoreHistory={endGame}
+                winningPlayerKey={winningScore.playerKey}
+                losingPlayerKey={losingScore.playerKey}
+                gameOver={true}
+            />
+        );
+    }
+
     return ( activePlayerScore ?
         <View style={styles.gameContainer}>
             <View>
                 <View>
                     <NavBar
                         leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => setShowScoreHistory(true)}}
-                        rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: endGame}}
+                        rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => setGameOver(true)}}
                     />
                 </View>
                 <View style={sharedStyles.rowNoBorder}>
@@ -206,11 +220,11 @@ const Game = ({players, settings, endGame}: GameProps) => {
                 </View>
             </View>
 
-            <View>
+            {/* <View>
                 <NavBar
                     leftButton={{ icon: 'settings', title: 'Game Settings', clickHandler: () => console.log('game settings')}}
                 />
-            </View>
+            </View> */}
         </View> : <Text>Loading...</Text>
     );
 };
