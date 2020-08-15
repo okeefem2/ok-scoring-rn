@@ -16,13 +16,10 @@ interface ScoreHistoryListItemProps {
     winning: boolean;
 }
 const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, removeRound, winning }: ScoreHistoryListItemProps) => {
-    console.log(playerScoreHistory);
-    // const [showHistory, setShowHistory] = useState(false);
-
     return (
-        <View style={sharedStyles.row}>
+        <View style={sharedStyles.spacedRowBordered}>
             <View style={sharedStyles.column}>
-                <View style={sharedStyles.rowNoBorder}>
+                <View style={sharedStyles.spacedRowNoBorder}>
                     <View style={sharedStyles.rowGroup}>
                         {
                             winning && <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
@@ -32,12 +29,10 @@ const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, rem
                     <View>
                         <Text style={[sharedStyles.bodyText, sharedStyles.ml5]}>{playerScoreHistory.currentScore} points</Text>
 
-                        {/* <IconButton icon={showHistory ? 'chevron-up' : 'chevron-down'} size={28} clickHandler={() => setShowHistory(!showHistory)} /> */}
                     </View>
                 </View>
                 <View style={styles.roundsRow}>
                     {
-                        // showHistory &&
                         playerScoreHistory.scores.map((s, i) =>
                             <ScoreHistoryListItemRound
                                 score={s}

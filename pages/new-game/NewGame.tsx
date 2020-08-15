@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, FlatList } from 'react-native'
+import { StyleSheet, Image, FlatList, Text } from 'react-native'
 import PlayerInput from './PlayerInput'
 import PlayerListItem from './PlayerListItem'
 import { Player } from '../../model/player'
@@ -12,24 +12,36 @@ import { Settings } from '../../model/settings'
 import CenterContent from '../../components/CenterContent'
 import { swap } from '../../util/array.util'
 import { useDiceIcon } from '../../hooks/useDiceIcon'
+import { GameState } from '../../model/game-score-history'
+import GameHistory from '../game-history/GameHistory';
+interface NewGameProps {
+    dbAvailable: boolean;
+}
 
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
-const NewGame = () => {
+const NewGame = ({ dbAvailable }: NewGameProps) => {
 
     const diceIcon = useDiceIcon();
-
+    const [games, setGames] = useState<GameState[]>([]);
+    const [previousPlayers, setPreviousPlayers] = useState<Player[]>([]);
     const [players, setPlayers] = useState<Player[]>([]);
     const [gameStarted, setGameStarted] = useState<boolean>(false);
+    const [showGameHistory, setShowGameHistory] = useState<boolean>(false);
     const [showSettings, setShowSettings] = useState<boolean>(false);
     const [settings, setSettings] = useState({ rounds: undefined, startingScore: 0, defaultScoreStep: 1, scoreIncreases: true } as Settings);
+
+    // Used to continue an existing game
+    const [gameState, setGameState] = useState<GameState>();
 
     const setSetting: SetSettingFunction = (key, setting) => {
         setSettings({ ...settings, [key]: setting });
     }
 
-    const addPlayer = (name?: string) => {
-        if (name) {
-            setPlayers([...players, { key: Math.random().toString(), name}]);
+    const addPlayer = (player: Player) => {
+        console.log(player);
+        if (player) {
+
+            setPlayers([...players, player]);
         }
     };
 
@@ -53,13 +65,58 @@ const NewGame = () => {
         }
     }
 
+    if (showGameHistory) {
+        return (
+            <GameHistory
+                games={games}
+                back={() => setShowGameHistory(false)}
+                continueGame={(game: GameState) => {
+                    setGameState(game);
+                    setShowGameHistory(false);
+                    setGameStarted(true);
+                }}
+                copyGameSetup={(players: Player[], settings: Settings) => {
+                    setPlayers(players);
+                    setSettings(settings);
+                    setShowGameHistory(false);
+                }}
+            />
+        )
+    }
+
     if (gameStarted) {
         return (
-            <Game players={players} settings={settings} endGame={() => setGameStarted(false)}/>
+            <Game
+                game={gameState}
+                players={players}
+                settings={settings}
+                endGame={(game: GameState) => {
+                    const existingGame = games.findIndex(g => g.key === game.key);
+                    if (existingGame !== -1) {
+                        games.splice(existingGame, 1, game);
+                    } else {
+                        games.push(game);
+                    }
+                    setGames(games);
+                    setGameStarted(false);
+
+                    // add new players
+                    game.players.forEach((p) => {
+                        if (!previousPlayers.some((pp) => pp.key === p.key)) {
+                            setPreviousPlayers([ ...previousPlayers, p]);
+                        }
+                    })
+            }}/>
         );
     }
     return (
         <>
+            {
+                dbAvailable &&
+                <NavBar
+                    leftButton={{ icon: 'book', title: 'Game History', clickHandler: () => setShowGameHistory(true)}}
+                />
+            }
             <CenterContent>
                 <Image
                     source={require('../../assets/img/Logomakr-182120-225011/google.png')}
@@ -72,10 +129,13 @@ const NewGame = () => {
                 <GameSettings settings={settings} setSetting={setSetting} exitSettings={() => setShowSettings(false)}/> :
                 <>
                     <Header title='New Game'/>
-                    <PlayerInput onAddPlayer={addPlayer}/>
+                    <PlayerInput onAddPlayer={addPlayer} selectablePlayers={previousPlayers}/>
                     <FlatList
                         style={sharedStyles.scroll}
                         data={players}
+                        ListEmptyComponent={
+                            <Text style={[sharedStyles.bodyText, sharedStyles.centeredText, sharedStyles.mt25]}>Add Players To Get Started!</Text>
+                        }
                         renderItem={
                             (itemData) =>
                                 <PlayerListItem player={itemData.item} onDeletePlayer={deletePlayer} onShiftPlayer={shiftPlayer}/>

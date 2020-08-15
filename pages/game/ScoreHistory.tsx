@@ -32,12 +32,12 @@ const ScoreHistory = ({ players, exitScoreHistory, scoreHistory, updateRoundScor
                 renderItem={
                     (itemData) =>
                         <ScoreHistoryListItem
+                            key={itemData.item.key}
                             player={itemData.item}
                             playerScoreHistory={scoreHistory[itemData.item.key]}
                             updateRoundScore={updateRoundScore}
                             removeRound={removeRound}
                             winning={itemData.item.key === winningPlayerKey}
-                            losing={itemData.item.key === losingPlayerKey}
                         />
                 }
             />

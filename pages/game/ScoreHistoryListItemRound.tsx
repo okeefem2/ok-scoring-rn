@@ -7,21 +7,21 @@ import { colors } from '../../styles/colors'
 interface ScoreHistoryListItemRoundProps {
     round: number;
     score: number;
-    updateRoundScore: (newScore: number) => void
-    removeRound: () => void
+    updateRoundScore: ((newScore: number) => void) | undefined
+    removeRound: (() => void) | undefined
 }
 const ScoreHistoryListItemRound = ({ score, round, updateRoundScore, removeRound }: ScoreHistoryListItemRoundProps) => {
     const [editingPoints, setEditingPoints] = useState(false);
     const [newScoreValue, setNewScoreValue] = useState<number | undefined>(score);
 
     const onSaveNewScore = () => {
-        if ((!!newScoreValue || newScoreValue === 0) && newScoreValue !== score) {
+        if (updateRoundScore && (!!newScoreValue || newScoreValue === 0) && newScoreValue !== score) {
             updateRoundScore(newScoreValue);
         }
         setEditingPoints(false);
     }
     return (
-        <View style={sharedStyles.rowNoBorder} key={round + score}>
+        <View style={sharedStyles.spacedRowNoBorder} key={round + score}>
             <View style={sharedStyles.rowGroup}>
                 { removeRound && <IconButton icon="trash-can-outline" color={colors.tertiary} clickHandler={removeRound} />}
                 <Text style={[sharedStyles.bodyText, sharedStyles.ml5]}>Round {round}</Text>

@@ -1,14 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import NewGame from './pages/new-game/NewGame';
-import * as Font from 'expo-font';
 import { useFonts } from 'expo-font';
-
+import { initLocalDb } from './db/db';
 export default function App() {
+
+  const [dbAvailable, setDbAvailable] = useState(false);
 
   const [loaded, error] = useFonts({
     Quicksand: require('./assets/fonts/Quicksand/static/Quicksand-Regular.ttf'),
   });
+
+  useEffect(() => {
+    initLocalDb().then(
+      () => {
+        console.log('DB initialized')
+        setDbAvailable(true);
+      }
+    ).catch(
+      (err) => console.error('Error initializing local DB', err)
+    );
+    return () => {
+      // TODO clean up db?
+    }
+  }, []);
 
 
   if (!loaded) {
@@ -24,7 +39,9 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-        <NewGame/>
+        <NewGame
+          dbAvailable={dbAvailable}
+        />
     </View>
   );
 }

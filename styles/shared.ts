@@ -2,7 +2,15 @@ import { StyleSheet, } from 'react-native';
 import { colors } from './colors';
 
 export const sharedStyles = StyleSheet.create({
-    row: {
+    plainRow: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    spacedRowBordered: {
         padding: 15,
         width: '100%',
         borderBottomColor: colors.greyMid,
@@ -12,7 +20,7 @@ export const sharedStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    rowNoBorder: {
+    spacedRowNoBorder: {
         paddingTop: 15,
         paddingBottom: 15,
         width: '100%',
@@ -52,6 +60,9 @@ export const sharedStyles = StyleSheet.create({
     ml5: {
         marginLeft: 5,
     },
+    ml20: {
+        marginLeft: 20,
+    },
     mr5: {
         marginRight: 5,
     },
@@ -66,6 +77,10 @@ export const sharedStyles = StyleSheet.create({
     },
     headerText: {
         fontSize: 36,
+        fontFamily: 'Quicksand'
+    },
+    subHeaderText: {
+        fontSize: 28,
         fontFamily: 'Quicksand'
     },
     centeredText: {

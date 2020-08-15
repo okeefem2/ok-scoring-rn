@@ -8,15 +8,16 @@ import GameTimer from './GameTimer';
 import { sharedStyles } from '../../styles/shared';
 import IconButton from '../../components/IconButton';
 import ScoreHistory from './ScoreHistory';
-import { GameScoreHistory, PlayerScoreHistory } from '../../model/game-score-history';
+import { GameScoreHistory, PlayerScoreHistory, GameState } from '../../model/game-score-history';
 import { colors } from '../../styles/colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { share } from 'rxjs/operators';
+import { v4 as uuid } from 'react-native-uuid';
 
 interface GameProps {
+    game?: GameState;
     players: Player[];
     settings: Settings;
-    endGame: () => void;
+    endGame: (game: GameState) => void;
 }
 
 interface ActivePlayerScore {playerScore: PlayerScoreHistory, index: number, player: Player };
@@ -36,11 +37,12 @@ function buildInitialHistory(players: Player[], startingScore: number): GameScor
         {}
     );
 }
-const Game = ({players, settings, endGame}: GameProps) => {
+const Game = ({players, settings, endGame, game}: GameProps) => {
+    const [gameState, setGameState] = useState<GameState | undefined>(game);
     const [showScoreHistory, setShowScoreHistory] = useState<boolean>(false);
     const [gameOver, setGameOver] = useState<boolean>(false);
     const [showGameSettings, setShowGameSettings] = useState<boolean>(false);
-    const [scoreHistory, updateScoreHistory] = useState<GameScoreHistory>({});
+    // const [scoreHistory, updateScoreHistory] = useState<GameScoreHistory>({});
     const [activePlayerScore, setActivePlayerScore] = useState<ActivePlayerScore | undefined>();
     const [turnScore, updateTurnScore] = useState<number>(0);
     const [scoreStep, updateScoreStep] = useState<number | undefined>(settings?.defaultScoreStep || 1);
@@ -49,8 +51,19 @@ const Game = ({players, settings, endGame}: GameProps) => {
 
     let scoreStepInputRef: any;
     useEffect(() => {
-        const initialScoreHistory = buildInitialHistory(players, settings.startingScore ?? 0)
-        updateScoreHistory(initialScoreHistory);
+        let initialScoreHistory: GameScoreHistory;
+        if (!game) {
+            initialScoreHistory = buildInitialHistory(players, settings.startingScore ?? 0);
+            setGameState({
+                key: uuid(),
+                date: new Date().toLocaleDateString(),
+                scoreHistory: initialScoreHistory,
+                players,
+            });
+        } else {
+            initialScoreHistory = game.scoreHistory;
+        }
+        // updateScoreHistory(initialScoreHistory);
         setActivePlayerScore({
             playerScore: initialScoreHistory[players[0].key],
             player: players[0],
@@ -83,52 +96,61 @@ const Game = ({players, settings, endGame}: GameProps) => {
     }
 
     const removeRound = (playerKey: string, roundIndex: number) => {
-        scoreHistory[playerKey].scores.splice(roundIndex, 1);
-        scoreHistory[playerKey] = reCalcCurrentScore(scoreHistory[playerKey]);
-        updateScoreHistory(scoreHistory);
-        determineWinnerLoser(scoreHistory);
+        if (gameState) {
+            gameState.scoreHistory[playerKey].scores.splice(roundIndex, 1);
+            gameState.scoreHistory[playerKey] = reCalcCurrentScore(gameState?.scoreHistory[playerKey]);
+            setGameState(gameState);
+            determineWinnerLoser(gameState.scoreHistory);
+        }
+
     };
 
     const updateRoundScore = (playerKey: string, roundIndex: number, newScore: number) => {
-        scoreHistory[playerKey].scores.splice(roundIndex, 1, newScore);
-        scoreHistory[playerKey] = reCalcCurrentScore(scoreHistory[playerKey]);
-        updateScoreHistory(scoreHistory);
-        determineWinnerLoser(scoreHistory);
+        if (gameState) {
+            gameState.scoreHistory[playerKey].scores.splice(roundIndex, 1, newScore);
+            gameState.scoreHistory[playerKey] = reCalcCurrentScore(gameState.scoreHistory[playerKey]);
+            setGameState(gameState);
+            determineWinnerLoser(gameState.scoreHistory);
+        }
     };
 
     const endPlayerTurn = ()  => {
-        const { playerScore, player } = activePlayerScore as ActivePlayerScore;
-        playerScore.scores.push(turnScore);
-        playerScore.currentScore += turnScore;
-        scoreHistory[player.key] = playerScore;
-        updateScoreHistory(scoreHistory);
-        updateScoreStep(settings.defaultScoreStep ?? 1);
-        updateTurnScore(0);
-        // TODO see if this causes two renders, if it does, just return the new player from this function
-        // TO be able to batch the updates
-        changePlayer(1);
+        if (gameState) {
+            const { playerScore, player } = activePlayerScore as ActivePlayerScore;
+            playerScore.scores.push(turnScore);
+            playerScore.currentScore += turnScore;
+            gameState.scoreHistory[player.key] = playerScore;
+            setGameState(gameState);
+            updateScoreStep(settings.defaultScoreStep ?? 1);
+            updateTurnScore(0);
+            // TODO see if this causes two renders, if it does, just return the new player from this function
+            // TO be able to batch the updates
+            changePlayer(1);
+        }
     }
 
     const changePlayer = (n: 1 | -1) => {
-        const { index } = activePlayerScore as ActivePlayerScore;
-        let newIndex = index + n;
-        if (newIndex >= players.length) {
-            newIndex = 0;
-        } else if (newIndex < 0) {
-            newIndex = players.length - 1;
-        }
-        const player = players[newIndex];
-        const playerScore = scoreHistory[players[newIndex].key];
+        if (gameState) {
+            const { index } = activePlayerScore as ActivePlayerScore;
+            let newIndex = index + n;
+            if (newIndex >= players.length) {
+                newIndex = 0;
+            } else if (newIndex < 0) {
+                newIndex = players.length - 1;
+            }
+            const player = players[newIndex];
+            const playerScore = gameState.scoreHistory[players[newIndex].key];
 
-        determineWinnerLoser(scoreHistory);
-        setActivePlayerScore({ playerScore, index: newIndex, player, });
+            determineWinnerLoser(gameState.scoreHistory);
+            setActivePlayerScore({ playerScore, index: newIndex, player, });
+        }
     }
 
-    if (showScoreHistory) {
+    if (showScoreHistory && gameState?.scoreHistory) {
         return (
             <ScoreHistory
                 players={players}
-                scoreHistory={scoreHistory}
+                scoreHistory={gameState.scoreHistory}
                 exitScoreHistory={() => setShowScoreHistory(false)}
                 updateRoundScore={updateRoundScore}
                 removeRound={removeRound}
@@ -138,12 +160,12 @@ const Game = ({players, settings, endGame}: GameProps) => {
         );
     }
 
-    if (gameOver) {
+    if (gameOver && gameState) {
         return (
             <ScoreHistory
                 players={players}
-                scoreHistory={scoreHistory}
-                exitScoreHistory={endGame}
+                scoreHistory={gameState.scoreHistory}
+                exitScoreHistory={() => endGame(gameState)}
                 winningPlayerKey={winningScore.playerKey}
                 losingPlayerKey={losingScore.playerKey}
                 gameOver={true}
@@ -160,17 +182,17 @@ const Game = ({players, settings, endGame}: GameProps) => {
                         rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => setGameOver(true)}}
                     />
                 </View>
-                <View style={sharedStyles.rowNoBorder}>
+                <View style={sharedStyles.spacedRowNoBorder}>
                     <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} />
                     <GameTimer />
                     <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} />
                 </View>
-                {
-                    winningScore.playerKey === activePlayerScore.player.key &&
-                    <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
-                        <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
-                    </View>
-                }
+                <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
+                    {
+                        winningScore.playerKey === activePlayerScore.player.key &&
+                            <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
+                    }
+                </View>
                 <View style={[sharedStyles.centeredContent, sharedStyles.mb25]}>
                     <Header title={activePlayerScore.player.name}/>
                 </View>
@@ -197,7 +219,7 @@ const Game = ({players, settings, endGame}: GameProps) => {
                         {/* </View> */}
                     {/* </View> */}
                 </View>
-                <View style={[sharedStyles.rowNoBorder, sharedStyles.mt25]}>
+                <View style={[sharedStyles.spacedRowNoBorder, sharedStyles.mt25]}>
                     <IconButton icon='minus' clickHandler={() => scoreStep && updateTurnScore(turnScore - scoreStep)} disabled={!scoreStep} />
                     <View>
                         <TextInput

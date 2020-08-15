@@ -18,7 +18,7 @@ const SettingsSection = ({ sectionTitle, children }: SettingsSectionProps) => {
 
     return (
         <View style={styles.sectionContainer}>
-            <View style={sharedStyles.row}>
+            <View style={sharedStyles.spacedRowBordered}>
                 <BodyText>{ sectionTitle }</BodyText>
                 <Switch
                     trackColor={{ false: colors.greyMid, true: colors.primaryLight }}

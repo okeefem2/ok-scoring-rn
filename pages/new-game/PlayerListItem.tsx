@@ -13,7 +13,7 @@ interface PlayerListItemProps {
 
 function PlayerListItem({ player, onDeletePlayer, onShiftPlayer }: PlayerListItemProps) {
     return (
-        <View style={sharedStyles.row}>
+        <View style={sharedStyles.spacedRowBordered}>
             <View style={sharedStyles.rowGroup}>
                 <IconButton icon="trash-can-outline" color={colors.tertiary} clickHandler={() => onDeletePlayer(player.key)} />
                 <Text style={[sharedStyles.bodyText, sharedStyles.ml5]} >{player.name}</Text>

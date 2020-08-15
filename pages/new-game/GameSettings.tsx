@@ -50,7 +50,7 @@ const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps)
                     </View>
                 </SettingsSection> */}
                 <SettingsSection sectionTitle='Score Settings'>
-                    <View style={sharedStyles.rowNoBorder}>
+                    <View style={sharedStyles.spacedRowNoBorder}>
                         <BodyText>Starting Score</BodyText>
                         <TextInput
                             placeholder='0'
@@ -59,7 +59,7 @@ const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps)
                             autoCorrect={false}
                             keyboardType='number-pad'/>
                     </View>
-                    <View style={sharedStyles.rowNoBorder}>
+                    <View style={sharedStyles.spacedRowNoBorder}>
                         <BodyText>Default Score Step</BodyText>
                         <TextInput
                             placeholder='1'
