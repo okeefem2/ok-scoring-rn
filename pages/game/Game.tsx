@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, createContext } from 'react'
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native'
 import { Player } from '../../model/player';
 import { Settings } from '../../model/settings';
 import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
-import GameTimer from './GameTimer';
+import GameTimer, { timerEvents } from './GameTimer';
 import { sharedStyles } from '../../styles/shared';
 import IconButton from '../../components/IconButton';
 import ScoreHistory from './ScoreHistory';
@@ -12,6 +12,8 @@ import { GameScoreHistory, PlayerScoreHistory, GameState } from '../../model/gam
 import { colors } from '../../styles/colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { v4 as uuid } from 'react-native-uuid';
+import { take } from 'rxjs/operators';
+import { TimerProvider, useTimerState } from '../../providers/timer';
 
 interface GameProps {
     game?: GameState;
@@ -38,6 +40,7 @@ function buildInitialHistory(players: Player[], startingScore: number): GameScor
     );
 }
 const Game = ({players, settings, endGame, game}: GameProps) => {
+    const {timerValue} = useTimerState();
     const [gameState, setGameState] = useState<GameState | undefined>(game);
     const [showScoreHistory, setShowScoreHistory] = useState<boolean>(false);
     const [gameOver, setGameOver] = useState<boolean>(false);
@@ -174,37 +177,33 @@ const Game = ({players, settings, endGame, game}: GameProps) => {
     }
 
     return ( activePlayerScore ?
-        <View style={styles.gameContainer}>
-            <View>
+            <View style={styles.gameContainer}>
                 <View>
-                    <NavBar
-                        leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => setShowScoreHistory(true)}}
-                        rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => setGameOver(true)}}
-                    />
-                </View>
-                <View style={sharedStyles.spacedRowNoBorder}>
-                    <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} />
-                    <GameTimer />
-                    <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} />
-                </View>
-                <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
-                    {
-                        winningScore.playerKey === activePlayerScore.player.key &&
-                            <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
-                    }
-                </View>
-                <View style={[sharedStyles.centeredContent, sharedStyles.mb25]}>
-                    <Header title={activePlayerScore.player.name}/>
-                </View>
-                {/* <View style={sharedStyles.rowNoBorder}> */}
-                    {/* <View style={sharedStyles.centeredContent}> */}
+                    <View>
+                        <NavBar
+                            leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => setShowScoreHistory(true)}}
+                            rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => {
+                                setGameState({ ...gameState as GameState, duration: timerValue });
+                                setGameOver(true);
+                            }}}
+                        />
+                    </View>
+                    <View style={sharedStyles.spacedRowNoBorder}>
+                        <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} />
+                        <GameTimer />
+                        <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} />
+                    </View>
+                    <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
+                        {
+                            winningScore.playerKey === activePlayerScore.player.key &&
+                                <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
+                        }
+                    </View>
+                    <View style={[sharedStyles.centeredContent, sharedStyles.mb25]}>
+                        <Header title={activePlayerScore.player.name}/>
+                    </View>
                         <View style={styles.scoreContainer}>
-                            <View style={styles.middleTextOuter}>
-                            {/* <Text style={styles.turnScore}>
-                                    current
-                                </Text> */}
-                            </View>
-                            {/* <Header title={activePlayerScore.playerScore.currentScore?.toString() || '0'}/> */}
+                            <View style={styles.middleTextOuter}></View>
                             <View style={styles.middleTextInner}>
                                 <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
                                     {activePlayerScore.playerScore.currentScore?.toString() || '0'}
@@ -216,38 +215,31 @@ const Game = ({players, settings, endGame, game}: GameProps) => {
                                     { turnScore >= 0 ? `+${turnScore}` : turnScore} points
                                 </Text>
                             </View>
-                        {/* </View> */}
-                    {/* </View> */}
-                </View>
-                <View style={[sharedStyles.spacedRowNoBorder, sharedStyles.mt25]}>
-                    <IconButton icon='minus' clickHandler={() => scoreStep && updateTurnScore(turnScore - scoreStep)} disabled={!scoreStep} />
-                    <View>
-                        <TextInput
-                            style={styles.scoreInput}
-                            onChangeText={(n) => updateScoreStep(n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : undefined)}
-                            placeholder='Score Step'
-                            value={scoreStep?.toString()}
-                            keyboardType='number-pad'
-                            ref={(input) => { scoreStepInputRef = input; }}
-                        />
-                        <View style={sharedStyles.mt25}>
-                            <IconButton icon='dialpad' clickHandler={() => scoreStepInputRef.focus()} />
-                        </View>
                     </View>
-                    <IconButton icon='plus' clickHandler={() => scoreStep && updateTurnScore(turnScore + (scoreStep))} disabled={!scoreStep} />
-                </View>
+                    <View style={[sharedStyles.spacedRowNoBorder, sharedStyles.mt25]}>
+                        <IconButton icon='minus' clickHandler={() => scoreStep && updateTurnScore(turnScore - scoreStep)} disabled={!scoreStep} />
+                        <View>
+                            <TextInput
+                                style={styles.scoreInput}
+                                onChangeText={(n) => updateScoreStep(n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : undefined)}
+                                placeholder='Score Step'
+                                value={scoreStep?.toString()}
+                                keyboardType='number-pad'
+                                ref={(input) => { scoreStepInputRef = input; }}
+                            />
+                            <View style={sharedStyles.mt25}>
+                                <IconButton icon='dialpad' clickHandler={() => scoreStepInputRef.focus()} />
+                            </View>
+                        </View>
+                        <IconButton icon='plus' clickHandler={() => scoreStep && updateTurnScore(turnScore + (scoreStep))} disabled={!scoreStep} />
+                    </View>
 
-                <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
-                    <Button title={`End Turn ${activePlayerScore.playerScore.scores.length + 1}`} onPress={endPlayerTurn} color={colors.primary}/>
+                    <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
+                        <Button title={`End Turn ${activePlayerScore.playerScore.scores.length + 1}`} onPress={endPlayerTurn} color={colors.primary}/>
+                    </View>
                 </View>
             </View>
-
-            {/* <View>
-                <NavBar
-                    leftButton={{ icon: 'settings', title: 'Game Settings', clickHandler: () => console.log('game settings')}}
-                />
-            </View> */}
-        </View> : <Text>Loading...</Text>
+        : <Text>Loading...</Text>
     );
 };
 

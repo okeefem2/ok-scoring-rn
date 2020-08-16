@@ -17,7 +17,7 @@ interface ScoreHistoryListItemProps {
 }
 const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, removeRound, winning }: ScoreHistoryListItemProps) => {
     return (
-        <View style={sharedStyles.spacedRowBordered}>
+        <View style={sharedStyles.spacedRowBordered} key={player.key}>
             <View style={sharedStyles.column}>
                 <View style={sharedStyles.spacedRowNoBorder}>
                     <View style={sharedStyles.rowGroup}>
@@ -35,6 +35,7 @@ const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, rem
                     {
                         playerScoreHistory.scores.map((s, i) =>
                             <ScoreHistoryListItemRound
+                                key={`${player.key} ${s} ${i + 1}`}
                                 score={s}
                                 round={i + 1}
                                 updateRoundScore={updateRoundScore && ((newScore: number) => updateRoundScore(player.key, i, newScore))}

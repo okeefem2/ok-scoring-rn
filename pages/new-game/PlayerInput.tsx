@@ -4,7 +4,8 @@ import { View, TextInput, Button, StyleSheet, Keyboard } from 'react-native'
 import IconButton from '../../components/IconButton';
 import { Player } from '../../model/player';
 import { v4 as uuid } from 'react-native-uuid';
-import {Picker} from '@react-native-community/picker';
+import ModalSelector from 'react-native-modal-selector';
+import { colors } from '../../styles/colors';
 
 interface PlayerInputProps {
     onAddPlayer: (player: Player) => void,
@@ -18,7 +19,6 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
         if (!newPlayer) {
             return;
         }
-        console.log('Adding player!');
         if (!newPlayer.key) {
             newPlayer.key = uuid();
         }
@@ -38,17 +38,17 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                 </View>
                 {
                     selectablePlayers?.length ?
-                        <Picker
-                            selectedValue={newPlayer?.key}
-                            style={{ height: 50, width: 50 }}
-                            onValueChange={(key) => setNewPlayer(selectablePlayers.find(p => p.key === key))}
-                        >
-                            {
-                                selectablePlayers.map(p => (
-                                    <Picker.Item label={p.name} value={p.key} key={p.key}/>
-                                ))
-                            }
-                        </Picker>
+                    <ModalSelector
+                        selectTextStyle={{ color: colors.primary }}
+                        optionTextStyle={{ color: colors.secondary }}
+                        cancelTextStyle={{ color: colors.tertiary }}
+                        selectedKey={newPlayer?.name}
+                        data={selectablePlayers}
+                        initValue="Select A Player"
+                        onChange={(player: Player) => setNewPlayer(player)}
+                        keyExtractor= {player => player.key}
+                        labelExtractor= {player => player.name}
+                    />
                     : <></>
                 }
             </View>

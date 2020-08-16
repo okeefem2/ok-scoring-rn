@@ -14,13 +14,13 @@ import { swap } from '../../util/array.util'
 import { useDiceIcon } from '../../hooks/useDiceIcon'
 import { GameState } from '../../model/game-score-history'
 import GameHistory from '../game-history/GameHistory';
+import { TimerProvider, useTimerState } from '../../providers/timer'
 interface NewGameProps {
     dbAvailable: boolean;
 }
 
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
 const NewGame = ({ dbAvailable }: NewGameProps) => {
-
     const diceIcon = useDiceIcon();
     const [games, setGames] = useState<GameState[]>([]);
     const [previousPlayers, setPreviousPlayers] = useState<Player[]>([]);
@@ -86,27 +86,34 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
 
     if (gameStarted) {
         return (
-            <Game
-                game={gameState}
-                players={players}
-                settings={settings}
-                endGame={(game: GameState) => {
-                    const existingGame = games.findIndex(g => g.key === game.key);
-                    if (existingGame !== -1) {
-                        games.splice(existingGame, 1, game);
-                    } else {
-                        games.push(game);
-                    }
-                    setGames(games);
-                    setGameStarted(false);
-
-                    // add new players
-                    game.players.forEach((p) => {
-                        if (!previousPlayers.some((pp) => pp.key === p.key)) {
-                            setPreviousPlayers([ ...previousPlayers, p]);
+            <TimerProvider initialTimerValue={gameState?.duration}>
+                <Game
+                    game={gameState}
+                    players={players}
+                    settings={settings}
+                    endGame={(game: GameState) => {
+                        // TODO insert data into local db
+                        const existingGame = games.findIndex(g => g.key === game.key);
+                        if (existingGame !== -1) {
+                            games.splice(existingGame, 1, game);
+                        } else {
+                            games.push(game);
                         }
-                    })
-            }}/>
+                        setGames(games);
+                        setGameStarted(false);
+
+                        console.log('adding players', game.players);
+                        // add new players
+                        const newPlayers: Player[] = [];
+                        game.players.forEach((p) => {
+                            if (!previousPlayers.some((pp) => pp.key === p.key)) {
+                                newPlayers.push(p);
+                            }
+                        });
+                        setPreviousPlayers([ ...previousPlayers, ...newPlayers]);
+                }}/>
+            </TimerProvider>
+
         );
     }
     return (
