@@ -10,7 +10,7 @@ import ScoreHistoryListItem from './ScoreHistoryListItem'
 interface ScoreHistoryProps {
     players: Player[];
     scoreHistory: GameScoreHistory;
-    exitScoreHistory: () => void;
+    exitScoreHistory: (response?: boolean) => void;
     updateRoundScore?: (playerKey: string, roundIndex: number, newScore: number) => void;
     removeRound?: (playerKey: string, roundIndex: number) => void;
     winningPlayerKey: string;
@@ -23,8 +23,10 @@ const ScoreHistory = ({ players, exitScoreHistory, scoreHistory, updateRoundScor
     return (
         <>
             <NavBar
-                leftButton={!gameOver ? { icon: diceIcon, title: 'Back To Game', clickHandler: exitScoreHistory } : undefined}
-                rightButton={gameOver ? { icon: diceIcon, title: 'Save & Quit', clickHandler: exitScoreHistory } : undefined}
+                leftButton={!gameOver ?
+                    { icon: diceIcon, title: 'Back To Game', clickHandler: exitScoreHistory } :
+                    { icon: 'delete-outline', title: 'Discard & Quit', clickHandler: () => exitScoreHistory(false) }}
+                rightButton={gameOver ? { icon: 'content-save-outline', title: 'Save & Quit', clickHandler: () => exitScoreHistory(true) } : undefined}
             />
             <FlatList
                 style={sharedStyles.scroll}

@@ -17,6 +17,8 @@ import GameHistory from '../game-history/GameHistory';
 import { TimerProvider } from '../../providers/timer'
 import { v4 as uuid } from 'react-native-uuid';
 import { insertGame, fetchPlayers, insertPlayer, fetchGameStates } from '../../db/db'
+import { colors } from '../../styles/colors'
+import ModalSelector from 'react-native-modal-selector'
 
 interface NewGameProps {
     dbAvailable: boolean;
@@ -27,11 +29,12 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
     const diceIcon = useDiceIcon();
     const [games, setGames] = useState<GameState[]>([]);
     const [previousPlayers, setPreviousPlayers] = useState<Player[]>([]);
+    const [previousGames, setPreviousGames] = useState<string[]>([]);
     const [players, setPlayers] = useState<Player[]>([]);
     const [gameStarted, setGameStarted] = useState<boolean>(false);
     const [showGameHistory, setShowGameHistory] = useState<boolean>(false);
     const [showSettings, setShowSettings] = useState<boolean>(false);
-    const [gameDescription, setGameDescription] = useState('New Game');
+    const [gameDescription, setGameDescription] = useState<string>();
     const [settings, setSettings] = useState({
         key: uuid(),
         // rounds: undefined,
@@ -49,6 +52,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
             const games = await fetchGameStates();
             if (games?.length) {
                 setGames(games);
+                setPreviousGames(Array.from(new Set(games.map(g => g.description))));
             }
         } catch(e) {
             console.log('Error loading players and games from db', e);
@@ -93,6 +97,10 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
     }
 
     const endGame = async (game: GameState) => {
+        if (!game) {
+            setGameStarted(false);
+            return;
+        }
         try {
             await insertGame(game);
         } catch(e) {
@@ -120,6 +128,10 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
             }
         }
         setPreviousPlayers([ ...previousPlayers, ...newPlayers]);
+        if (!previousGames?.find(p => p === game.description)) {
+            previousGames.push(game.description);
+            setPreviousGames(previousGames);
+        }
     };
 
     if (showGameHistory) {
@@ -136,6 +148,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
                     setPlayers(players);
                     setSettings(settings);
                     setShowGameHistory(false);
+                    setGameDescription(description);
                 }}
             />
         )
@@ -145,7 +158,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
         return (
             <TimerProvider initialTimerValue={gameState?.duration}>
                 <Game
-                    description={gameDescription}
+                    description={gameDescription as string}
                     game={gameState}
                     players={players}
                     settings={settings}
@@ -177,6 +190,21 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
                     <View style={sharedStyles.spacedRowBordered}>
                         <TextInput style={sharedStyles.bodyText} placeholder='New Game' onChangeText={(description) => setGameDescription(description)} value={gameDescription}/>
                     </View>
+                    <View style={sharedStyles.spacedRowNoBorder}>
+                        {
+                            previousGames?.length ?
+                            <ModalSelector
+                                initValueTextStyle={{ color: colors.primary }}
+                                selectTextStyle={{ color: colors.primary }}
+                                optionTextStyle={{ color: colors.secondary }}
+                                cancelTextStyle={{ color: colors.tertiary }}
+                                data={previousGames.map((g, i) => ({ key: i, label: g}))}
+                                initValue="Previous Games"
+                                onChange={(g) => setGameDescription(g.label)}
+                            />
+                            : <></>
+                        }
+                    </View>
                     <PlayerInput onAddPlayer={addPlayer} selectablePlayers={previousPlayers}/>
                     <FlatList
                         style={sharedStyles.scroll}
@@ -191,7 +219,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
                     />
                     <NavBar
                         leftButton={{ icon: 'settings', title: 'Settings', clickHandler: () => setShowSettings(true)}}
-                        rightButton={{ disabled: !players?.length, icon: diceIcon, title: 'Start Game', clickHandler: () => setGameStarted(true)}}
+                        rightButton={{ disabled: !players?.length || !gameDescription, icon: diceIcon, title: 'Start Game', clickHandler: () => setGameStarted(true)}}
                     />
                 </>
             }

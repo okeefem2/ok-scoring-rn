@@ -19,7 +19,7 @@ interface GameProps {
     players: Player[];
     settings: Settings;
     description: string;
-    endGame: (game: GameState) => void;
+    endGame: (game?: GameState) => void;
 }
 
 interface ActivePlayerScore {playerScore: PlayerScoreHistory, index: number, player: Player };
@@ -169,11 +169,11 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
             <ScoreHistory
                 players={players}
                 scoreHistory={gameState.scoreHistory}
-                exitScoreHistory={() => {
-                    endGame({
+                exitScoreHistory={(keepGame?: boolean) => {
+                    endGame(keepGame ? {
                         winningPlayerKey: winningScore.playerKey,
                         ...gameState
-                    })
+                    } : undefined)
                 }}
                 winningPlayerKey={winningScore.playerKey}
                 losingPlayerKey={losingScore.playerKey}
