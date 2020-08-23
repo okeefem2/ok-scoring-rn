@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, FlatList, Text } from 'react-native'
+import { StyleSheet, Image, FlatList, Text, View, TextInput } from 'react-native'
 import PlayerInput from './PlayerInput'
 import PlayerListItem from './PlayerListItem'
 import { Player } from '../../model/player'
@@ -14,7 +14,10 @@ import { swap } from '../../util/array.util'
 import { useDiceIcon } from '../../hooks/useDiceIcon'
 import { GameState } from '../../model/game-score-history'
 import GameHistory from '../game-history/GameHistory';
-import { TimerProvider, useTimerState } from '../../providers/timer'
+import { TimerProvider } from '../../providers/timer'
+import { v4 as uuid } from 'react-native-uuid';
+import { insertGame, fetchPlayers, insertPlayer, fetchGameStates } from '../../db/db'
+
 interface NewGameProps {
     dbAvailable: boolean;
 }
@@ -28,7 +31,32 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
     const [gameStarted, setGameStarted] = useState<boolean>(false);
     const [showGameHistory, setShowGameHistory] = useState<boolean>(false);
     const [showSettings, setShowSettings] = useState<boolean>(false);
-    const [settings, setSettings] = useState({ rounds: undefined, startingScore: 0, defaultScoreStep: 1, scoreIncreases: true } as Settings);
+    const [gameDescription, setGameDescription] = useState('New Game');
+    const [settings, setSettings] = useState({
+        key: uuid(),
+        // rounds: undefined,
+        startingScore: 0,
+        defaultScoreStep: 1,
+        // scoreIncreases: true
+    } as Settings);
+
+    const loadPlayersAndGames = async () => {
+        try {
+            const players = await fetchPlayers();
+            if (players?.length) {
+                setPreviousPlayers(players);
+            }
+            const games = await fetchGameStates();
+            if (games?.length) {
+                setGames(games);
+            }
+        } catch(e) {
+            console.log('Error loading players and games from db', e);
+        }
+    };
+    useEffect(() => {
+        loadPlayersAndGames();
+    }, []);
 
     // Used to continue an existing game
     const [gameState, setGameState] = useState<GameState>();
@@ -60,10 +88,39 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
             } else if (newIndex >= players.length) {
                 newIndex = 0;
             }
-
             setPlayers(swap(players, playerIndex, newIndex));
         }
     }
+
+    const endGame = async (game: GameState) => {
+        try {
+            await insertGame(game);
+        } catch(e) {
+            console.log('error saving game', game, e);
+        }
+        const existingGame = games.findIndex(g => g.key === game.key);
+        if (existingGame !== -1) {
+            games.splice(existingGame, 1, game);
+        } else {
+            games.push(game);
+        }
+        setGames(games);
+        setGameStarted(false);
+
+        // add new players
+        const newPlayers: Player[] = [];
+        for (let p of game.players) {
+            if (!previousPlayers.some((pp) => pp.key === p.key)) {
+                try {
+                    await insertPlayer(p);
+                    newPlayers.push(p);
+                } catch(e) {
+                    console.log('error saving player', p, e);
+                }
+            }
+        }
+        setPreviousPlayers([ ...previousPlayers, ...newPlayers]);
+    };
 
     if (showGameHistory) {
         return (
@@ -75,7 +132,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
                     setShowGameHistory(false);
                     setGameStarted(true);
                 }}
-                copyGameSetup={(players: Player[], settings: Settings) => {
+                copyGameSetup={(players: Player[], settings: Settings, description: string) => {
                     setPlayers(players);
                     setSettings(settings);
                     setShowGameHistory(false);
@@ -88,30 +145,11 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
         return (
             <TimerProvider initialTimerValue={gameState?.duration}>
                 <Game
+                    description={gameDescription}
                     game={gameState}
                     players={players}
                     settings={settings}
-                    endGame={(game: GameState) => {
-                        // TODO insert data into local db
-                        const existingGame = games.findIndex(g => g.key === game.key);
-                        if (existingGame !== -1) {
-                            games.splice(existingGame, 1, game);
-                        } else {
-                            games.push(game);
-                        }
-                        setGames(games);
-                        setGameStarted(false);
-
-                        console.log('adding players', game.players);
-                        // add new players
-                        const newPlayers: Player[] = [];
-                        game.players.forEach((p) => {
-                            if (!previousPlayers.some((pp) => pp.key === p.key)) {
-                                newPlayers.push(p);
-                            }
-                        });
-                        setPreviousPlayers([ ...previousPlayers, ...newPlayers]);
-                }}/>
+                    endGame={endGame}/>
             </TimerProvider>
 
         );
@@ -135,7 +173,10 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
                 showSettings ?
                 <GameSettings settings={settings} setSetting={setSetting} exitSettings={() => setShowSettings(false)}/> :
                 <>
-                    <Header title='New Game'/>
+                    {/* <Header title='New Game'/> */}
+                    <View style={sharedStyles.spacedRowBordered}>
+                        <TextInput style={sharedStyles.bodyText} placeholder='New Game' onChangeText={(description) => setGameDescription(description)} value={gameDescription}/>
+                    </View>
                     <PlayerInput onAddPlayer={addPlayer} selectablePlayers={previousPlayers}/>
                     <FlatList
                         style={sharedStyles.scroll}
@@ -158,7 +199,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
     )
 }
 
-export default NewGame
+export default NewGame;
 
 const styles = StyleSheet.create({
     logoImage: {

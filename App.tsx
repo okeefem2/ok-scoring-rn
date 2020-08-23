@@ -26,7 +26,7 @@ export default function App() {
   }, []);
 
 
-  if (!loaded) {
+  if (!loaded || !dbAvailable) {
     return <>
       <Text>...Loading</Text>
     </>;

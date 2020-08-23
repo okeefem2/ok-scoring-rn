@@ -12,7 +12,7 @@ import { useDiceIcon } from '../../hooks/useDiceIcon';
 
 interface GameHistoryListItemProps {
     game: GameState;
-    copyGameSetup: (players: Player[], settings: Settings) => void;
+    copyGameSetup: (players: Player[], settings: Settings, description: string) => void;
     continueGame: (game: GameState) => void;
 };
 
@@ -24,6 +24,11 @@ const GameHistoryListItem = ({ game, copyGameSetup, continueGame,}: GameHistoryL
     return (
         <View style={sharedStyles.spacedRowBordered}>
             <View style={sharedStyles.column}>
+                <View style={sharedStyles.plainRow}>
+                    <Text style={[sharedStyles.ml5, sharedStyles.subHeaderText]}>
+                        {game.description}
+                    </Text>
+                </View>
                 <View style={sharedStyles.plainRow}>
                     <MaterialCommunityIcons name='calendar-outline' size={28} color={colors.tertiary} />
                     <Text style={[sharedStyles.ml5, sharedStyles.subHeaderText]}>
@@ -37,7 +42,7 @@ const GameHistoryListItem = ({ game, copyGameSetup, continueGame,}: GameHistoryL
                     </Text>
                 </View>
                 <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
-                    <IconButton icon='replay' title='Copy Game Setup' clickHandler={() => copyGameSetup(game.players, game.settings as Settings)} color={colors.primary} />
+                    <IconButton icon='replay' title='Copy Game Setup' clickHandler={() => copyGameSetup(game.players, game.settings as Settings, game.description)} color={colors.primary} />
                 </View>
                 <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
                     <IconButton icon={diceIcon} title='Continue Game' clickHandler={() => continueGame(game)} color={colors.primary}  />

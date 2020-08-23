@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { sharedStyles } from '../../styles/shared'
-import { View, TextInput, Button, StyleSheet, Keyboard } from 'react-native'
+import { View, TextInput, StyleSheet, Keyboard } from 'react-native'
 import IconButton from '../../components/IconButton';
 import { Player } from '../../model/player';
 import { v4 as uuid } from 'react-native-uuid';
@@ -39,13 +39,16 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                 {
                     selectablePlayers?.length ?
                     <ModalSelector
+                        initValueTextStyle={{ color: colors.primary }}
                         selectTextStyle={{ color: colors.primary }}
                         optionTextStyle={{ color: colors.secondary }}
                         cancelTextStyle={{ color: colors.tertiary }}
                         selectedKey={newPlayer?.name}
                         data={selectablePlayers}
                         initValue="Select A Player"
-                        onChange={(player: Player) => setNewPlayer(player)}
+                        onChange={(player: Player) => {
+                            setNewPlayer(player);
+                        }}
                         keyExtractor= {player => player.key}
                         labelExtractor= {player => player.name}
                     />

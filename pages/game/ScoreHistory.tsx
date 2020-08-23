@@ -6,7 +6,6 @@ import { GameScoreHistory } from '../../model/game-score-history'
 import { useDiceIcon } from '../../hooks/useDiceIcon'
 import { sharedStyles } from '../../styles/shared'
 import ScoreHistoryListItem from './ScoreHistoryListItem'
-import { useTimerState } from '../../providers/timer'
 
 interface ScoreHistoryProps {
     players: Player[];
@@ -25,7 +24,7 @@ const ScoreHistory = ({ players, exitScoreHistory, scoreHistory, updateRoundScor
         <>
             <NavBar
                 leftButton={!gameOver ? { icon: diceIcon, title: 'Back To Game', clickHandler: exitScoreHistory } : undefined}
-                rightButton={gameOver ? { icon: diceIcon, title: 'Start New Game', clickHandler: exitScoreHistory } : undefined}
+                rightButton={gameOver ? { icon: diceIcon, title: 'Save & Quit', clickHandler: exitScoreHistory } : undefined}
             />
             <FlatList
                 style={sharedStyles.scroll}

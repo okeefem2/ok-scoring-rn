@@ -4,7 +4,7 @@ import { Player } from '../../model/player';
 import { Settings } from '../../model/settings';
 import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
-import GameTimer, { timerEvents } from './GameTimer';
+import GameTimer from './GameTimer';
 import { sharedStyles } from '../../styles/shared';
 import IconButton from '../../components/IconButton';
 import ScoreHistory from './ScoreHistory';
@@ -12,19 +12,19 @@ import { GameScoreHistory, PlayerScoreHistory, GameState } from '../../model/gam
 import { colors } from '../../styles/colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { v4 as uuid } from 'react-native-uuid';
-import { take } from 'rxjs/operators';
-import { TimerProvider, useTimerState } from '../../providers/timer';
+import { useTimerState } from '../../providers/timer';
 
 interface GameProps {
     game?: GameState;
     players: Player[];
     settings: Settings;
+    description: string;
     endGame: (game: GameState) => void;
 }
 
 interface ActivePlayerScore {playerScore: PlayerScoreHistory, index: number, player: Player };
 
-function buildInitialHistory(players: Player[], startingScore: number): GameScoreHistory {
+export function buildInitialHistory(players: Player[], startingScore: number): GameScoreHistory {
     console.log('setting initial history');
     return players.reduce(
         (history, player) => ({
@@ -39,12 +39,12 @@ function buildInitialHistory(players: Player[], startingScore: number): GameScor
         {}
     );
 }
-const Game = ({players, settings, endGame, game}: GameProps) => {
+const Game = ({players, settings, endGame, game, description}: GameProps) => {
     const {timerValue} = useTimerState();
     const [gameState, setGameState] = useState<GameState | undefined>(game);
     const [showScoreHistory, setShowScoreHistory] = useState<boolean>(false);
     const [gameOver, setGameOver] = useState<boolean>(false);
-    const [showGameSettings, setShowGameSettings] = useState<boolean>(false);
+    // const [showGameSettings, setShowGameSettings] = useState<boolean>(false);
     // const [scoreHistory, updateScoreHistory] = useState<GameScoreHistory>({});
     const [activePlayerScore, setActivePlayerScore] = useState<ActivePlayerScore | undefined>();
     const [turnScore, updateTurnScore] = useState<number>(0);
@@ -59,6 +59,7 @@ const Game = ({players, settings, endGame, game}: GameProps) => {
             initialScoreHistory = buildInitialHistory(players, settings.startingScore ?? 0);
             setGameState({
                 key: uuid(),
+                description,
                 date: new Date().toLocaleDateString(),
                 scoreHistory: initialScoreHistory,
                 players,
@@ -168,7 +169,12 @@ const Game = ({players, settings, endGame, game}: GameProps) => {
             <ScoreHistory
                 players={players}
                 scoreHistory={gameState.scoreHistory}
-                exitScoreHistory={() => endGame(gameState)}
+                exitScoreHistory={() => {
+                    endGame({
+                        winningPlayerKey: winningScore.playerKey,
+                        ...gameState
+                    })
+                }}
                 winningPlayerKey={winningScore.playerKey}
                 losingPlayerKey={losingScore.playerKey}
                 gameOver={true}

@@ -1,4 +1,6 @@
 export interface Settings {
+    key: string;
+    gameKey?: string;
     // rounds?: number;
     // roundTimeLimit?: number;
     startingScore?: number;

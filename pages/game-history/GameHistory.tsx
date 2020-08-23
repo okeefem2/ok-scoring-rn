@@ -9,7 +9,7 @@ import { Settings } from '../../model/settings';
 // TODO consolidate players settings and score history into a GameState
 interface GameHistoryProps {
     games: GameState[];
-    copyGameSetup: (players: Player[], settings: Settings) => void;
+    copyGameSetup: (players: Player[], settings: Settings, description: string) => void;
     continueGame: (game: GameState) => void;
     back: () => void;
 }

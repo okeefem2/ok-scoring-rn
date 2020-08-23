@@ -2,6 +2,8 @@ import { Player } from './player';
 import { Settings } from './settings';
 
 export interface PlayerScoreHistory {
+    key: string;
+    playerKey: string;
     scores: number[];
     currentScore: number;
 }
@@ -12,11 +14,12 @@ export interface GameScoreHistory {
 
 export interface GameState {
     key: string;
+    description: string;
     date: string;
     duration?: number;
     winningPlayerKey?: string;
-    players: Player[];
     settings?: Settings;
+    players: Player[];
     scoreHistory: GameScoreHistory;
 }
 
