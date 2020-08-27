@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ok-scoring-rn",
-    "slug": "ok-scoring-rn",
+    "name": "OK Scoring",
+    "slug": "ok-scoring-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
