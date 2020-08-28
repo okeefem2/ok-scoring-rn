@@ -96,5 +96,8 @@ export const sharedStyles = StyleSheet.create({
     },
     centeredText: {
         textAlign: 'center',
+    },
+    input: {
+        width: '100%'
     }
 });

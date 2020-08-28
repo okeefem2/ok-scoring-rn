@@ -31,7 +31,7 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
         <>
             <View style={sharedStyles.spacedRowBordered}>
                 <TextInput
-                    style={sharedStyles.bodyText}
+                    style={[sharedStyles.bodyText, sharedStyles.input]}
                     placeholder='New Player'
                     returnKeyType="done"
                     onChangeText={(name) => setNewPlayer({ name })} value={newPlayer?.name}/>

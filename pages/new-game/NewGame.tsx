@@ -188,7 +188,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
                 <>
                     {/* <Header title='New Game'/> */}
                     <View style={sharedStyles.spacedRowBordered}>
-                        <TextInput style={sharedStyles.bodyText}
+                        <TextInput style={[sharedStyles.bodyText, sharedStyles.input]}
                             placeholder='What are we playing?'
                             returnKeyType="done"
                             onChangeText={(description) => setGameDescription(description)} value={gameDescription}/>
