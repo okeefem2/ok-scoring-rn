@@ -39,9 +39,11 @@ const ScoreHistoryListItemRound = ({ score, round, updateRoundScore, removeRound
                         <TextInput
                             style={[styles.scoreInput, sharedStyles.ml5]}
                             placeholder='Update Score'
-                            onChangeText={(n) => setNewScoreValue(n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : undefined)}
+                            onChangeText={(n) => !!n && setNewScoreValue(parseInt(n.replace(/[^0-9]/g, ''), 10))}
                             value={newScoreValue?.toString()}
                             autoCorrect={false}
+                            returnKeyType="done"
+                            clearTextOnFocus={true}
                             keyboardType='number-pad'/>:
                         <Text style={[sharedStyles.bodyText, sharedStyles.ml5]}>{score} points</Text>
 

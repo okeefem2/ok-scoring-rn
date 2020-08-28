@@ -31,6 +31,7 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
         <>
             <View style={sharedStyles.spacedRowBordered}>
                 <TextInput
+                    autoCapitalize='words'
                     style={[sharedStyles.bodyText, sharedStyles.input]}
                     placeholder='New Player'
                     returnKeyType="done"

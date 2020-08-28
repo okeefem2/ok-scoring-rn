@@ -190,6 +190,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
                     <View style={sharedStyles.spacedRowBordered}>
                         <TextInput style={[sharedStyles.bodyText, sharedStyles.input]}
                             placeholder='What are we playing?'
+                            autoCapitalize='words'
                             returnKeyType="done"
                             onChangeText={(description) => setGameDescription(description)} value={gameDescription}/>
                     </View>

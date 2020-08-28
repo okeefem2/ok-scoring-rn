@@ -191,22 +191,37 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
                             setGameOver(true);
                         }}}
                     />
-                    <View style={sharedStyles.spacedEvenlyNoBorder}>
-                        <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} width={'100%'} />
-                        <GameTimer />
-                        <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} width={'100%'} />
-                    </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
                         {
                             winningScore.playerKey === activePlayerScore.player.key &&
                                 <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
                         }
                     </View>
-                    <View style={[sharedStyles.centeredContent, sharedStyles.mb25]}>
-                        <Header title={activePlayerScore.player.name}/>
+                    <View style={[sharedStyles.spacedEvenlyNoBorder, winningScore.playerKey !== activePlayerScore.player.key && sharedStyles.mt25 ]}>
+                        <View style={[styles.buttonRowItem]}>
+                            <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} width={'100%'} />
+                        </View>
+                        <View style={[styles.buttonRowItem]}>
+                            <Header title={activePlayerScore.player.name}/>
+                        </View>
+                        <View style={[styles.buttonRowItem]}>
+                        <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} width={'100%'} />
+                        </View>
                     </View>
+                    {/* <View style={sharedStyles.spacedEvenlyNoBorder}>
+                        <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} width={'100%'} />
+                        <GameTimer />
+                        <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} width={'100%'} />
+                    </View> */}
+                    {/* <View style={[sharedStyles.centeredContent, sharedStyles.mb25]}>
+                        <Header title={activePlayerScore.player.name}/>
+                    </View> */}
                     <View style={styles.scoreContainer}>
-                        <View style={styles.middleTextOuter}></View>
+                        <View style={styles.middleTextOuter}>
+                            <Text style={[styles.turnDetails, styles.turnNumber]}>
+                                Turn {activePlayerScore.playerScore.scores.length + 1}
+                            </Text>
+                        </View>
                         <View style={styles.middleTextInner}>
                             <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
                                 {activePlayerScore.playerScore.currentScore?.toString() || '0'}
@@ -214,7 +229,7 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
                         </View>
 
                         <View style={styles.middleTextOuter}>
-                            <Text style={[styles.turnScore, sharedStyles.ml5]}>
+                            <Text style={[styles.turnDetails, styles.turnScore ]}>
                                 { turnScore >= 0 ? `+${turnScore}` : turnScore} points
                             </Text>
                         </View>
@@ -226,7 +241,7 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
                         <View style={[styles.buttonRowItem]}>
                             <TextInput
                                 style={[styles.scoreInput]}
-                                onChangeText={(n) => updateScoreStep(n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : undefined)}
+                                onChangeText={(n) => !!n && updateScoreStep(parseInt(n.replace(/[^0-9]/g, ''), 10))}
                                 placeholder='Score Step'
                                 value={scoreStep?.toString()}
                                 keyboardType='number-pad'
@@ -271,10 +286,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         minWidth: 50,
     },
+    turnNumber: {
+        // alignSelf: 'flex-end'
+    },
     turnScore: {
+        // alignSelf: 'flex-start'
+    },
+    turnDetails: {
         fontFamily: 'Quicksand',
         fontSize: 18,
-        color: colors.primary
+        color: colors.primary,
+        alignSelf: 'center'
     },
     scoreContainer: {
         width: '100%',
