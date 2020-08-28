@@ -192,6 +192,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
                             placeholder='What are we playing?'
                             autoCapitalize='words'
                             returnKeyType="done"
+                            clearButtonMode="while-editing"
                             onChangeText={(description) => setGameDescription(description)} value={gameDescription}/>
                     </View>
                     <View style={sharedStyles.spacedRowNoBorder}>

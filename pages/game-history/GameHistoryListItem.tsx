@@ -14,9 +14,10 @@ interface GameHistoryListItemProps {
     game: GameState;
     copyGameSetup: (players: Player[], settings: Settings, description: string) => void;
     continueGame: (game: GameState) => void;
+    showScoreHistory: (game: GameState) => void;
 };
 
-const GameHistoryListItem = ({ game, copyGameSetup, continueGame,}: GameHistoryListItemProps) => {
+const GameHistoryListItem = ({ game, copyGameSetup, continueGame, showScoreHistory, }: GameHistoryListItemProps) => {
     const diceIcon = useDiceIcon();
     // get the winning player to the front of the list
     game.players.sort((a) => game.winningPlayerKey === a.key ? -1 : 1);
@@ -48,7 +49,7 @@ const GameHistoryListItem = ({ game, copyGameSetup, continueGame,}: GameHistoryL
                     <IconButton icon={diceIcon} title='Continue Game' clickHandler={() => continueGame(game)} color={colors.primary}  />
                 </View>
                 <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
-                    <IconButton icon='book' title='View Scores' clickHandler={() => console.log('Show scores')} />
+                    <IconButton icon='book' title='View Scores' clickHandler={() => showScoreHistory(game)} />
                 </View>
             </View>
         </View>

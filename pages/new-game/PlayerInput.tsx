@@ -35,6 +35,8 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                     style={[sharedStyles.bodyText, sharedStyles.input]}
                     placeholder='New Player'
                     returnKeyType="done"
+                    clearButtonMode="while-editing"
+                    onSubmitEditing={addPlayer}
                     onChangeText={(name) => setNewPlayer({ name })} value={newPlayer?.name}/>
             </View>
             <View style={sharedStyles.spacedRowNoBorder}>

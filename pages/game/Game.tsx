@@ -199,13 +199,13 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
                     </View>
                     <View style={[sharedStyles.spacedEvenlyNoBorder, winningScore.playerKey !== activePlayerScore.player.key && sharedStyles.mt25 ]}>
                         <View style={[styles.buttonRowItem]}>
-                            <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} width={'100%'} />
+                            <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} width={'100%'} size={34} />
                         </View>
                         <View style={[styles.buttonRowItem]}>
                             <Header title={activePlayerScore.player.name}/>
                         </View>
                         <View style={[styles.buttonRowItem]}>
-                        <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} width={'100%'} />
+                        <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} width={'100%'} size={34} />
                         </View>
                     </View>
                     {/* <View style={sharedStyles.spacedEvenlyNoBorder}>
@@ -236,7 +236,7 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
                     </View>
                     <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt25 ]}>
                         <View style={[styles.buttonRowItem]}>
-                            <IconButton icon='minus' clickHandler={() => scoreStep && updateTurnScore(turnScore - scoreStep)} disabled={!scoreStep} width={'100%'}/>
+                            <IconButton icon='minus' clickHandler={() => scoreStep && updateTurnScore(turnScore - scoreStep)} disabled={!scoreStep} width={'100%'} size={34}/>
                         </View>
                         <View style={[styles.buttonRowItem]}>
                             <TextInput
@@ -254,7 +254,7 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
                             </View>
                         </View>
                         <View style={[styles.buttonRowItem]}>
-                            <IconButton icon='plus' clickHandler={() => scoreStep && updateTurnScore(turnScore + (scoreStep))} disabled={!scoreStep} width={'100%'}/>
+                            <IconButton icon='plus' clickHandler={() => scoreStep && updateTurnScore(turnScore + (scoreStep))} disabled={!scoreStep} width={'100%'} size={34}/>
                         </View>
                     </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>

@@ -14,17 +14,16 @@ interface ScoreHistoryProps {
     updateRoundScore?: (playerKey: string, roundIndex: number, newScore: number) => void;
     removeRound?: (playerKey: string, roundIndex: number) => void;
     winningPlayerKey: string;
-    losingPlayerKey: string;
+    losingPlayerKey?: string;
     gameOver?: boolean;
 }
 const ScoreHistory = ({ players, exitScoreHistory, scoreHistory, updateRoundScore, removeRound, winningPlayerKey, losingPlayerKey, gameOver = false }: ScoreHistoryProps) => {
-    const diceIcon = useDiceIcon();
 
     return (
         <>
             <NavBar
                 leftButton={!gameOver ?
-                    { icon: diceIcon, title: 'Back To Game', clickHandler: exitScoreHistory } :
+                    { icon: 'chevron-left', title: 'Back', clickHandler: exitScoreHistory } :
                     { icon: 'delete-outline', title: 'Discard & Quit', clickHandler: () => exitScoreHistory(false) }}
                 rightButton={gameOver ? { icon: 'content-save-outline', title: 'Save & Quit', clickHandler: () => exitScoreHistory(true) } : undefined}
             />

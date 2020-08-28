@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { Player } from '../../model/player';
 import { GameScoreHistory, GameState } from '../../model/game-score-history';
@@ -6,6 +6,7 @@ import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
 import GameHistoryListItem from './GameHistoryListItem';
 import { Settings } from '../../model/settings';
+import ScoreHistory from '../game/ScoreHistory';
 // TODO consolidate players settings and score history into a GameState
 interface GameHistoryProps {
     games: GameState[];
@@ -14,6 +15,18 @@ interface GameHistoryProps {
     back: () => void;
 }
 const GameHistory = ({ games, copyGameSetup, continueGame, back }: GameHistoryProps) => {
+    const [scoreHistory, setShowScoreHistory] = useState<GameState>();
+
+    if (!!scoreHistory) {
+        return (
+            <ScoreHistory
+                players={scoreHistory.players}
+                scoreHistory={scoreHistory.scoreHistory}
+                exitScoreHistory={() => setShowScoreHistory(undefined)}
+                winningPlayerKey={scoreHistory.winningPlayerKey as string}
+            />
+        );
+    }
     return (
         <>
             <NavBar
@@ -26,7 +39,13 @@ const GameHistory = ({ games, copyGameSetup, continueGame, back }: GameHistoryPr
                     <Text style={[sharedStyles.bodyText, sharedStyles.centeredText, sharedStyles.mt25]}>No Games Played Yet!</Text>
                 }
                 renderItem={
-                    (itemData) => <GameHistoryListItem game={itemData.item} copyGameSetup={copyGameSetup} continueGame={continueGame} key={itemData.item.key}/>
+                    (itemData) => <GameHistoryListItem
+                                        game={itemData.item}
+                                        copyGameSetup={copyGameSetup}
+                                        continueGame={continueGame}
+                                        key={itemData.item.key}
+                                        showScoreHistory={setShowScoreHistory}
+                                        />
                 }
             />
         </>
