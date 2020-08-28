@@ -96,7 +96,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
         }
     }
 
-    const endGame = async (game: GameState) => {
+    const endGame = async (game?: GameState) => {
         if (!game) {
             setGameStarted(false);
             return;
@@ -188,7 +188,10 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
                 <>
                     {/* <Header title='New Game'/> */}
                     <View style={sharedStyles.spacedRowBordered}>
-                        <TextInput style={sharedStyles.bodyText} placeholder='New Game' onChangeText={(description) => setGameDescription(description)} value={gameDescription}/>
+                        <TextInput style={sharedStyles.bodyText}
+                            placeholder='What are we playing?'
+                            returnKeyType="done"
+                            onChangeText={(description) => setGameDescription(description)} value={gameDescription}/>
                     </View>
                     <View style={sharedStyles.spacedRowNoBorder}>
                         {

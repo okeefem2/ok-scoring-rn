@@ -48,7 +48,10 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 50,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingTop: 25,
     backgroundColor: '#fff',
     flex: 1,
     alignItems: 'flex-start',

@@ -24,10 +24,21 @@ export const sharedStyles = StyleSheet.create({
         paddingTop: 15,
         paddingBottom: 15,
         width: '100%',
+        maxWidth: '100%',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    spacedEvenlyNoBorder: {
+        paddingTop: 15,
+        paddingBottom: 15,
+        width: '100%',
+        maxWidth: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
     },
     rowGroup: {
         display: 'flex',

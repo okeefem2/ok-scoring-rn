@@ -11,6 +11,7 @@ export interface ButtonConfig {
     title?: string;
     size?: number;
     color?: string;
+    width?: string
 }
 const IconButton = ({
     icon,
@@ -20,19 +21,22 @@ const IconButton = ({
     disabled = false,
     size = 24,
     color = colors.primary,
+    width
 }: ButtonConfig) => {
     const textStyles: any[] = [styles.buttonText];
     if (disabled) {
         textStyles.push(styles.disabled);
     }
     return (
-        <TouchableOpacity onPress={() => !disabled && clickHandler()} disabled={disabled}>
-            <View style={styles.buttonRow}>
-                { !!icon && iconSide === 'left' ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
-                { !!title ? <Text style={textStyles}>{title}</Text> : <></> }
-                { !!icon && iconSide === 'right'  ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
-            </View>
-        </TouchableOpacity>
+        <View style={{ alignSelf: 'stretch', display: 'flex', width: width }}>
+            <TouchableOpacity onPress={() => !disabled && clickHandler()} disabled={disabled} style={{ width: width }}>
+                <View style={styles.buttonRow}>
+                    { !!icon && iconSide === 'left' ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
+                    { !!title ? <Text style={textStyles}>{title}</Text> : <></> }
+                    { !!icon && iconSide === 'right'  ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
+                </View>
+            </TouchableOpacity>
+        </View>
 
     )
 }
@@ -44,7 +48,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     buttonText: {
         fontFamily: 'Quicksand',

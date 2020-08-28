@@ -30,7 +30,11 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
     return (
         <>
             <View style={sharedStyles.spacedRowBordered}>
-                <TextInput style={sharedStyles.bodyText} placeholder='New Player' onChangeText={(name) => setNewPlayer({ name })} value={newPlayer?.name}/>
+                <TextInput
+                    style={sharedStyles.bodyText}
+                    placeholder='New Player'
+                    returnKeyType="done"
+                    onChangeText={(name) => setNewPlayer({ name })} value={newPlayer?.name}/>
             </View>
             <View style={sharedStyles.spacedRowNoBorder}>
                 <View style={styles.addButton}>

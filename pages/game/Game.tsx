@@ -184,20 +184,17 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
 
     return ( activePlayerScore ?
             <View style={styles.gameContainer}>
-                <View>
-                    <View>
-                        <NavBar
-                            leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => setShowScoreHistory(true)}}
-                            rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => {
-                                setGameState({ ...gameState as GameState, duration: timerValue });
-                                setGameOver(true);
-                            }}}
-                        />
-                    </View>
-                    <View style={sharedStyles.spacedRowNoBorder}>
-                        <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} />
+                    <NavBar
+                        leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => setShowScoreHistory(true)}}
+                        rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => {
+                            setGameState({ ...gameState as GameState, duration: timerValue });
+                            setGameOver(true);
+                        }}}
+                    />
+                    <View style={sharedStyles.spacedEvenlyNoBorder}>
+                        <IconButton icon='chevron-left' clickHandler={() => changePlayer(-1)} width={'100%'} />
                         <GameTimer />
-                        <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} />
+                        <IconButton icon='chevron-right' clickHandler={() => changePlayer(1)} width={'100%'} />
                     </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
                         {
@@ -208,42 +205,46 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
                     <View style={[sharedStyles.centeredContent, sharedStyles.mb25]}>
                         <Header title={activePlayerScore.player.name}/>
                     </View>
-                        <View style={styles.scoreContainer}>
-                            <View style={styles.middleTextOuter}></View>
-                            <View style={styles.middleTextInner}>
-                                <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
-                                    {activePlayerScore.playerScore.currentScore?.toString() || '0'}
-                                </Text>
-                            </View>
+                    <View style={styles.scoreContainer}>
+                        <View style={styles.middleTextOuter}></View>
+                        <View style={styles.middleTextInner}>
+                            <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
+                                {activePlayerScore.playerScore.currentScore?.toString() || '0'}
+                            </Text>
+                        </View>
 
-                            <View style={styles.middleTextOuter}>
-                                <Text style={[styles.turnScore, sharedStyles.ml5]}>
-                                    { turnScore >= 0 ? `+${turnScore}` : turnScore} points
-                                </Text>
-                            </View>
+                        <View style={styles.middleTextOuter}>
+                            <Text style={[styles.turnScore, sharedStyles.ml5]}>
+                                { turnScore >= 0 ? `+${turnScore}` : turnScore} points
+                            </Text>
+                        </View>
                     </View>
-                    <View style={[sharedStyles.spacedRowNoBorder, sharedStyles.mt25]}>
-                        <IconButton icon='minus' clickHandler={() => scoreStep && updateTurnScore(turnScore - scoreStep)} disabled={!scoreStep} />
-                        <View>
+                    <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt25 ]}>
+                        <View style={[styles.buttonRowItem]}>
+                            <IconButton icon='minus' clickHandler={() => scoreStep && updateTurnScore(turnScore - scoreStep)} disabled={!scoreStep} width={'100%'}/>
+                        </View>
+                        <View style={[styles.buttonRowItem]}>
                             <TextInput
-                                style={styles.scoreInput}
+                                style={[styles.scoreInput]}
                                 onChangeText={(n) => updateScoreStep(n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : undefined)}
                                 placeholder='Score Step'
                                 value={scoreStep?.toString()}
                                 keyboardType='number-pad'
+                                clearTextOnFocus={true}
+                                returnKeyType="done"
                                 ref={(input) => { scoreStepInputRef = input; }}
                             />
                             <View style={sharedStyles.mt25}>
                                 <IconButton icon='dialpad' clickHandler={() => scoreStepInputRef.focus()} />
                             </View>
                         </View>
-                        <IconButton icon='plus' clickHandler={() => scoreStep && updateTurnScore(turnScore + (scoreStep))} disabled={!scoreStep} />
+                        <View style={[styles.buttonRowItem]}>
+                            <IconButton icon='plus' clickHandler={() => scoreStep && updateTurnScore(turnScore + (scoreStep))} disabled={!scoreStep} width={'100%'}/>
+                        </View>
                     </View>
-
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
                         <Button title={`End Turn ${activePlayerScore.playerScore.scores.length + 1}`} onPress={endPlayerTurn} color={colors.primary}/>
                     </View>
-                </View>
             </View>
         : <Text>Loading...</Text>
     );
@@ -252,13 +253,15 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
 export default Game;
 
 const styles = StyleSheet.create({
+    buttonRowItem: {
+        flex: 1
+    },
     gameContainer: {
         display: 'flex',
         flexDirection: 'column',
         textAlign: 'center',
         height: '100%',
-        width: '100%',
-        justifyContent: 'space-between',
+        width: '100%'
     },
     scoreInput: {
         fontFamily: 'Quicksand',
