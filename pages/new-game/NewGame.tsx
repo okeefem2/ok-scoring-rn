@@ -97,8 +97,18 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
     }
 
     const endGame = async (game?: GameState) => {
+
         if (!game) {
             setGameStarted(false);
+            setPlayers([]);
+            setGameState(undefined);
+            setSettings({
+                key: uuid(),
+                // rounds: undefined,
+                startingScore: 0,
+                defaultScoreStep: undefined,
+                // scoreIncreases: true
+            });
             return;
         }
         try {
@@ -114,6 +124,15 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
         }
         setGames(games);
         setGameStarted(false);
+        setPlayers([]);
+        setGameState(undefined);
+        setSettings({
+            key: uuid(),
+            // rounds: undefined,
+            startingScore: 0,
+            defaultScoreStep: 1,
+            // scoreIncreases: true
+        });
 
         // add new players
         const newPlayers: Player[] = [];

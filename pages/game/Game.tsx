@@ -47,12 +47,11 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
     // const [showGameSettings, setShowGameSettings] = useState<boolean>(false);
     // const [scoreHistory, updateScoreHistory] = useState<GameScoreHistory>({});
     const [activePlayerScore, setActivePlayerScore] = useState<ActivePlayerScore | undefined>();
-    const [turnScore, updateTurnScore] = useState<number>(0);
-    const [scoreStep, updateScoreStep] = useState<number | undefined>(settings?.defaultScoreStep || 1);
+    const [turnScore, updateTurnScore] = useState<number | undefined>(settings?.defaultScoreStep);
     const [winningScore, updateWinningScore] = useState<{ playerKey: string, score: number }>({ playerKey: '', score: 0 });
     const [losingScore, updateLosingScore] = useState<{ playerKey: string, score: number }>({ playerKey: '', score: Infinity });
 
-    let scoreStepInputRef: any;
+    let turnScoreInputRef: TextInput;
     useEffect(() => {
         let initialScoreHistory: GameScoreHistory;
         if (!game) {
@@ -121,11 +120,11 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
     const endPlayerTurn = ()  => {
         if (gameState) {
             const { playerScore, player } = activePlayerScore as ActivePlayerScore;
-            playerScore.scores.push(turnScore);
-            playerScore.currentScore += turnScore;
+            playerScore.scores.push(turnScore ?? 0);
+            playerScore.currentScore += (turnScore ?? 0);;
             gameState.scoreHistory[player.key] = playerScore;
             setGameState(gameState);
-            updateScoreStep(settings.defaultScoreStep ?? 1);
+            updateTurnScore(settings?.defaultScoreStep);
             updateTurnScore(0);
             // TODO see if this causes two renders, if it does, just return the new player from this function
             // TO be able to batch the updates
@@ -230,31 +229,36 @@ const Game = ({players, settings, endGame, game, description}: GameProps) => {
 
                         <View style={styles.middleTextOuter}>
                             <Text style={[styles.turnDetails, styles.turnScore ]}>
-                                { turnScore >= 0 ? `+${turnScore}` : turnScore} points
+                                { !!turnScore ? (turnScore >= 0 ? `+${turnScore}` : turnScore) : '+0'} points
                             </Text>
                         </View>
                     </View>
                     <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt25 ]}>
                         <View style={[styles.buttonRowItem]}>
-                            <IconButton icon='minus' clickHandler={() => scoreStep && updateTurnScore(turnScore - scoreStep)} disabled={!scoreStep} width={'100%'} size={34}/>
+                            <IconButton icon='minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} disabled={!turnScore || turnScore < 0} width={'100%'} size={34}/>
                         </View>
                         <View style={[styles.buttonRowItem]}>
                             <TextInput
                                 style={[styles.scoreInput]}
-                                onChangeText={(n) => !!n && updateScoreStep(parseInt(n.replace(/[^0-9]/g, ''), 10))}
-                                placeholder='Score Step'
-                                value={scoreStep?.toString()}
-                                keyboardType='number-pad'
+                                onChangeText={(n) => {
+                                    console.log('changed', n)
+                                    if (!!n || n === '0') {
+                                        updateTurnScore(parseInt(n.replace(/[^0-9]/g, ''), 10));
+                                    }
+                                }}
+                                placeholder='Turn Score'
+                                value={turnScore?.toString()}
                                 clearTextOnFocus={true}
+                                keyboardType='number-pad'
                                 returnKeyType="done"
-                                ref={(input) => { scoreStepInputRef = input; }}
+                                ref={(input: TextInput) => { turnScoreInputRef = input; }}
                             />
                             <View style={sharedStyles.mt25}>
-                                <IconButton icon='dialpad' clickHandler={() => scoreStepInputRef.focus()} />
+                                <IconButton icon='dialpad' clickHandler={() => turnScoreInputRef.focus()} size={34} />
                             </View>
                         </View>
                         <View style={[styles.buttonRowItem]}>
-                            <IconButton icon='plus' clickHandler={() => scoreStep && updateTurnScore(turnScore + (scoreStep))} disabled={!scoreStep} width={'100%'} size={34}/>
+                            <IconButton icon='plus' clickHandler={() => turnScore && updateTurnScore(Math.abs(turnScore))} disabled={!turnScore || turnScore > 0} width={'100%'} size={34}/>
                         </View>
                     </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>

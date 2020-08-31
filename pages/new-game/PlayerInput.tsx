@@ -13,17 +13,17 @@ interface PlayerInputProps {
 }
 
 function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
-    const [newPlayer, setNewPlayer] = useState<Partial<Player>>();
+    const [newPlayer, setNewPlayer] = useState<Partial<Player>>({});
 
-    const addPlayer = () => {
-        if (!newPlayer) {
+    const addPlayer = (player: Partial<Player>) => {
+        if (!player?.name) {
             return;
         }
-        if (!newPlayer.key) {
-            newPlayer.key = uuid();
+        if (!player.key) {
+            player.key = uuid();
         }
-        onAddPlayer(newPlayer as Player);
-        setNewPlayer(undefined);
+        onAddPlayer(player as Player);
+        setNewPlayer({});
         Keyboard.dismiss();
     }
 
@@ -36,13 +36,18 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                     placeholder='New Player'
                     returnKeyType="done"
                     clearButtonMode="while-editing"
-                    onSubmitEditing={addPlayer}
-                    onChangeText={(name) => setNewPlayer({ name })} value={newPlayer?.name}/>
+                    onSubmitEditing={() => {
+                        console.log('submit');
+                        addPlayer(newPlayer)
+                    }}
+                    onChangeText={(name) => setNewPlayer({ name })}
+                    value={newPlayer?.name}
+                    />
             </View>
             <View style={sharedStyles.spacedRowNoBorder}>
-                <View style={styles.addButton}>
+                {/* <View style={styles.addButton}>
                     <IconButton icon={'account'} title={'Add Player'} clickHandler={addPlayer} iconSide='left'/>
-                </View>
+                </View> */}
                 {
                     selectablePlayers?.length ?
                     <ModalSelector
@@ -50,14 +55,16 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                         selectTextStyle={{ color: colors.primary }}
                         optionTextStyle={{ color: colors.secondary }}
                         cancelTextStyle={{ color: colors.tertiary }}
-                        selectedKey={newPlayer?.name}
                         data={selectablePlayers}
                         initValue="Select A Player"
                         onChange={(player: Player) => {
+                            console.log('selected player!');
                             setNewPlayer(player);
                         }}
+                        onModalClose={() => addPlayer(newPlayer)}
                         keyExtractor= {player => player.key}
                         labelExtractor= {player => player.name}
+                        selectedKey={newPlayer?.key}
                     />
                     : <></>
                 }
