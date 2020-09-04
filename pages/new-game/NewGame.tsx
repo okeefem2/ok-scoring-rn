@@ -3,7 +3,6 @@ import { StyleSheet, Image, FlatList, Text, View, TextInput } from 'react-native
 import PlayerInput from './PlayerInput'
 import PlayerListItem from './PlayerListItem'
 import { Player } from '../../model/player'
-import Header from '../../components/Header'
 import NavBar from '../../components/NavBar'
 import GameSettings from './GameSettings'
 import { sharedStyles } from '../../styles/shared'
@@ -196,7 +195,7 @@ const NewGame = ({ dbAvailable }: NewGameProps) => {
             }
             <CenterContent>
                 <Image
-                    source={require('../../assets/img/Logomakr-182120-225011/google.png')}
+                    source={require('../../assets/icon.png')}
                     style={styles.logoImage}
                     resizeMode='contain'
                 />
