@@ -1,24 +1,30 @@
-import React, {useState} from 'react'
-import { StyleSheet, Text, View, ScrollView, TextInput, Switch } from 'react-native'
-import SettingsSection from './SettingsSection';
+import React, { useContext } from 'react'
+import { View, ScrollView, TextInput } from 'react-native'
 import Header from '../../components/Header';
 import { sharedStyles } from '../../styles/shared';
-import { colors } from '../../styles/colors';
-import { SetSettingFunction } from './NewGame';
-import { Settings } from '../../model/settings';
 import BodyText from '../../components/BodyText';
 import NavBar from '../../components/NavBar';
+import UnderConstruction from '../../components/UnderConstruction';
+import { gameContext } from '../../state/game.store';
+import { observer } from 'mobx-react';
+import SettingsSection from './components/dumb/SettingsSection';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigation';
 
-interface GameSettingsProps {
-    settings: Settings;
-    setSetting: SetSettingFunction;
-    exitSettings: () => void;
-}
-const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps) => {
+type GameSettingsNavigationProps = {
+    navigation: StackNavigationProp<RootStackParamList, typeof RouteName>
+};
+
+const GameSettings = ({ navigation: { goBack }}: GameSettingsNavigationProps) => {
+
+    const { gameSettings, setSetting } = useContext(gameContext);
 
     return (
         <>
-            <Header title='Settings'/>
+            <NavBar
+                leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: goBack }}
+            />
+            <Header title='Game Settings'/>
             <ScrollView style={sharedStyles.scroll} keyboardShouldPersistTaps='always'>
                 {/* <SettingsSection sectionTitle='Round Settings'>
                     <View style={sharedStyles.rowNoBorder}>
@@ -55,8 +61,9 @@ const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps)
                         <TextInput
                             placeholder='0'
                             onChangeText={(n) => setSetting('startingScore', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 0)}
-                            value={settings?.startingScore?.toString()}
+                            value={gameSettings?.startingScore?.toString()}
                             autoCorrect={false}
+                            returnKeyType="done"
                             keyboardType='number-pad'/>
                     </View>
                     <View style={sharedStyles.spacedRowNoBorder}>
@@ -64,7 +71,8 @@ const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps)
                         <TextInput
                             placeholder='1'
                             onChangeText={(n) => setSetting('defaultScoreStep', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 1)}
-                            value={settings?.defaultScoreStep?.toString()}
+                            returnKeyType="done"
+                            value={gameSettings?.defaultScoreStep?.toString()}
                             autoCorrect={false}
                             keyboardType='number-pad'/>
                     </View>
@@ -80,13 +88,10 @@ const GameSettings = ({ settings, setSetting, exitSettings }: GameSettingsProps)
                     </View> */}
                 </SettingsSection>
             </ScrollView>
-            <NavBar
-                leftButton={{ icon: 'account-group', title: 'Players', clickHandler: exitSettings }}
-            />
+            <UnderConstruction/>
         </>
     );
 }
 
-export default GameSettings;
-
-const styles = StyleSheet.create({});
+export const RouteName = 'GameSettings';
+export default observer(GameSettings);

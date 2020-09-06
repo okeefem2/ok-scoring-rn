@@ -9,7 +9,7 @@ const db = SQLite.openDatabase('ok-scores.db');
 
 type SQLInsertData = [string, any[]];
 
-export const initLocalDb = () => {
+export const initSQLLiteDb = () => {
     return new Promise((resolve, reject) => {
         db.transaction((tx) => {
 
@@ -121,11 +121,11 @@ export const buildGameSettingsInsert = (settings: Settings): SQLInsertData => {
 
 export const buildPlayerScoresInserts = (gameKey: string, scoreHistory: GameScoreHistory): SQLInsertData[] => {
     return Object.keys(scoreHistory).map((playerKey: string) => {
-        return createPlayerScoreInsert(playerKey, gameKey, scoreHistory[playerKey]);
+        return buildPlayerScoreInsert(playerKey, gameKey, scoreHistory[playerKey]);
     });
 }
 
-export const createPlayerScoreInsert = (playerKey: string, gameKey: string, scoreHistory: PlayerScoreHistory): SQLInsertData => {
+export const buildPlayerScoreInsert = (playerKey: string, gameKey: string, scoreHistory: PlayerScoreHistory): SQLInsertData => {
     return [`
         INSERT OR REPLACE INTO playerScoreHistory
             (

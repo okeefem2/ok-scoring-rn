@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { sharedStyles } from '../../styles/shared'
-import { View, TextInput, StyleSheet, Keyboard } from 'react-native'
-import IconButton from '../../components/IconButton';
-import { Player } from '../../model/player';
+import { View, TextInput, Keyboard } from 'react-native'
 import { v4 as uuid } from 'react-native-uuid';
 import ModalSelector from 'react-native-modal-selector';
-import { colors } from '../../styles/colors';
+import { Player } from '../../../../model/player';
+import { sharedStyles } from '../../../../styles/shared';
+import { colors } from '../../../../styles/colors';
 
 interface PlayerInputProps {
     onAddPlayer: (player: Player) => void,
@@ -36,6 +35,7 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                     placeholder='New Player'
                     returnKeyType="done"
                     clearButtonMode="while-editing"
+                    autoCorrect={false}
                     onSubmitEditing={() => {
                         console.log('submit');
                         addPlayer(newPlayer)
@@ -45,9 +45,6 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                     />
             </View>
             <View style={sharedStyles.spacedRowNoBorder}>
-                {/* <View style={styles.addButton}>
-                    <IconButton icon={'account'} title={'Add Player'} clickHandler={addPlayer} iconSide='left'/>
-                </View> */}
                 {
                     selectablePlayers?.length ?
                     <ModalSelector
@@ -74,10 +71,3 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
 }
 
 export default PlayerInput;
-
-const styles = StyleSheet.create({
-    addButton: {
-        margin: 0,
-        padding: 15,
-    },
-});

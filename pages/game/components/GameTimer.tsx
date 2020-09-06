@@ -1,8 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { sharedStyles } from '../../styles/shared';
-import IconButton from '../../components/IconButton';
-import { useTimerDispatch, useTimerState } from '../../providers/timer';
+import { sharedStyles } from '../../../styles/shared';
+import IconButton from '../../../components/IconButton';
+import { useTimerDispatch, useTimerState } from '../../../providers/timer';
 
 const GameTimer = () => {
     const timerState = useTimerState();

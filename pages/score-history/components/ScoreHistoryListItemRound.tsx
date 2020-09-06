@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, TextInput } from 'react-native'
-import { sharedStyles } from '../../styles/shared'
-import IconButton from '../../components/IconButton'
-import { colors } from '../../styles/colors'
+import { sharedStyles } from '../../../styles/shared';
+import IconButton from '../../../components/IconButton';
+import { colors } from '../../../styles/colors';
 
 interface ScoreHistoryListItemRoundProps {
     round: number;

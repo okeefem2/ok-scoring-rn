@@ -1,9 +1,9 @@
 import React, { ReactNode, useState } from 'react'
 import { StyleSheet, Text, View, Switch } from 'react-native'
-import { sharedStyles } from '../../styles/shared';
-import { colors } from '../../styles/colors';
-import { WrapperComponentProps } from '../../model/component';
-import BodyText from '../../components/BodyText';
+import { WrapperComponentProps } from '../../../../model/component';
+import { sharedStyles } from '../../../../styles/shared';
+import BodyText from '../../../../components/BodyText';
+import { colors } from '../../../../styles/colors';
 
 interface SettingsSectionProps extends WrapperComponentProps {
     sectionTitle: string;

@@ -1,50 +1,47 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import { Player } from '../../model/player';
-import { GameScoreHistory, GameState } from '../../model/game-score-history';
+import React, { useContext } from 'react';
+import { Text, FlatList } from 'react-native';
 import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
-import GameHistoryListItem from './GameHistoryListItem';
-import { Settings } from '../../model/settings';
-import ScoreHistory from '../game/ScoreHistory';
-// TODO consolidate players settings and score history into a GameState
-interface GameHistoryProps {
-    games: GameState[];
-    copyGameSetup: (players: Player[], settings: Settings, description: string) => void;
-    continueGame: (game: GameState) => void;
-    back: () => void;
-}
-const GameHistory = ({ games, copyGameSetup, continueGame, back }: GameHistoryProps) => {
-    const [scoreHistory, setShowScoreHistory] = useState<GameState>();
+import GameHistoryListItem from './components/smart/GameHistoryListItem';
+import { gameHistoryContext } from '../../state/game-history.store';
+import { gameContext } from '../../state/game.store';
+import { observer } from 'mobx-react';
+import { RootStackParamList } from '../../navigation';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteName as GameRoute } from '../game/Game';
 
-    if (!!scoreHistory) {
-        return (
-            <ScoreHistory
-                players={scoreHistory.players}
-                scoreHistory={scoreHistory.scoreHistory}
-                exitScoreHistory={() => setShowScoreHistory(undefined)}
-                winningPlayerKey={scoreHistory.winningPlayerKey as string}
-            />
-        );
-    }
+type GameHistoryNavigationProps = {
+    navigation: StackNavigationProp<RootStackParamList, typeof RouteName>
+};
+const GameHistory = ({ navigation }: GameHistoryNavigationProps) => {
+    const {gameHistory} = useContext(gameHistoryContext);
+    const {copyGameSetup, continueGame} = useContext(gameContext);
     return (
         <>
             <NavBar
-                leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: back }}
+                leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: navigation.goBack }}
             />
             <FlatList
                 style={sharedStyles.scroll}
-                data={games}
+                data={gameHistory}
                 ListEmptyComponent={
                     <Text style={[sharedStyles.bodyText, sharedStyles.centeredText, sharedStyles.mt25]}>No Games Played Yet!</Text>
                 }
                 renderItem={
                     (itemData) => <GameHistoryListItem
                                         game={itemData.item}
-                                        copyGameSetup={copyGameSetup}
-                                        continueGame={continueGame}
+                                        copyGameSetup={(...args) => {
+                                            copyGameSetup(...args);
+                                            navigation.goBack();
+                                        }}
+                                        continueGame={(gameState) => {
+                                            continueGame(gameState);
+                                            navigation.reset({
+                                                index: 0,
+                                                routes: [{ name: GameRoute }],
+                                            })
+                                        }}
                                         key={itemData.item.key}
-                                        showScoreHistory={setShowScoreHistory}
                                         />
                 }
             />
@@ -52,6 +49,5 @@ const GameHistory = ({ games, copyGameSetup, continueGame, back }: GameHistoryPr
     );
 }
 
-export default GameHistory
-
-const styles = StyleSheet.create({})
+export const RouteName = 'GameHistory';
+export default observer(GameHistory);

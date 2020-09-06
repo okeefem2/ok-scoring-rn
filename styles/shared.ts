@@ -2,6 +2,16 @@ import { StyleSheet, } from 'react-native';
 import { colors } from './colors';
 
 export const sharedStyles = StyleSheet.create({
+    pageContainer: {
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        paddingTop: 25,
+        backgroundColor: '#fff',
+        flex: 1,
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+    },
     plainRow: {
         paddingTop: 10,
         paddingBottom: 10,
@@ -99,5 +109,9 @@ export const sharedStyles = StyleSheet.create({
     },
     input: {
         width: '100%'
+    },
+    logoImage: {
+        width: '80%',
+        height: 150
     }
 });

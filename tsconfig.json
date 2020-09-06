@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "target": "ES5",
     "jsx": "react-native",
     "lib": ["dom", "esnext"],
     "moduleResolution": "node",

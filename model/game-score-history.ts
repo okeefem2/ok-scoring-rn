@@ -1,26 +1,36 @@
+import { PlayerScoreHistory } from './player-score-history';
 import { Player } from './player';
-import { Settings } from './settings';
-
-export interface PlayerScoreHistory {
-    key: string;
-    playerKey: string;
-    scores: number[];
-    currentScore: number;
-}
 
 export interface GameScoreHistory {
     [TPlayerKey: string]: PlayerScoreHistory;
 }
 
-export interface GameState {
-    key: string;
-    description: string;
-    date: string;
-    duration?: number;
-    winningPlayerKey?: string;
-    settings?: Settings;
-    players: Player[];
-    scoreHistory: GameScoreHistory;
+
+export function determineWinner(gameScoreHistory: GameScoreHistory): string {
+    const winningScore = { playerKey: '', score: 0 };
+
+    Object.keys(gameScoreHistory).forEach((playerKey: string) => {
+        const { currentScore } = gameScoreHistory[playerKey];
+        if (currentScore > winningScore.score) {
+            winningScore.playerKey = playerKey;
+            winningScore.score = currentScore;
+        }
+    });
+    return winningScore.playerKey;
 }
 
-// TODO make scores into a Command pattern with a calculation engine to allow for redoing and time travel
+export function buildInitialHistory(players: Player[], startingScore: number): GameScoreHistory {
+    console.log('setting initial history');
+    return players.reduce(
+        (history, player) => ({
+            ...history,
+            [player.key]: {
+                currentScore: startingScore,
+                winning: false,
+                losing: false,
+                scores: [],
+            }
+        }),
+        {}
+    );
+}

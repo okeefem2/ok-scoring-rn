@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import IconButton from '../../components/IconButton';
-import { Player } from '../../model/player';
-import { PlayerScoreHistory } from '../../model/game-score-history';
-import { sharedStyles } from '../../styles/shared';
+import IconButton from '../../../components/IconButton';
+import { Player } from '../../../model/player';
+import { sharedStyles } from '../../../styles/shared';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { colors } from '../../styles/colors';
+import { colors } from '../../../styles/colors';
 import ScoreHistoryListItemRound from './ScoreHistoryListItemRound';
+import { PlayerScoreHistory } from '../../../model/player-score-history';
 
 interface ScoreHistoryListItemProps {
     player: Player;

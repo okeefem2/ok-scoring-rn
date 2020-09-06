@@ -10,3 +10,14 @@ export function commaSeperateWithEllipsis(values: string[], max = 5): string {
     }
     return values.join(', ')
 }
+
+export function addOrReplaceByKey<T extends { key: string }>(arr: T[], item: T): T[] {
+    const arrCopy = [ ...arr];
+    const existingItemIndex = arrCopy.findIndex(i => i.key === item.key);
+    if (existingItemIndex !== -1) {
+        arrCopy.splice(existingItemIndex, 1, item);
+    } else {
+        arrCopy.push(item);
+    }
+    return arrCopy;
+}

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "OK Scoring",
-    "slug": "ok-scoring-mobile",
+    "description": "A simple but elegant application for keeping track of game scores of all kinds.",
     "version": "1.0.0",
     "sdkVersion": "38.0.0",
     "orientation": "portrait",
@@ -18,13 +18,18 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.okenterprises.okscoring",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.okenterprises.okcoring",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-adaptive.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"

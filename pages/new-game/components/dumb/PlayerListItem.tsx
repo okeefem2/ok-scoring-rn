@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import { Player } from '../../model/player';
-import { sharedStyles } from '../../styles/shared';
-import IconButton from '../../components/IconButton';
-import { colors } from '../../styles/colors';
+import { Player } from '../../../../model/player';
+import { sharedStyles } from '../../../../styles/shared';
+import IconButton from '../../../../components/IconButton';
+import { colors } from '../../../../styles/colors';
 
 interface PlayerListItemProps {
     player: Player,
