@@ -17,7 +17,7 @@ const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteN
         );
     }
     return (
-        <>
+        <View style={sharedStyles.pageContainer}>
             <NavBar
                 rightButton={{ icon: 'window-close', title: 'Close', clickHandler: () => {
                     setGameState(undefined);
@@ -37,7 +37,7 @@ const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteN
                         />
                 }
             />
-        </>
+        </View>
     )
 }
 

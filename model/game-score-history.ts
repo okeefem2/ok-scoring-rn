@@ -7,7 +7,7 @@ export interface GameScoreHistory {
 
 
 export function determineWinner(gameScoreHistory: GameScoreHistory, highScoreWins = true): string {
-    const winningScore = { playerKey: '', score: 0 };
+    const winningScore = { playerKey: '', score: highScoreWins ? -Infinity : Infinity };
 
     Object.keys(gameScoreHistory).forEach((playerKey: string) => {
         const { currentScore } = gameScoreHistory[playerKey];
@@ -16,6 +16,7 @@ export function determineWinner(gameScoreHistory: GameScoreHistory, highScoreWin
             winningScore.score = currentScore;
         }
     });
+    console.log('the winner is', winningScore.playerKey);
     return winningScore.playerKey;
 }
 

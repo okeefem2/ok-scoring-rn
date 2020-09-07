@@ -37,6 +37,7 @@ class GameStore implements GameState {
 
     constructor() {
         reaction(() => this.scoreHistory, (scoreHistory) => {
+            console.log('setting winner');
             this.setWinningPlayerKey(determineWinner(scoreHistory, this.settings.highScoreWins));
         })
     }
@@ -55,7 +56,7 @@ class GameStore implements GameState {
             date: this.date,
             players: this.players,
             settings: this.settings,
-        }
+        };
     }
 
     @action

@@ -16,7 +16,7 @@ const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof Rout
     const { settings, setSetting } = useContext(gameContext);
 
     return (
-        <>
+        <View style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: goBack }}
             />
@@ -95,7 +95,7 @@ const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof Rout
                 </SettingsSection>
             </ScrollView>
             <UnderConstruction/>
-        </>
+        </View>
     );
 }
 

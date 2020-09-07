@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Text, FlatList } from 'react-native';
+import { Text, FlatList, View } from 'react-native';
 import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
 import GameHistoryListItem from './components/dumb/GameHistoryListItem';
@@ -20,7 +20,7 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
         navigation.navigate(GameScoreHistoryModalRoute);
     }
     return (
-        <>
+        <View style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: navigation.goBack }}
             />
@@ -49,7 +49,7 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                                         />
                 }
             />
-        </>
+        </View>
     );
 }
 

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, View } from 'react-native'
 import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
 import GameScoreListItem from './components/GameScoresListItem'
@@ -38,7 +38,7 @@ const GameScores = ({ gameOver, navigation }: GameScoreProps & PageNavigationPro
     // Rename this to game scores or something similar
 
     return (
-        <>
+        <View style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={!gameOver ?
                     { icon: 'chevron-left', title: 'Back', clickHandler: navigation.goBack } :
@@ -64,7 +64,7 @@ const GameScores = ({ gameOver, navigation }: GameScoreProps & PageNavigationPro
                         />
                 }
             />
-        </>
+        </View>
     )
 }
 

@@ -31,6 +31,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const [turnScore, updateTurnScore] = useState(settings?.defaultScoreStep ?? 0); //TODO
 
     return ( activePlayerScore ?
+        <View style={sharedStyles.pageContainer}>
             <View style={styles.gameContainer}>
                     <NavBar
                         leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => {
@@ -117,6 +118,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             updateTurnScore(settings?.defaultScoreStep ?? 0)
                         }} color={colors.primary}/>
                     </View>
+                </View>
             </View>
         : <Text>Loading...</Text>
     );
