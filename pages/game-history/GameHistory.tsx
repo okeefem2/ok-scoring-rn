@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Text, FlatList } from 'react-native';
 import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
-import GameHistoryListItem from './components/smart/GameHistoryListItem';
+import GameHistoryListItem from './components/dumb/GameHistoryListItem';
 import { gameHistoryContext } from '../../state/game-history.store';
 import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
@@ -15,7 +15,7 @@ type GameHistoryNavigationProps = {
 };
 const GameHistory = ({ navigation }: GameHistoryNavigationProps) => {
     const {gameHistory} = useContext(gameHistoryContext);
-    const {copyGameSetup, continueGame} = useContext(gameContext);
+    const {copyGameSetup, initGameState: initNewGame} = useContext(gameContext);
     return (
         <>
             <NavBar
@@ -35,7 +35,7 @@ const GameHistory = ({ navigation }: GameHistoryNavigationProps) => {
                                             navigation.goBack();
                                         }}
                                         continueGame={(gameState) => {
-                                            continueGame(gameState);
+                                            initNewGame(gameState);
                                             navigation.reset({
                                                 index: 0,
                                                 routes: [{ name: GameRoute }],

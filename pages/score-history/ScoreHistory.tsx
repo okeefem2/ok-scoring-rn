@@ -4,7 +4,6 @@ import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
 import ScoreHistoryListItem from './components/ScoreHistoryListItem'
 import { gameContext } from '../../state/game.store'
-import { scoreHistoryContext } from '../../state/score-history.store'
 import { observer } from 'mobx-react'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../navigation'
@@ -21,22 +20,27 @@ type ScoreHistoryNavigationProps = {
 
 const ScoreHistory = ({ gameOver, navigation }: ScoreHistoryProps & ScoreHistoryNavigationProps) => {
 
-    const {gamePlayers, gameState, initNewGame } = useContext(gameContext);
     const {
+        players,
+        gameState,
+        initGameState,
         scoreHistory,
         updateRoundScore,
         removeRound,
         winningPlayerKey
-    } = useContext(scoreHistoryContext);
+    } = useContext(gameContext);
     const { saveGame } = useContext(gameHistoryContext);
 
     const exitToNewGame = () => {
-        initNewGame();
+        initGameState(undefined);
         navigation.reset({
             index: 0,
             routes: [{ name: NewGameRoute }],
         });
     };
+
+    // TODO make a read only view version of this for game history
+    // Rename this to game scores or something similar
 
     return (
         <>
@@ -46,16 +50,13 @@ const ScoreHistory = ({ gameOver, navigation }: ScoreHistoryProps & ScoreHistory
                     { icon: 'delete-outline', title: 'Discard & Quit', clickHandler: exitToNewGame }
                 }
                 rightButton={gameOver ? { icon: 'content-save-outline', title: 'Save & Quit', clickHandler: () => {
-                    saveGame({
-                        ...gameState,
-                        scoreHistory
-                    });
+                    saveGame(gameState);
                     exitToNewGame();
                 } } : undefined}
             />
             <FlatList
                 style={sharedStyles.scroll}
-                data={gamePlayers}
+                data={players}
                 renderItem={
                     (itemData) =>
                         <ScoreHistoryListItem

@@ -9,8 +9,6 @@ class PlayerHistoryStore {
 
     @observable playerHistory: Player[] = [];
 
-    constructor() {}
-
     async savePlayerToDb(player: Player) {
         try {
             await insertPlayer(player);
@@ -19,12 +17,12 @@ class PlayerHistoryStore {
         }
     }
 
-    @action savePlayer(player: Player) {
+    @action savePlayer = (player: Player) => {
         this.playerHistory = addOrReplaceByKey(this.playerHistory, player);
         this.savePlayerToDb(player);
     }
 
-    @action async loadPlayers() {
+    @action loadPlayers = async () => {
         if (localDbStore.dbInitialized) {
             try {
                 const players = await fetchPlayers();

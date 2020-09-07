@@ -7,10 +7,10 @@ import { gameContext } from '../../../../state/game.store'
 import { gameHistoryContext } from '../../../../state/game-history.store'
 
 const NewGameDescription = () => {
-    const {gameDescription, setGameDescription} = useContext(gameContext);
+    const {description, setGameDescription} = useContext(gameContext);
     const { previousGames } =  useContext(gameHistoryContext);
 
-    const [tempDescription, setTempDescription] = useState(gameDescription);
+    const [tempDescription, setTempDescription] = useState(description);
     return (
         <>
             <View style={sharedStyles.spacedRowBordered}>

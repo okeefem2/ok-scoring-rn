@@ -1,119 +1,190 @@
 import { createContext } from 'react';
-import { action, observable, computed } from 'mobx';
+import { action, observable, computed, reaction } from 'mobx';
 import { Settings } from '../model/settings';
 import { v4 as uuid } from 'react-native-uuid';
 import { Player } from '../model/player';
 import { swap } from '../util/array.util';
 import { GameState } from '../model/game-state';
+import { GameScoreHistory, determineWinner, buildInitialHistory } from '../model/game-score-history';
+import { ActivePlayerScore } from '../model/active-player-score';
+import { reCalcCurrentScore } from '../model/player-score-history';
 
-class GameStore {
+class GameStore implements GameState {
+    key = uuid();
+    description = '';
+    date = new Date().toLocaleDateString();
+    duration = 0;
+
+    // Observable props
     @observable
-    gameState?: GameState;
+    winningPlayerKey?: string;
+    @observable
+    settings: Settings = {
+        key: uuid(),
+        // rounds: undefined,
+        startingScore: 0,
+        defaultScoreStep: 1,
+        // scoreIncreases: true
+    };
+    @observable
+    players: Player[] = [];
+    @observable
+    scoreHistory: GameScoreHistory = {};
+
+    @observable
+    activePlayerScore?: ActivePlayerScore;
+
+    constructor() {
+        reaction(() => this.scoreHistory, (scoreHistory) => {
+            this.setWinningPlayerKey(determineWinner(scoreHistory));
+        })
+    }
 
     @computed
     get gameCanStart() {
-        return !!this.gameState?.players?.length && !!this.gameState?.description;
+        return !!this.players.length && !!this.description;
     }
 
     @computed
-    get gameDescription() {
-        return this.gameState?.description;
-    }
-
-    @computed
-    get gamePlayers(): Player[] {
-        return this.gameState?.players ?? [];
-    }
-
-    @computed
-    get gameSettings() {
-        return this.gameState?.settings;
-    }
-
-    @computed
-    get scoreHistory() {
-        return this.gameState?.scoreHistory ?? {};
+    get gameState(): GameState {
+        return {
+            key: this.key,
+            description: this.description,
+            scoreHistory: this.scoreHistory,
+            date: this.date,
+            players: this.players,
+            settings: this.settings,
+        }
     }
 
     @action
-    initNewGame() {
-        this.gameState = {
+    setWinningPlayerKey = (key: string) => {
+        this.winningPlayerKey = key;
+    }
+
+    @action
+    initGameState = (gameState?: GameState) => {
+        this.key = gameState?.key ?? uuid();
+        this.description = gameState?.description ?? '';
+        this.scoreHistory = gameState?.scoreHistory ?? {};
+        this.date = gameState?.date ?? new Date().toLocaleDateString();
+        this.players = gameState?.players ?? [];
+        this.settings = gameState?.settings ?? {
             key: uuid(),
-            description: '',
-            scoreHistory: {},
-            date: new Date().toLocaleDateString(),
-            players: [],
-            settings: {
-                key: uuid(),
-                // rounds: undefined,
-                startingScore: 0,
-                defaultScoreStep: 1,
-                // scoreIncreases: true
-            }
-        }
+            // rounds: undefined;
+            startingScore: 0,
+            defaultScoreStep: 1,
+            // scoreIncreases: true
+        };
     }
 
     @action
-    setGameState(gs: GameState) {
-        this.gameState = gs;
+    setGameDescription = (description: string) => {
+        this.description = description;
     }
 
     @action
-    setGameDescription(description: string) {
-        if (this.gameState) {
-            this.gameState.description = description;
-        }
+    setSetting = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => {
+        this.settings = { ...this.settings, [key]: setting };
     }
 
     @action
-    setSetting<K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) {
-        if (this.gameState?.settings) {
-            this.gameState.settings = { ...this.gameState.settings, [key]: setting };
-        }
-    }
-
-    @action
-    addPlayer(player: Player) {
-        if (player && this.gameState?.players) {
-            this.gameState.players = [...this.gameState.players, player];
+    addPlayer = (player: Player) => {
+        if (player && this.players) {
+            console.log('Adding player!', player);
+            this.players = [...this.players, player];
         }
     };
 
     @action
-    deletePlayer(playerKey: string) {
-        if (playerKey && this.gameState && this.gamePlayers) {
-            this.gameState.players = this.gamePlayers.filter(p => p.key !== playerKey);
+    deletePlayer = (playerKey: string) => {
+        if (playerKey && this.gameState && this.players) {
+            this.players = this.players.filter(p => p.key !== playerKey);
         }
     }
 
     @action
-    shiftPlayer(playerKey: string, direction: 1 | -1) {
-        if (playerKey && this.gameState && this.gamePlayers) {
-            const playerIndex = this.gamePlayers.findIndex(p => p.key === playerKey);
+    shiftPlayer = (playerKey: string, direction: 1 | -1) => {
+        if (playerKey && this.players) {
+            const playerIndex = this.players.findIndex(p => p.key === playerKey);
             let newIndex = playerIndex + direction;
             if (newIndex < 0) {
-                newIndex = this.gamePlayers.length - 1;
-            } else if (newIndex >= this.gamePlayers.length) {
+                newIndex = this.players.length - 1;
+            } else if (newIndex >= this.players.length) {
                 newIndex = 0;
             }
-            this.gameState.players = swap(this.gamePlayers, playerIndex, newIndex);
+            this.players = swap(this.players, playerIndex, newIndex);
         }
     }
 
     @action
-    continueGame(gameState: GameState) {
-        this.gameState = gameState;
-    }
-
-    @action
-    copyGameSetup(players: Player[], settings: Settings, description: string) {
-        this.gameState = {
+    copyGameSetup = (players: Player[], settings: Settings, description: string) => {
+        this.initGameState({
             key: uuid(),
             description,
             scoreHistory: {},
             date: '',
             players,
             settings
+        });
+    }
+
+    @action
+    startGame = () => {
+        if (!Object.keys(this.scoreHistory ?? {}).length) {
+            this.scoreHistory = buildInitialHistory(
+                this.players ?? [],
+                this.settings?.startingScore ?? 0
+            );
+            const players = this.players;
+            this.activePlayerScore = {
+                playerScore: this.scoreHistory[players[0].key],
+                player: players[0],
+                index: 0,
+            }
+        }
+    }
+
+    @action
+    removeRound = (playerKey: string, roundIndex: number) => {
+        if (this.scoreHistory) {
+            this.scoreHistory[playerKey].scores.splice(roundIndex, 1);
+            this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);
+        }
+    };
+
+    @action
+    updateRoundScore = (playerKey: string, roundIndex: number, newScore: number) => {
+        if (this.scoreHistory) {
+            this.scoreHistory[playerKey].scores.splice(roundIndex, 1, newScore);
+            this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);
+        }
+    };
+
+    @action
+    endPlayerTurn = (turnScore: number = 0, gamePlayers: Player[]) => {
+        if (this.scoreHistory && this.activePlayerScore) {
+            const { playerScore, player } = this.activePlayerScore;
+            playerScore.scores.push(turnScore);
+            playerScore.currentScore += (turnScore);
+            this.scoreHistory[player.key] = playerScore;
+            this.changeActivePlayer(1, gamePlayers);
+        }
+    }
+
+    @action
+    changeActivePlayer = (n: 1 | -1, gamePlayers: Player[]) => {
+        if (this.scoreHistory && this.activePlayerScore) {
+            const { index } = this.activePlayerScore;
+            let newIndex = index + n;
+            if (newIndex >= gamePlayers.length) {
+                newIndex = 0;
+            } else if (newIndex < 0) {
+                newIndex = gamePlayers.length - 1;
+            }
+            const player = gamePlayers[newIndex];
+            const playerScore = this.scoreHistory[player.key];
+            this.activePlayerScore = { playerScore, index: newIndex, player, };
         }
     }
 }

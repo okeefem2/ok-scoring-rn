@@ -17,7 +17,7 @@ type GameSettingsNavigationProps = {
 
 const GameSettings = ({ navigation: { goBack }}: GameSettingsNavigationProps) => {
 
-    const { gameSettings, setSetting } = useContext(gameContext);
+    const { settings, setSetting } = useContext(gameContext);
 
     return (
         <>
@@ -61,7 +61,7 @@ const GameSettings = ({ navigation: { goBack }}: GameSettingsNavigationProps) =>
                         <TextInput
                             placeholder='0'
                             onChangeText={(n) => setSetting('startingScore', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 0)}
-                            value={gameSettings?.startingScore?.toString()}
+                            value={settings?.startingScore?.toString()}
                             autoCorrect={false}
                             returnKeyType="done"
                             keyboardType='number-pad'/>
@@ -72,7 +72,7 @@ const GameSettings = ({ navigation: { goBack }}: GameSettingsNavigationProps) =>
                             placeholder='1'
                             onChangeText={(n) => setSetting('defaultScoreStep', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 1)}
                             returnKeyType="done"
-                            value={gameSettings?.defaultScoreStep?.toString()}
+                            value={settings?.defaultScoreStep?.toString()}
                             autoCorrect={false}
                             keyboardType='number-pad'/>
                     </View>

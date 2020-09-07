@@ -9,13 +9,13 @@ import PlayerInput from '../dumb/PlayerInput';
 
 const NewGamePlayers = () => {
     const { playerHistory } = useContext(playerHistoryContext);
-    const { gamePlayers, addPlayer, deletePlayer, shiftPlayer } =  useContext(gameContext);
+    const { players, addPlayer, deletePlayer, shiftPlayer } =  useContext(gameContext);
     return (
         <>
             <PlayerInput onAddPlayer={addPlayer} selectablePlayers={playerHistory}/>
             <FlatList
                 style={sharedStyles.scroll}
-                data={gamePlayers}
+                data={players}
                 ListEmptyComponent={
                     <Text style={[sharedStyles.bodyText, sharedStyles.centeredText, sharedStyles.mt25]}>Add Players To Get Started!</Text>
                 }

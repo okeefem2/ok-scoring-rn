@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Image, View, Text } from 'react-native'
+import { Image, View } from 'react-native'
 import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
 import { Settings } from '../../model/settings'

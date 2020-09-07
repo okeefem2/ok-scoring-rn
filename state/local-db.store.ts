@@ -6,7 +6,7 @@ class LocalDbStore {
     @observable dbInitialized = false;
     @observable dbError = false;
 
-    @action setDbInitialized(initialized: boolean) {
+    @action setDbInitialized = (initialized: boolean) => {
         this.dbInitialized = initialized;
     }
 

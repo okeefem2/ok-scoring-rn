@@ -16,7 +16,7 @@ interface GameHistoryListItemProps {
     continueGame: (game: GameState) => void;
 };
 
-const GameHistoryListItem = ({ game, copyGameSetup, continueGame, }: GameHistoryListItemProps) => {
+const GameHistoryListItem = ({ game, copyGameSetup, continueGame }: GameHistoryListItemProps) => {
     // TODO set state score history and navigate
     const diceIcon = useDiceIcon();
     // get the winning player to the front of the list
@@ -48,9 +48,9 @@ const GameHistoryListItem = ({ game, copyGameSetup, continueGame, }: GameHistory
                 <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
                     <IconButton icon={diceIcon} title='Continue Game' clickHandler={() => continueGame(game)} color={colors.primary}  />
                 </View>
-                <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
+                {/* <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
                     <IconButton icon='book' title='View Scores' clickHandler={() => showScoreHistory(game)} />
-                </View>
+                </View> */}
             </View>
         </View>
     )

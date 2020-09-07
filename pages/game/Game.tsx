@@ -6,34 +6,27 @@ import { sharedStyles } from '../../styles/shared';
 import IconButton from '../../components/IconButton';
 import { colors } from '../../styles/colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTimerState } from '../../providers/timer';
-import { GameState } from '../../model/game-state';
 import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
-import { scoreHistoryContext } from '../../state/score-history.store';
 
 const Game = () => {
-    const {timerValue} = useTimerState();
+    // const {timerValue} = useTimerState();
     const {
-        gameState,
-        gameSettings,
-        gamePlayers
-    } = useContext(gameContext);
-
-    const {
+        settings,
+        players,
         startGame,
         activePlayerScore,
-        winningPlayerKey: winngPlayerKey,
+        winningPlayerKey,
         changeActivePlayer,
         endPlayerTurn,
-    } = useContext(scoreHistoryContext);
+    } = useContext(gameContext);
 
     let turnScoreInputRef: TextInput;
     useEffect(() => {
-        startGame(gameState as GameState);
+        startGame();
     }, []);
 
-    const [turnScore, updateTurnScore] = useState(gameSettings?.defaultScoreStep ?? 0); //TODO
+    const [turnScore, updateTurnScore] = useState(settings?.defaultScoreStep ?? 0); //TODO
 
     return ( activePlayerScore ?
             <View style={styles.gameContainer}>
@@ -43,19 +36,19 @@ const Game = () => {
                     />
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
                         {
-                            winngPlayerKey === activePlayerScore.player.key &&
+                            winningPlayerKey === activePlayerScore.player.key &&
                                 <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
                         }
                     </View>
-                    <View style={[sharedStyles.spacedEvenlyNoBorder, winngPlayerKey !== activePlayerScore.player.key && sharedStyles.mt25 ]}>
+                    <View style={[sharedStyles.spacedEvenlyNoBorder, winningPlayerKey !== activePlayerScore.player.key && sharedStyles.mt25 ]}>
                         <View style={[styles.buttonRowItem]}>
-                            <IconButton icon='chevron-left' clickHandler={() => changeActivePlayer(-1, gamePlayers)} width={'100%'} size={34} />
+                            <IconButton icon='chevron-left' clickHandler={() => changeActivePlayer(-1, players)} width={'100%'} size={34} />
                         </View>
                         <View style={[styles.buttonRowItem]}>
                             <Header title={activePlayerScore.player.name}/>
                         </View>
                         <View style={[styles.buttonRowItem]}>
-                        <IconButton icon='chevron-right' clickHandler={() => changeActivePlayer(1, gamePlayers)} width={'100%'} size={34} />
+                        <IconButton icon='chevron-right' clickHandler={() => changeActivePlayer(1, players)} width={'100%'} size={34} />
                         </View>
                     </View>
                     {/* <View style={sharedStyles.spacedEvenlyNoBorder}>
@@ -114,8 +107,8 @@ const Game = () => {
                     </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
                         <Button title={`End Turn ${activePlayerScore.playerScore.scores.length + 1}`} onPress={() => {
-                            endPlayerTurn(turnScore, gamePlayers)
-                            updateTurnScore(gameSettings?.defaultScoreStep ?? 0)
+                            endPlayerTurn(turnScore, players)
+                            updateTurnScore(settings?.defaultScoreStep ?? 0)
                         }} color={colors.primary}/>
                     </View>
             </View>
