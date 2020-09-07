@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, ScrollView, TextInput } from 'react-native'
+import { View, ScrollView, TextInput, Switch } from 'react-native'
 import Header from '../../components/Header';
 import { sharedStyles } from '../../styles/shared';
 import BodyText from '../../components/BodyText';
@@ -8,14 +8,10 @@ import UnderConstruction from '../../components/UnderConstruction';
 import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
 import SettingsSection from './components/dumb/SettingsSection';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation';
+import { PageNavigationProps } from '../../navigation';
+import { colors } from '../../styles/colors';
 
-type GameSettingsNavigationProps = {
-    navigation: StackNavigationProp<RootStackParamList, typeof RouteName>
-};
-
-const GameSettings = ({ navigation: { goBack }}: GameSettingsNavigationProps) => {
+const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof RouteName>) => {
 
     const { settings, setSetting } = useContext(gameContext);
 
@@ -75,6 +71,16 @@ const GameSettings = ({ navigation: { goBack }}: GameSettingsNavigationProps) =>
                             value={settings?.defaultScoreStep?.toString()}
                             autoCorrect={false}
                             keyboardType='number-pad'/>
+                    </View>
+                    <View style={sharedStyles.spacedRowNoBorder}>
+                        <BodyText>High Score Wins</BodyText>
+                        <Switch
+                            trackColor={{ false: colors.greyMid, true: colors.primaryLight }}
+                            thumbColor={settings?.highScoreWins ? colors.primaryLight : colors.greyLight}
+                            ios_backgroundColor={colors.greyMid}
+                            onValueChange={(n: boolean) => setSetting('highScoreWins', n)}
+                            value={settings?.highScoreWins}
+                        />
                     </View>
                     {/* <View style={sharedStyles.rowNoBorder}>
                         <BodyText>Score Increases By Default</BodyText>

@@ -13,16 +13,11 @@ import { observer } from 'mobx-react'
 import { RouteName as GameHistoryRoute } from '../game-history/GameHistory';
 import { RouteName as GameRoute } from '../game/Game';
 import { RouteName as GameSettingsRoute } from '../game-settings/GameSettings';
-import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackParamList } from '../../navigation'
-
-type NewGameNavigationProps = {
-    navigation: StackNavigationProp<RootStackParamList, typeof RouteName>
-};
+import { PageNavigationProps } from '../../navigation'
 
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
 
-const NewGame = ({ navigation }: NewGameNavigationProps) => {
+const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     console.log('New game!');
     const { dbInitialized, dbError } = useContext(localDbContext);
     const { gameCanStart } =  useContext(gameContext);

@@ -6,16 +6,19 @@ import GameHistoryListItem from './components/dumb/GameHistoryListItem';
 import { gameHistoryContext } from '../../state/game-history.store';
 import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
-import { RootStackParamList } from '../../navigation';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { PageNavigationProps } from '../../navigation';
 import { RouteName as GameRoute } from '../game/Game';
+import { RouteName as GameScoreHistoryModalRoute } from '../game-score-history-modal/GameScoreHistoryModal';
+import { GameState } from '../../model/game-state';
 
-type GameHistoryNavigationProps = {
-    navigation: StackNavigationProp<RootStackParamList, typeof RouteName>
-};
-const GameHistory = ({ navigation }: GameHistoryNavigationProps) => {
-    const {gameHistory} = useContext(gameHistoryContext);
+
+const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
+    const {gameHistory, setGameState} = useContext(gameHistoryContext);
     const {copyGameSetup, initGameState: initNewGame} = useContext(gameContext);
+    const showGameState = (gameState: GameState) => {
+        setGameState(gameState);
+        navigation.navigate(GameScoreHistoryModalRoute);
+    }
     return (
         <>
             <NavBar
@@ -42,6 +45,7 @@ const GameHistory = ({ navigation }: GameHistoryNavigationProps) => {
                                             })
                                         }}
                                         key={itemData.item.key}
+                                        showGameState={showGameState}
                                         />
                 }
             />

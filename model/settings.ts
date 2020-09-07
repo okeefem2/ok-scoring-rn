@@ -5,6 +5,7 @@ export interface Settings {
     // roundTimeLimit?: number;
     startingScore?: number;
     defaultScoreStep?: number;
+    highScoreWins: boolean
     // scoreIncreases?: boolean;
     // par?: number;
 }

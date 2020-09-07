@@ -5,17 +5,17 @@ import { Player } from '../../../model/player';
 import { sharedStyles } from '../../../styles/shared';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../../../styles/colors';
-import ScoreHistoryListItemRound from './ScoreHistoryListItemRound';
+import GameScoreListItemRound from './GameScoreListItemRound';
 import { PlayerScoreHistory } from '../../../model/player-score-history';
 
-interface ScoreHistoryListItemProps {
+interface GameScoreListItemProps {
     player: Player;
     playerScoreHistory: PlayerScoreHistory;
     updateRoundScore?: (playerKey: string, roundIndex: number, newScore: number) => void;
     removeRound?: (playerKey: string, roundIndex: number) => void;
     winning: boolean;
 }
-const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, removeRound, winning }: ScoreHistoryListItemProps) => {
+const GameScoreListItem = ({player, playerScoreHistory, updateRoundScore, removeRound, winning }: GameScoreListItemProps) => {
     return (
         <View style={sharedStyles.spacedRowBordered} key={player.key}>
             <View style={sharedStyles.column}>
@@ -34,7 +34,7 @@ const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, rem
                 <View style={styles.roundsRow}>
                     {
                         playerScoreHistory.scores.map((s, i) =>
-                            <ScoreHistoryListItemRound
+                            <GameScoreListItemRound
                                 key={`${player.key} ${s} ${i + 1}`}
                                 score={s}
                                 round={i + 1}
@@ -49,7 +49,7 @@ const ScoreHistoryListItem = ({player, playerScoreHistory, updateRoundScore, rem
     );
 }
 
-export default ScoreHistoryListItem;
+export default GameScoreListItem;
 
 const styles = StyleSheet.create({
     roundsRow: {

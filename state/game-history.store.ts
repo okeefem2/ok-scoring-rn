@@ -9,7 +9,7 @@ import { GameScoreHistory } from '../model/game-score-history';
 class GameHistoryStore {
 
     @observable gameHistory: GameState[] = [];
-    @observable scoreHistory?: GameScoreHistory;
+    @observable gameState?: GameState;
 
     @computed
     get previousGames() {
@@ -42,8 +42,8 @@ class GameHistoryStore {
         }
     }
 
-    @action setScoreHistory = (scoreHistory: GameScoreHistory) => {
-        this.scoreHistory = scoreHistory;
+    @action setGameState = (gameState?: GameState) => {
+        this.gameState = gameState;
     }
 }
 

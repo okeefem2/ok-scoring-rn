@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import { observer } from 'mobx-react';
 import NewGame, { RouteName as NewGameRoute } from './pages/new-game/NewGame';
 import Game, { RouteName as GameRoute } from './pages/game/Game';
 import GameHistory, { RouteName as GameHistoryRoute } from './pages/game-history/GameHistory';
-import ScoreHistory, { RouteName as ScoreHistoryRoute } from './pages/score-history/ScoreHistory';
+import GameScores, { RouteName as GameScoresRoute } from './pages/game-scores/GameScores';
 import GameSettings, { RouteName as GameSettingsRoute } from './pages/game-settings/GameSettings';
 import CenterContent from './components/CenterContent';
 import { localDbContext } from './state/local-db.store';
@@ -71,7 +71,7 @@ function App() {
           <Stack.Screen name={NewGameRoute} component={NewGame}/>
           <Stack.Screen name={GameRoute} component={Game}/>
           <Stack.Screen name={GameHistoryRoute} component={GameHistory}/>
-          <Stack.Screen name={ScoreHistoryRoute} component={ScoreHistory}/>
+          <Stack.Screen name={GameScoresRoute} component={GameScores}/>
           <Stack.Screen name={GameSettingsRoute} component={GameSettings}/>
         </Stack.Navigator>
       </NavigationContainer>

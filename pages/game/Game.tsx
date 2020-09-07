@@ -8,8 +8,10 @@ import { colors } from '../../styles/colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
+import { PageNavigationProps } from '../../navigation';
+import { RouteName as GameScoresRoute } from '../game-scores/GameScores';
 
-const Game = () => {
+const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     // const {timerValue} = useTimerState();
     const {
         settings,
@@ -31,8 +33,12 @@ const Game = () => {
     return ( activePlayerScore ?
             <View style={styles.gameContainer}>
                     <NavBar
-                        leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => {}}}
-                        rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => {}}}
+                        leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => {
+                            navigation.navigate(GameScoresRoute, { gameOver: false });
+                        }}}
+                        rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => {
+                            navigation.navigate(GameScoresRoute, { gameOver: true });
+                        }}}
                     />
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
                         {

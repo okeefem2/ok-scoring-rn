@@ -24,6 +24,7 @@ class GameStore implements GameState {
         // rounds: undefined,
         startingScore: 0,
         defaultScoreStep: 1,
+        highScoreWins: true,
         // scoreIncreases: true
     };
     @observable
@@ -36,7 +37,7 @@ class GameStore implements GameState {
 
     constructor() {
         reaction(() => this.scoreHistory, (scoreHistory) => {
-            this.setWinningPlayerKey(determineWinner(scoreHistory));
+            this.setWinningPlayerKey(determineWinner(scoreHistory, this.settings.highScoreWins));
         })
     }
 
@@ -74,6 +75,7 @@ class GameStore implements GameState {
             // rounds: undefined;
             startingScore: 0,
             defaultScoreStep: 1,
+            highScoreWins: true,
             // scoreIncreases: true
         };
     }

@@ -6,12 +6,12 @@ export interface GameScoreHistory {
 }
 
 
-export function determineWinner(gameScoreHistory: GameScoreHistory): string {
+export function determineWinner(gameScoreHistory: GameScoreHistory, highScoreWins = true): string {
     const winningScore = { playerKey: '', score: 0 };
 
     Object.keys(gameScoreHistory).forEach((playerKey: string) => {
         const { currentScore } = gameScoreHistory[playerKey];
-        if (currentScore > winningScore.score) {
+        if ((highScoreWins && currentScore > winningScore.score) || (!highScoreWins && currentScore < winningScore.score)) {
             winningScore.playerKey = playerKey;
             winningScore.score = currentScore;
         }

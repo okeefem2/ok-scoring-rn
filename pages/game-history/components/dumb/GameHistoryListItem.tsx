@@ -9,14 +9,16 @@ import { Player } from '../../../../model/player';
 import { Settings } from '../../../../model/settings';
 import { useDiceIcon } from '../../../../hooks/useDiceIcon';
 import { GameState } from '../../../../model/game-state';
+import { GameScoreHistory } from '../../../../model/game-score-history';
 
 interface GameHistoryListItemProps {
     game: GameState;
     copyGameSetup: (players: Player[], settings: Settings, description: string) => void;
     continueGame: (game: GameState) => void;
+    showGameState: (gameState: GameState) => void;
 };
 
-const GameHistoryListItem = ({ game, copyGameSetup, continueGame }: GameHistoryListItemProps) => {
+const GameHistoryListItem = ({ game, copyGameSetup, continueGame, showGameState }: GameHistoryListItemProps) => {
     // TODO set state score history and navigate
     const diceIcon = useDiceIcon();
     // get the winning player to the front of the list
@@ -48,9 +50,9 @@ const GameHistoryListItem = ({ game, copyGameSetup, continueGame }: GameHistoryL
                 <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
                     <IconButton icon={diceIcon} title='Continue Game' clickHandler={() => continueGame(game)} color={colors.primary}  />
                 </View>
-                {/* <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
-                    <IconButton icon='book' title='View Scores' clickHandler={() => showScoreHistory(game)} />
-                </View> */}
+                <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
+                    <IconButton icon='book' title='View Scores' clickHandler={() => showGameState(game)} />
+                </View>
             </View>
         </View>
     )

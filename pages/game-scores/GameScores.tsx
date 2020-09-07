@@ -2,23 +2,18 @@ import React, { useContext } from 'react'
 import { FlatList } from 'react-native'
 import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
-import ScoreHistoryListItem from './components/ScoreHistoryListItem'
+import GameScoreListItem from './components/GameScoresListItem'
 import { gameContext } from '../../state/game.store'
 import { observer } from 'mobx-react'
-import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackParamList } from '../../navigation'
+import { PageNavigationProps } from '../../navigation'
 import { RouteName as NewGameRoute } from '../new-game/NewGame';
 import { gameHistoryContext } from '../../state/game-history.store'
 
-export type ScoreHistoryProps = {
+export type GameScoreProps = {
     gameOver?: boolean;
 }
 
-type ScoreHistoryNavigationProps = {
-    navigation: StackNavigationProp<RootStackParamList, typeof RouteName>
-};
-
-const ScoreHistory = ({ gameOver, navigation }: ScoreHistoryProps & ScoreHistoryNavigationProps) => {
+const GameScores = ({ gameOver, navigation }: GameScoreProps & PageNavigationProps<typeof RouteName>) => {
 
     const {
         players,
@@ -59,7 +54,7 @@ const ScoreHistory = ({ gameOver, navigation }: ScoreHistoryProps & ScoreHistory
                 data={players}
                 renderItem={
                     (itemData) =>
-                        <ScoreHistoryListItem
+                        <GameScoreListItem
                             key={itemData.item.key}
                             player={itemData.item}
                             playerScoreHistory={scoreHistory[itemData.item.key]}
@@ -73,5 +68,5 @@ const ScoreHistory = ({ gameOver, navigation }: ScoreHistoryProps & ScoreHistory
     )
 }
 
-export const RouteName = 'ScoreHistory';
-export default observer(ScoreHistory)
+export const RouteName = 'GameScore';
+export default observer(GameScores)

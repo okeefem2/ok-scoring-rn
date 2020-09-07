@@ -10,7 +10,7 @@ interface ScoreHistoryListItemRoundProps {
     updateRoundScore: ((newScore: number) => void) | undefined
     removeRound: (() => void) | undefined
 }
-const ScoreHistoryListItemRound = ({ score, round, updateRoundScore, removeRound }: ScoreHistoryListItemRoundProps) => {
+const GameScoreListItemRound = ({ score, round, updateRoundScore, removeRound }: ScoreHistoryListItemRoundProps) => {
     const [editingPoints, setEditingPoints] = useState(false);
     const [newScoreValue, setNewScoreValue] = useState<number | undefined>(score);
 
@@ -53,7 +53,7 @@ const ScoreHistoryListItemRound = ({ score, round, updateRoundScore, removeRound
     )
 }
 
-export default ScoreHistoryListItemRound
+export default GameScoreListItemRound
 
 const styles = StyleSheet.create({
     scoreInput: {
