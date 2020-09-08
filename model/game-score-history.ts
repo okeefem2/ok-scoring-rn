@@ -5,13 +5,17 @@ export interface GameScoreHistory {
     [TPlayerKey: string]: PlayerScoreHistory;
 }
 
+function scoreBeatsWinner(winningScore: number, score: number, highScoreWins: boolean): boolean {
+    return (highScoreWins && score > winningScore) || (!highScoreWins && score < winningScore)
+}
+
 
 export function determineWinner(gameScoreHistory: GameScoreHistory, highScoreWins = true): string {
     const winningScore = { playerKey: '', score: highScoreWins ? -Infinity : Infinity };
 
     Object.keys(gameScoreHistory).forEach((playerKey: string) => {
-        const { currentScore } = gameScoreHistory[playerKey];
-        if ((highScoreWins && currentScore > winningScore.score) || (!highScoreWins && currentScore < winningScore.score)) {
+        const { currentScore, scores } = gameScoreHistory[playerKey];
+        if (scores.length && scoreBeatsWinner(winningScore.score, currentScore, highScoreWins)) {
             winningScore.playerKey = playerKey;
             winningScore.score = currentScore;
         }
