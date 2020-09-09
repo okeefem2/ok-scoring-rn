@@ -4,7 +4,6 @@ import { localDbStore } from './local-db.store';
 import { fetchGameStates, insertGame } from '../db/db';
 import { addOrReplaceByKey } from '../util/array.util';
 import { GameState } from '../model/game-state';
-import { GameScoreHistory } from '../model/game-score-history';
 
 class GameHistoryStore {
 

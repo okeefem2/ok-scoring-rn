@@ -6,6 +6,7 @@ import { RouteName as GameScoresRoute } from './pages/game-scores/GameScores';
 import { RouteName as GameSettingsRoute } from './pages/game-settings/GameSettings';
 import { RouteName as GameScoreHistoryModal } from './pages/game-score-history-modal/GameScoreHistoryModal';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
 export type RootStackParamList = {
     [NewGameRoute]: undefined,
@@ -17,5 +18,6 @@ export type RootStackParamList = {
 }
 
 export type PageNavigationProps<TRouteName extends keyof RootStackParamList> = {
+    route: RouteProp<RootStackParamList, TRouteName>,
     navigation: StackNavigationProp<RootStackParamList, TRouteName>
 };

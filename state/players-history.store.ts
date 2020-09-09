@@ -17,9 +17,11 @@ class PlayerHistoryStore {
         }
     }
 
-    @action savePlayer = (player: Player) => {
-        this.playerHistory = addOrReplaceByKey(this.playerHistory, player);
-        this.savePlayerToDb(player);
+    @action savePlayers = (players: Player[]) => {
+        this.playerHistory = players.reduce((newPlayers: Player[], player) => {
+            this.savePlayerToDb(player);
+            return addOrReplaceByKey(newPlayers, player);
+        }, []);
     }
 
     @action loadPlayers = async () => {

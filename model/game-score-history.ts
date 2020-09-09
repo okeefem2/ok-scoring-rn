@@ -15,6 +15,7 @@ export function determineWinner(gameScoreHistory: GameScoreHistory, highScoreWin
 
     Object.keys(gameScoreHistory).forEach((playerKey: string) => {
         const { currentScore, scores } = gameScoreHistory[playerKey];
+        console.log(`Checking if ${playerKey} is the winner`, currentScore, scores);
         if (scores.length && scoreBeatsWinner(winningScore.score, currentScore, highScoreWins)) {
             winningScore.playerKey = playerKey;
             winningScore.score = currentScore;

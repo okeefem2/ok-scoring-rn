@@ -10,6 +10,7 @@ import Game, { RouteName as GameRoute } from './pages/game/Game';
 import GameHistory, { RouteName as GameHistoryRoute } from './pages/game-history/GameHistory';
 import GameScores, { RouteName as GameScoresRoute } from './pages/game-scores/GameScores';
 import GameSettings, { RouteName as GameSettingsRoute } from './pages/game-settings/GameSettings';
+import GameScoreHistoryModal, { RouteName as GameScoreHistoryModalRoute }  from './pages/game-score-history-modal/GameScoreHistoryModal';
 import CenterContent from './components/CenterContent';
 import { localDbContext } from './state/local-db.store';
 import { sharedStyles } from './styles/shared';
@@ -35,7 +36,6 @@ function App() {
   useEffect(() => {
     if (fontsLoaded) {
       initDbAndData();
-
     }
     return () => {
       // TODO clean up db?
@@ -73,6 +73,7 @@ function App() {
           <Stack.Screen name={GameHistoryRoute} component={GameHistory}/>
           <Stack.Screen name={GameScoresRoute} component={GameScores}/>
           <Stack.Screen name={GameSettingsRoute} component={GameSettings}/>
+          <Stack.Screen name={GameScoreHistoryModalRoute} component={GameScoreHistoryModal}/>
         </Stack.Navigator>
       </NavigationContainer>
   );

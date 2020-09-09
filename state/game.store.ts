@@ -11,11 +11,12 @@ import { reCalcCurrentScore } from '../model/player-score-history';
 
 class GameStore implements GameState {
     key = uuid();
-    description = '';
     date = new Date().toLocaleDateString();
     duration = 0;
 
     // Observable props
+    @observable
+    description = '';
     @observable
     winningPlayerKey?: string;
     @observable
@@ -36,9 +37,9 @@ class GameStore implements GameState {
     activePlayerScore?: ActivePlayerScore;
 
     constructor() {
-        reaction(() => this.scoreHistory, (scoreHistory) => {
+        reaction(() => this.activePlayerScore, () => {
             console.log('setting winner');
-            this.setWinningPlayerKey(determineWinner(scoreHistory, this.settings.highScoreWins));
+            this.setWinningPlayerKey(determineWinner(this.scoreHistory, this.settings.highScoreWins));
         });
     }
 

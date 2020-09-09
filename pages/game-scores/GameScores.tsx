@@ -8,13 +8,13 @@ import { observer } from 'mobx-react'
 import { PageNavigationProps } from '../../navigation'
 import { RouteName as NewGameRoute } from '../new-game/NewGame';
 import { gameHistoryContext } from '../../state/game-history.store'
+import { playerHistoryContext } from '../../state/players-history.store'
 
 export type GameScoreProps = {
     gameOver?: boolean;
 }
 
-const GameScores = ({ gameOver, navigation }: GameScoreProps & PageNavigationProps<typeof RouteName>) => {
-
+const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigationProps<typeof RouteName>) => {
     const {
         players,
         gameState,
@@ -25,6 +25,7 @@ const GameScores = ({ gameOver, navigation }: GameScoreProps & PageNavigationPro
         winningPlayerKey
     } = useContext(gameContext);
     const { saveGame } = useContext(gameHistoryContext);
+    const { savePlayers } = useContext(playerHistoryContext);
 
     const exitToNewGame = () => {
         initGameState(undefined);
@@ -41,10 +42,11 @@ const GameScores = ({ gameOver, navigation }: GameScoreProps & PageNavigationPro
         <View style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={!gameOver ?
-                    { icon: 'chevron-left', title: 'Back', clickHandler: navigation.goBack } :
+                    { icon: 'chevron-left', title: 'Back', clickHandler: navigation.pop } :
                     { icon: 'delete-outline', title: 'Discard & Quit', clickHandler: exitToNewGame }
                 }
                 rightButton={gameOver ? { icon: 'content-save-outline', title: 'Save & Quit', clickHandler: () => {
+                    savePlayers(gameState.players);
                     saveGame(gameState);
                     exitToNewGame();
                 } } : undefined}

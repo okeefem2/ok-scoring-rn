@@ -7,8 +7,11 @@ import { sharedStyles } from '../../styles/shared';
 import GameScoreListItem from '../game-scores/components/GameScoresListItem';
 import { gameHistoryContext } from '../../state/game-history.store';
 
+// TODO make this an actual modal
+
 const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const { gameState, setGameState } = useContext(gameHistoryContext);
+
     if (!gameState) {
         return (
             <View>
@@ -19,10 +22,14 @@ const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteN
     return (
         <View style={sharedStyles.pageContainer}>
             <NavBar
-                rightButton={{ icon: 'window-close', title: 'Close', clickHandler: () => {
+                leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: () => {
                     setGameState(undefined);
                     navigation.pop();
                 }}}
+                // rightButton={{ icon: 'window-close', title: 'Close', clickHandler: () => {
+                //     setGameState(undefined);
+                //     navigation.pop();
+                // }}}
             />
             <FlatList
                 style={sharedStyles.scroll}
