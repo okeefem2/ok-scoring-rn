@@ -10,6 +10,7 @@ import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
 import { PageNavigationProps } from '../../navigation';
 import { RouteName as GameScoresRoute } from '../game-scores/GameScores';
+import CenterContent from '../../components/CenterContent';
 
 const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     // const {timerValue} = useTimerState();
@@ -55,7 +56,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             <Header title={activePlayerScore.player.name}/>
                         </View>
                         <View style={[styles.buttonRowItem]}>
-                        <IconButton icon='chevron-right' clickHandler={() => changeActivePlayer(1, players)} width={'100%'} size={34} />
+                            <IconButton icon='chevron-right' clickHandler={() => changeActivePlayer(1, players)} width={'100%'} size={34} />
                         </View>
                     </View>
                     {/* <View style={sharedStyles.spacedEvenlyNoBorder}>
@@ -78,38 +79,45 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             </Text>
                         </View>
 
-                        <View style={styles.middleTextOuter}>
+                        <View style={[styles.middleTextOuter]}>
+
                             <Text style={[styles.turnDetails]}>
                                 { !!turnScore ? (turnScore >= 0 ? `+${turnScore}` : turnScore) : '+0'} points
                             </Text>
                         </View>
                     </View>
                     <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt25 ]}>
-                        <View style={[styles.buttonRowItem]}>
-                            <IconButton icon='minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} disabled={!turnScore || turnScore < 0} width={'100%'} size={34}/>
-                        </View>
-                        <View style={[styles.buttonRowItem]}>
-                            <TextInput
-                                style={[styles.scoreInput]}
-                                onChangeText={(n) => {
-                                    console.log('changed', n)
-                                    if (!!n || n === '0') {
-                                        updateTurnScore(parseInt(n.replace(/[^0-9]/g, ''), 10));
-                                    }
-                                }}
-                                placeholder='Turn Score'
-                                value={turnScore?.toString()}
-                                clearTextOnFocus={true}
-                                keyboardType='number-pad'
-                                returnKeyType="done"
-                                ref={(input: TextInput) => { turnScoreInputRef = input; }}
-                            />
-                            <View style={sharedStyles.mt25}>
-                                <IconButton icon='dialpad' clickHandler={() => turnScoreInputRef.focus()} size={34} />
+                            <View style={[styles.buttonRowItem]}>
+                                <IconButton icon='plus-minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} size={34}/>
                             </View>
-                        </View>
+                            <View style={[ styles.buttonRowItem ]}>
+                                {/* <View style={[sharedStyles.plainRow]}> */}
+                                    {/* <View style={[sharedStyles.mr5]}>
+                                        <IconButton icon='plus-minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} size={34}/>
+                                    </View> */}
+                                    <TextInput
+                                        style={[styles.scoreInput]}
+                                        onChangeText={(n) => {
+                                            console.log('changed', n)
+                                            if (!!n || n === '0') {
+                                                updateTurnScore(parseInt(n.replace(/[^0-9]/g, ''), 10));
+                                            }
+                                        }}
+                                        placeholder='Turn Score'
+                                        value={turnScore?.toString()}
+                                        clearTextOnFocus={true}
+                                        keyboardType='number-pad'
+                                        returnKeyType="done"
+                                        ref={(input: TextInput) => { turnScoreInputRef = input; }}
+                                    />
+                                {/* </View> */}
+                                <View style={sharedStyles.mt25}>
+                                    <IconButton icon='dialpad' clickHandler={() => turnScoreInputRef.focus()} size={34} />
+                                </View>
+                            </View>
+
                         <View style={[styles.buttonRowItem]}>
-                            <IconButton icon='plus' clickHandler={() => turnScore && updateTurnScore(Math.abs(turnScore))} disabled={!turnScore || turnScore > 0} width={'100%'} size={34}/>
+                            {/* <IconButton icon='plus' clickHandler={() => turnScore && updateTurnScore(Math.abs(turnScore))} disabled={!turnScore || turnScore > 0} width={'100%'} size={34}/> */}
                         </View>
                     </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
@@ -163,6 +171,9 @@ const styles = StyleSheet.create({
     middleTextOuter: {
         flex: 2,
     },
+    scoreInputContainer: {
+        width: '40%',
+    }
 });
 
 export const RouteName = 'Game';

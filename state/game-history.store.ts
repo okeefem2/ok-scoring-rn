@@ -11,8 +11,8 @@ class GameHistoryStore {
     @observable gameState?: GameState;
 
     @computed
-    get previousGames() {
-        return Array.from(new Set(this.gameHistory.map(g => g.description)));
+    get previousGamesSelectable(): { key: number, label: string }[] {
+        return Array.from(new Set(this.gameHistory.map(g => g.description))).map((d, i) => ({ label: d, key: i }));
     }
 
     async saveGameToDb(gameState: GameState) {

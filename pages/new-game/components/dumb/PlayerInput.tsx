@@ -54,9 +54,9 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                         cancelTextStyle={{ color: colors.tertiary }}
                         data={selectablePlayers}
                         initValue="Select A Player"
-                        onChange={(player: Player) => {
-                            console.log('selected player!');
-                            setNewPlayer(player);
+                        onChange={setNewPlayer}
+                        onModalOpen={() => {
+                            Keyboard.dismiss();
                         }}
                         onModalClose={() => addPlayer(newPlayer)}
                         keyExtractor= {player => player.key}

@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { View, TextInput } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { View, TextInput, Keyboard } from 'react-native'
 import { sharedStyles } from '../../../../styles/shared'
 import ModalSelector from 'react-native-modal-selector'
 import { colors } from '../../../../styles/colors'
@@ -8,13 +8,10 @@ import { gameHistoryContext } from '../../../../state/game-history.store'
 import { observer } from 'mobx-react'
 
 const NewGameDescription = () => {
-    const {description, setGameDescription} = useContext(gameContext);
-    const { previousGames } =  useContext(gameHistoryContext);
+    const {setGameDescription} = useContext(gameContext);
+    const { previousGamesSelectable } =  useContext(gameHistoryContext);
 
-    const [tempDescription, setTempDescription] = useState(description);
-    useEffect(() => {
-        setTempDescription(description);
-    }, [description]);
+    const [tempDescription, setTempDescription] = useState('');
 
     return (
         <>
@@ -25,20 +22,36 @@ const NewGameDescription = () => {
                     returnKeyType="done"
                     clearButtonMode="while-editing"
                     autoCorrect={false}
-                    onEndEditing={() => setGameDescription(tempDescription as string)}
-                    onChangeText={(description) => setTempDescription(description)} value={tempDescription}/>
+                    onEndEditing={() => {
+                        setGameDescription(tempDescription as string);
+                        setTempDescription('');
+                    }}
+                    onChangeText={(description) => setTempDescription(description)} value={tempDescription}
+                />
             </View>
             <View style={sharedStyles.spacedRowNoBorder}>
                 {
-                    previousGames?.length ?
+                    previousGamesSelectable?.length ?
                     <ModalSelector
                         initValueTextStyle={{ color: colors.primary }}
                         selectTextStyle={{ color: colors.primary }}
                         optionTextStyle={{ color: colors.secondary }}
                         cancelTextStyle={{ color: colors.tertiary }}
-                        data={previousGames.map((g, i) => ({ key: i, label: g}))}
+                        data={previousGamesSelectable}
                         initValue="Previous Games"
-                        onChange={(g) => setGameDescription(g.label)}
+                        selectedKey={tempDescription}
+                        onModalOpen={() => {
+                            Keyboard.dismiss();
+                        }}
+                        onChange={({ label }) => {
+                            setTempDescription(label);
+                        }}
+                        onModalClose={() => {
+                            if (tempDescription) {
+                                setGameDescription(tempDescription);
+                                setTempDescription('');
+                            }
+                        }}
                     />
                     : <></>
                 }

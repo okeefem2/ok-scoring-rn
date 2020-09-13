@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Image, View } from 'react-native'
+import { Image, View, Text } from 'react-native'
 import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
 import { Settings } from '../../model/settings'
@@ -20,7 +20,7 @@ export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K
 const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     console.log('New game!');
     const { dbInitialized, dbError } = useContext(localDbContext);
-    const { gameCanStart } =  useContext(gameContext);
+    const { gameCanStart, description } =  useContext(gameContext);
     const diceIcon = useDiceIcon();
 
     return (
@@ -37,6 +37,11 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                     style={sharedStyles.logoImage}
                     resizeMode='contain'
                 />
+            </CenterContent>
+            <CenterContent>
+                <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
+                    {description}
+                </Text>
             </CenterContent>
             <NewGameDescription/>
             <NewGamePlayers/>

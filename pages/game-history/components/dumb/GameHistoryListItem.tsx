@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
 import { sharedStyles } from '../../../../styles/shared'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -21,9 +21,13 @@ interface GameHistoryListItemProps {
 const GameHistoryListItem = ({ game, copyGameSetup, continueGame, showGameState }: GameHistoryListItemProps) => {
     // TODO set state score history and navigate
     const diceIcon = useDiceIcon();
+    const [playerNames, setPlayerNames] = useState('');
     // get the winning player to the front of the list
-    game.players.sort((a) => game.winningPlayerKey === a.key ? -1 : 1);
-    const playerNames = commaSeperateWithEllipsis(game.players.map(p => p.name));
+    useEffect(() => {
+        // TODO should probably switch this to state
+        const playerNames = game.players.slice().sort((a) => game.winningPlayerKey === a.key ? -1 : 1).map(p => p.name);
+        setPlayerNames(commaSeperateWithEllipsis(playerNames));
+    }, [game]);
     return (
         <View style={sharedStyles.spacedRowBordered}>
             <View style={sharedStyles.column}>
