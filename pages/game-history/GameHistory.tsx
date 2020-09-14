@@ -11,7 +11,6 @@ import { RouteName as GameRoute } from '../game/Game';
 import { RouteName as GameScoreHistoryModalRoute } from '../game-score-history-modal/GameScoreHistoryModal';
 import { GameState } from '../../model/game-state';
 
-
 const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const {gameHistory, setGameState} = useContext(gameHistoryContext);
     const {copyGameSetup, initGameState: initNewGame} = useContext(gameContext);

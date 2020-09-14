@@ -8,6 +8,11 @@ import { GameState } from '../model/game-state';
 import { GameScoreHistory, determineWinner, buildInitialHistory } from '../model/game-score-history';
 import { ActivePlayerScore } from '../model/active-player-score';
 import { reCalcCurrentScore } from '../model/player-score-history';
+export interface PlayerScore {
+    playerKey: string;
+    scoreIndex: number;
+    score: number;
+}
 
 class GameStore implements GameState {
     key = uuid();
@@ -35,6 +40,8 @@ class GameStore implements GameState {
 
     @observable
     activePlayerScore?: ActivePlayerScore;
+    @observable
+    editingPlayerScore?: PlayerScore;
 
     constructor() {
         reaction(() => this.activePlayerScore, () => {
@@ -58,6 +65,12 @@ class GameStore implements GameState {
             players: this.players,
             settings: this.settings,
         };
+    }
+
+    @computed
+    get scoreHistoryRounds(): number[] {
+        const numberRounds = Math.max(...Object.values(this.scoreHistory).map(v => v.scores.length));
+        return Array.from({length: numberRounds}, (_, i) => i + 1);
     }
 
     @action
@@ -150,18 +163,11 @@ class GameStore implements GameState {
     }
 
     @action
-    removeRound = (playerKey: string, roundIndex: number) => {
-        if (this.scoreHistory) {
-            this.scoreHistory[playerKey].scores.splice(roundIndex, 1);
-            this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);
-        }
-    };
-
-    @action
     updateRoundScore = (playerKey: string, roundIndex: number, newScore: number) => {
         if (this.scoreHistory) {
             this.scoreHistory[playerKey].scores.splice(roundIndex, 1, newScore);
             this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);
+            this.editingPlayerScore = undefined;
         }
     };
 
@@ -189,6 +195,20 @@ class GameStore implements GameState {
             const player = gamePlayers[newIndex];
             const playerScore = this.scoreHistory[player.key];
             this.activePlayerScore = { playerScore, index: newIndex, player, };
+        }
+    }
+
+    @action
+    editPlayerScore = (playerScore: PlayerScore) => {
+        console.log('Editing score!', playerScore);
+        this.editingPlayerScore = playerScore;
+    }
+
+    @action
+    deletePlayerScore = ({playerKey, scoreIndex}: PlayerScore) => {
+        if (this.scoreHistory) {
+            this.scoreHistory[playerKey].scores.splice(scoreIndex, 1);
+            this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);
         }
     }
 }

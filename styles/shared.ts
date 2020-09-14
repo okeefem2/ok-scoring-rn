@@ -20,6 +20,16 @@ export const sharedStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    plainRowBordered: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderBottomColor: colors.greyMid,
+        borderBottomWidth: 1,
+    },
     spacedRowBordered: {
         padding: 15,
         width: '100%',
@@ -87,11 +97,23 @@ export const sharedStyles = StyleSheet.create({
     mr5: {
         marginRight: 5,
     },
+    mt5: {
+        marginTop: 5,
+    },
     mt10: {
         marginTop: 10
     },
+    mt15: {
+        marginTop: 15
+    },
     mt25: {
         marginTop: 25
+    },
+    mb5: {
+        marginBottom: 5,
+    },
+    mb10: {
+        marginBottom: 10
     },
     mb25: {
         marginBottom: 25
@@ -113,5 +135,11 @@ export const sharedStyles = StyleSheet.create({
     logoImage: {
         width: '80%',
         height: 150
+    },
+    scoreTabelCell: {
+        width: 30,
+        margin: 5,
+        textAlign: 'center',
+        fontFamily: 'Quicksand'
     }
 });

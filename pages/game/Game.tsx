@@ -67,26 +67,17 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                     {/* <View style={[sharedStyles.centeredContent, sharedStyles.mb25]}>
                         <Header title={activePlayerScore.player.name}/>
                     </View> */}
+                    <Text style={[styles.turnDetails, sharedStyles.mt15]}>
+                        Turn {activePlayerScore.playerScore.scores.length + 1}
+                    </Text>
                     <View style={styles.scoreContainer}>
-                        <View style={styles.middleTextOuter}>
-                            <Text style={[styles.turnDetails]}>
-                                Turn {activePlayerScore.playerScore.scores.length + 1}
-                            </Text>
-                        </View>
                         <View style={styles.middleTextInner}>
                             <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
                                 {activePlayerScore.playerScore.currentScore?.toString() || '0'}
                             </Text>
                         </View>
-
-                        <View style={[styles.middleTextOuter]}>
-
-                            <Text style={[styles.turnDetails]}>
-                                { !!turnScore ? (turnScore >= 0 ? `+${turnScore}` : turnScore) : '+0'} points
-                            </Text>
-                        </View>
                     </View>
-                    <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt25 ]}>
+                    <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt10 ]}>
                             <View style={[styles.buttonRowItem]}>
                                 <IconButton icon='plus-minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} size={34}/>
                             </View>
@@ -121,7 +112,12 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                         </View>
                     </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
-                        <Button title={`End Turn ${activePlayerScore.playerScore.scores.length + 1}`} onPress={() => {
+                        <Text style={[styles.turnDetails]}>
+                            { !!turnScore ? (turnScore >= 0 ? `+${turnScore}` : turnScore) : '+0'} points
+                        </Text>
+                    </View>
+                    <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
+                        <Button title={`End Turn`} onPress={() => {
                             endPlayerTurn(turnScore, players)
                             updateTurnScore(settings?.defaultScoreStep ?? 0)
                         }} color={colors.primary}/>
@@ -154,7 +150,7 @@ const styles = StyleSheet.create({
     turnDetails: {
         fontFamily: 'Quicksand',
         fontSize: 18,
-        color: colors.primary,
+        color: colors.tertiary,
         alignSelf: 'center'
     },
     scoreContainer: {

@@ -16,6 +16,7 @@ import { localDbContext } from './state/local-db.store';
 import { sharedStyles } from './styles/shared';
 import { gameHistoryContext } from './state/game-history.store';
 import { playerHistoryContext } from './state/players-history.store';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 
 function App() {
 
@@ -66,6 +67,7 @@ function App() {
   const Stack = createStackNavigator();
 
   return (
+    <ActionSheetProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName={NewGameRoute} screenOptions={{ headerShown: false }}>
           <Stack.Screen name={NewGameRoute} component={NewGame}/>
@@ -76,6 +78,7 @@ function App() {
           <Stack.Screen name={GameScoreHistoryModalRoute} component={GameScoreHistoryModal}/>
         </Stack.Navigator>
       </NavigationContainer>
+    </ActionSheetProvider>
   );
 }
 

@@ -9,7 +9,6 @@ import { Player } from '../../../../model/player';
 import { Settings } from '../../../../model/settings';
 import { useDiceIcon } from '../../../../hooks/useDiceIcon';
 import { GameState } from '../../../../model/game-state';
-import { GameScoreHistory } from '../../../../model/game-score-history';
 
 interface GameHistoryListItemProps {
     game: GameState;

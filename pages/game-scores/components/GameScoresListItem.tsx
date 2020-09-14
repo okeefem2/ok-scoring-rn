@@ -11,16 +11,12 @@ import { PlayerScoreHistory } from '../../../model/player-score-history';
 interface GameScoreListItemProps {
     player: Player;
     playerScoreHistory: PlayerScoreHistory;
-    updateRoundScore?: (playerKey: string, roundIndex: number, newScore: number) => void;
-    removeRound?: (playerKey: string, roundIndex: number) => void;
     winning: boolean;
 }
-const GameScoreListItem = ({player, playerScoreHistory, updateRoundScore, removeRound, winning }: GameScoreListItemProps) => {
+const GameScoreListItem = ({player, playerScoreHistory, winning }: GameScoreListItemProps) => {
     return (
-        <View style={sharedStyles.spacedRowBordered} key={player.key}>
-            <View style={sharedStyles.column}>
-                <View style={sharedStyles.spacedRowNoBorder}>
-                    <View style={sharedStyles.rowGroup}>
+        <View style={sharedStyles.spacedRowNoBorder} key={player.key}>
+            <View style={sharedStyles.rowGroup}>
                         {
                             winning && <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
                         }
@@ -30,6 +26,9 @@ const GameScoreListItem = ({player, playerScoreHistory, updateRoundScore, remove
                         <Text style={[sharedStyles.bodyText, sharedStyles.ml5]}>{playerScoreHistory.currentScore} points</Text>
 
                     </View>
+            {/* <View style={sharedStyles.column}>
+                <View style={sharedStyles.spacedRowNoBorder}>
+
                 </View>
                 <View style={styles.roundsRow}>
                     {
@@ -44,7 +43,7 @@ const GameScoreListItem = ({player, playerScoreHistory, updateRoundScore, remove
                         )
                     }
                 </View>
-            </View>
+            </View> */}
         </View>
     );
 }
