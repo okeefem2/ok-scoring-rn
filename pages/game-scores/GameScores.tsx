@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { FlatList, View, Text, StyleSheet, TextInput } from 'react-native'
 import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
@@ -33,6 +33,13 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
     const { savePlayers } = useContext(playerHistoryContext);
 
     const [tempNewScore, setTempNewScore] = useState<number>();
+    const [playerRoundScoreInputRef, setPlayerRoundScoreInputRef] = useState<TextInput>();
+
+    useEffect(() => {
+        if (playerRoundScoreInputRef) {
+            playerRoundScoreInputRef.focus();
+        }
+    }, [playerRoundScoreInputRef])
 
     const exitToNewGame = () => {
         initGameState(undefined);
@@ -80,7 +87,7 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                 {
                     editingPlayerScore ? <View style={sharedStyles.spacedRowNoBorder}>
                             <Text style={[sharedStyles.bodyText]}>
-                                Update Score:
+                                Update Round {editingPlayerScore.scoreIndex + 1} Score For { editingPlayerScore.playerName }:
                             </Text>
                             <TextInput
                                 style={[]}
@@ -90,7 +97,13 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                                 autoCorrect={false}
                                 returnKeyType="done"
                                 clearTextOnFocus={true}
-                                onEndEditing={() => updateRoundScore(editingPlayerScore.playerKey, editingPlayerScore.scoreIndex, tempNewScore || 0)}
+                                ref={(input: TextInput) => setPlayerRoundScoreInputRef(input)}
+                                onEndEditing={() => {
+                                    if (tempNewScore !== undefined) {
+                                        updateRoundScore(editingPlayerScore.playerKey, editingPlayerScore.scoreIndex, tempNewScore);
+                                        setTempNewScore(undefined);
+                                    }
+                                }}
                                 keyboardType='number-pad'/>
                     </View> : null
                 }

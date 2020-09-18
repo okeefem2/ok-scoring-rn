@@ -28,14 +28,13 @@ export function determineWinner(gameScoreHistory: GameScoreHistory, highScoreWin
 export function buildInitialHistory(players: Player[], startingScore: number): GameScoreHistory {
     console.log('setting initial history');
     return players.reduce(
-        (history, player) => ({
+        (history, player): GameScoreHistory => ({
             ...history,
             [player.key]: {
+                playerKey: player.key,
                 currentScore: startingScore,
-                winning: false,
-                losing: false,
                 scores: [],
-            }
+            } as PlayerScoreHistory
         }),
         {}
     );

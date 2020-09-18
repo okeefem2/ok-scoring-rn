@@ -10,6 +10,7 @@ import { ActivePlayerScore } from '../model/active-player-score';
 import { reCalcCurrentScore } from '../model/player-score-history';
 export interface PlayerScore {
     playerKey: string;
+    playerName: string;
     scoreIndex: number;
     score: number;
 }
@@ -148,7 +149,7 @@ class GameStore implements GameState {
 
     @action
     startGame = () => {
-        if (!Object.keys(this.scoreHistory ?? {}).length) {
+        if (!Object.keys(this.scoreHistory ?? {}).length && this.players?.length) {
             this.scoreHistory = buildInitialHistory(
                 this.players ?? [],
                 this.settings?.startingScore ?? 0
@@ -164,7 +165,7 @@ class GameStore implements GameState {
 
     @action
     updateRoundScore = (playerKey: string, roundIndex: number, newScore: number) => {
-        if (this.scoreHistory) {
+        if (this.scoreHistory && this.scoreHistory.hasOwnProperty(playerKey)) {
             this.scoreHistory[playerKey].scores.splice(roundIndex, 1, newScore);
             this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);
             this.editingPlayerScore = undefined;
@@ -199,13 +200,19 @@ class GameStore implements GameState {
     }
 
     @action
-    editPlayerScore = (playerScore: PlayerScore) => {
-        console.log('Editing score!', playerScore);
-        this.editingPlayerScore = playerScore;
+    editPlayerScore = (data: {
+        playerKey: string;
+        scoreIndex: number;
+        score: number;
+    }) => {
+        const player = this.players.find(p => p.key === data.playerKey);
+        if (player) {
+            this.editingPlayerScore = { ...data, playerName: player.name };
+        }
     }
 
     @action
-    deletePlayerScore = ({playerKey, scoreIndex}: PlayerScore) => {
+    deletePlayerScore = ({playerKey, scoreIndex}: { playerKey: string, scoreIndex: number}) => {
         if (this.scoreHistory) {
             this.scoreHistory[playerKey].scores.splice(scoreIndex, 1);
             this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);

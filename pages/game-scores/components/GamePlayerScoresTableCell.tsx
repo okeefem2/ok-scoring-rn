@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Menu, Provider } from 'react-native-paper';
+import React, { useContext } from 'react'
+import { Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { sharedStyles } from '../../../styles/shared';
 import { gameContext } from '../../../state/game.store';
@@ -29,7 +28,7 @@ const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerS
             if (buttonIndex === 0) {
                 editPlayerScore({ playerKey, score, scoreIndex });
             } else if (buttonIndex === 1) {
-                deletePlayerScore({ playerKey, score, scoreIndex });
+                deletePlayerScore({ playerKey, scoreIndex });
             }
         })}>
             <Text style={[sharedStyles.scoreTabelCell]}>
