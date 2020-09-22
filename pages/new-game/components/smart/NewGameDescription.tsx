@@ -6,15 +6,21 @@ import { colors } from '../../../../styles/colors'
 import { gameContext } from '../../../../state/game.store'
 import { gameHistoryContext } from '../../../../state/game-history.store'
 import { observer } from 'mobx-react'
+import { focusInputOnCreation } from '../../../../hooks/focusInputOnCreation'
+import IconButton from '../../../../components/IconButton'
 
 const NewGameDescription = () => {
     const {setGameDescription} = useContext(gameContext);
     const { previousGamesSelectable } =  useContext(gameHistoryContext);
 
     const [tempDescription, setTempDescription] = useState('');
+    const [showInput, setShowInput] = useState(false);
+    const focusInput = focusInputOnCreation();
 
     return (
         <>
+        {
+            showInput ?
             <View style={sharedStyles.spacedRowBordered}>
                 <TextInput style={[sharedStyles.bodyText, sharedStyles.input]}
                     placeholder='What are we playing?'
@@ -25,10 +31,15 @@ const NewGameDescription = () => {
                     onEndEditing={() => {
                         setGameDescription(tempDescription as string);
                         setTempDescription('');
+                        setShowInput(false);
                     }}
-                    onChangeText={(description) => setTempDescription(description)} value={tempDescription}
+                    onChangeText={(description) => setTempDescription(description)}
+                    value={tempDescription}
+                    ref={(input: TextInput) => focusInput(input)}
                 />
-            </View>
+            </View> : <></>
+        }
+
             <View style={sharedStyles.spacedRowNoBorder}>
                 {
                     previousGamesSelectable?.length ?
@@ -54,6 +65,13 @@ const NewGameDescription = () => {
                         }}
                     />
                     : <></>
+                }
+                {
+                    !showInput ?
+                        <IconButton icon='pencil-outline' title='Edit Game' alignSelf={'center'} clickHandler={() => {
+                            setShowInput(true)
+                        }}/> :
+                        <></>
                 }
             </View>
         </>

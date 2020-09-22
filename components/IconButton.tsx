@@ -12,6 +12,7 @@ export interface ButtonConfig {
     size?: number;
     color?: string;
     width?: string
+    alignSelf?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline' | 'auto' | undefined;
 }
 const IconButton = ({
     icon,
@@ -21,14 +22,15 @@ const IconButton = ({
     disabled = false,
     size = 24,
     color = colors.primary,
-    width
+    width,
+    alignSelf = 'center'
 }: ButtonConfig) => {
     const textStyles: any[] = [styles.buttonText];
     if (disabled) {
         textStyles.push(styles.disabled);
     }
     return (
-        <View style={{ alignSelf: 'stretch', display: 'flex', width: width }}>
+        <View style={{ alignSelf: alignSelf, display: 'flex', width: width }}>
             <TouchableOpacity onPress={() => !disabled && clickHandler()} disabled={disabled} style={{ width: width, }}>
                 <View style={styles.buttonRow}>
                     { !!icon && iconSide === 'left' ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}

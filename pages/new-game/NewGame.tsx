@@ -40,7 +40,7 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
             </CenterContent>
             <CenterContent>
                 <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
-                    {description}
+                    {description || 'New Game'}
                 </Text>
             </CenterContent>
             <NewGameDescription/>

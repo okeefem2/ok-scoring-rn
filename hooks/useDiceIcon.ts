@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 /**
  * Custom hook to create a random dice icon when the component is created
