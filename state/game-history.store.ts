@@ -4,6 +4,7 @@ import { localDbStore } from './local-db.store';
 import { fetchGameStates, insertGame } from '../db/db';
 import { addOrReplaceByKey } from '../util/array.util';
 import { GameState } from '../model/game-state';
+import { buildScoreHistoryRounds } from '../model/game-score-history';
 
 class GameHistoryStore {
 
@@ -13,6 +14,12 @@ class GameHistoryStore {
     @computed
     get previousGamesSelectable(): { key: number, label: string }[] {
         return Array.from(new Set(this.gameHistory.map(g => g.description))).map((d, i) => ({ label: d, key: i }));
+    }
+
+    @computed
+    get scoreHistoryRounds(): number[] {
+        // TODO memo?
+        return buildScoreHistoryRounds(this.gameState?.scoreHistory ?? {});
     }
 
     async saveGameToDb(gameState: GameState) {

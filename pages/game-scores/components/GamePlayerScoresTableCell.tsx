@@ -1,17 +1,17 @@
 import React, { useContext } from 'react'
-import { Text } from 'react-native'
+import { Text, StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { sharedStyles } from '../../../styles/shared';
 import { gameContext } from '../../../state/game.store';
 import { connectActionSheet, useActionSheet } from '@expo/react-native-action-sheet';
 import { colors } from '../../../styles/colors';
 
-type GamePlayerScoresTableCell = {
+type GamePlayerScoresTableCellProps = {
     playerKey: string;
     scoreIndex: number;
     score: number;
 }
-const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerScoresTableCell) => {
+const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerScoresTableCellProps) => {
     const {editPlayerScore, deletePlayerScore} = useContext(gameContext);
 
     const { showActionSheetWithOptions } = useActionSheet();
@@ -31,11 +31,20 @@ const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerS
                 deletePlayerScore({ playerKey, scoreIndex });
             }
         })}>
-            <Text style={[sharedStyles.scoreTabelCell]}>
+            <Text style={[sharedStyles.scoreTabelCell, styles.touchableCell]}>
                 {score}
             </Text>
         </TouchableOpacity>
     );
 }
+
+const styles = StyleSheet.create({
+    touchableCell: {
+        backgroundColor: colors.primaryLight,
+    },
+    winningCell: {
+        backgroundColor: colors.primaryLight,
+    }
+});
 
 export default connectActionSheet(GamePlayerScoresTableCell);

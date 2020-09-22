@@ -13,6 +13,8 @@ import GamePlayerScsoresTableRow from './components/GamePlayerScoresTableRow'
 import Header from '../../components/Header'
 import GamePlayerScoresTableRow from './components/GamePlayerScoresTableRow'
 import { ScrollView } from 'react-native-gesture-handler'
+import GamePlayerScoresTable from './components/GamePlayerScoresTable'
+import GameScoresHeader from './components/GameScoresHeader'
 
 export type GameScoreProps = {
     gameOver?: boolean;
@@ -24,7 +26,6 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
         gameState,
         initGameState,
         scoreHistory,
-        winningPlayerKey,
         scoreHistoryRounds,
         editingPlayerScore,
         updateRoundScore
@@ -66,23 +67,7 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                 } } : undefined}
             />
             <View style={[sharedStyles.column]}>
-                <Header title={gameState.description}/>
-                <Text style={[sharedStyles.bodyText, sharedStyles.mb25, sharedStyles.centeredText]}>
-                    {gameState.date}
-                </Text>
-                <FlatList
-                    style={[sharedStyles.scroll, sharedStyles.mb25]}
-                    data={players}
-                    renderItem={
-                        (itemData) =>
-                            <GameScoreListItem
-                                key={itemData.item.key}
-                                player={itemData.item}
-                                playerScoreHistory={scoreHistory[itemData.item.key]}
-                                winning={itemData.item.key === winningPlayerKey}
-                            />
-                    }
-                />
+                <GameScoresHeader gameState={gameState}/>
 
                 {
                     editingPlayerScore ? <View style={sharedStyles.spacedRowNoBorder}>
@@ -107,66 +92,11 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                                 keyboardType='number-pad'/>
                     </View> : null
                 }
-
-
-                <View style={[sharedStyles.plainRow]}>
-                        <View style={[styles.players]}></View>
-                        <View style={styles.scores}>
-                            <View style={sharedStyles.plainRowBordered}>
-                                    {
-                                        scoreHistoryRounds.map(
-                                            r =>
-                                            <Text style={[sharedStyles.scoreTabelCell]} key={r}>
-                                                {r}
-                                            </Text>
-                                        )
-                                    }
-                            </View>
-                        </View>
-                    </View>
-                <ScrollView>
-                    <View style={[sharedStyles.plainRow]}>
-                        <View style={[styles.players]}>
-                            {
-                                players.map(player => (
-                                    <View style={[sharedStyles.plainRow, sharedStyles.mb5, sharedStyles.mt5]}>
-                                        <Text style={[sharedStyles.bodyText]}>
-                                            {player.name}
-                                        </Text>
-                                    </View>
-                                ))
-                            }
-                        </View>
-                        <View style={styles.scores}>
-                            <ScrollView horizontal={true}>
-                                <View style={sharedStyles.column}>
-                                    {
-                                        players.map(
-                                            player => <GamePlayerScoresTableRow playerScoreHistory={scoreHistory[player.key]} key={player.key}/>
-                                        )
-                                    }
-                                </View>
-                            </ScrollView>
-                        </View>
-                    </View>
-                </ScrollView>
+                <GamePlayerScoresTable players={players} scoreHistory={scoreHistory} scoreHistoryRounds={scoreHistoryRounds} />
             </View>
         </View>
-    )
+    );
 }
-
-const styles = StyleSheet.create({
-    table: {
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    players: {
-        flex: 1
-    },
-    scores: {
-        flex: 4
-    }
-});
 
 
 export const RouteName = 'GameScore';

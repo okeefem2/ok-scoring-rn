@@ -1,21 +1,23 @@
 import React, { useContext } from 'react'
-import { Text, View, FlatList } from 'react-native'
+import { Text, View } from 'react-native'
 import { observer } from 'mobx-react';
 import { PageNavigationProps } from '../../navigation';
 import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
-import GameScoreListItem from '../game-scores/components/GameScoresListItem';
 import { gameHistoryContext } from '../../state/game-history.store';
+import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTable';
+import GameScoresHeader from '../game-scores/components/GameScoresHeader';
 
 // TODO make this an actual modal
 
 const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
-    const { gameState, setGameState } = useContext(gameHistoryContext);
+    const { gameState, setGameState, scoreHistoryRounds } = useContext(gameHistoryContext);
 
+    console.log('the game state!!!', gameState);
     if (!gameState) {
         return (
-            <View>
-                <Text>No Data To Show</Text>
+            <View style={[sharedStyles.column]}>
+                <Text style={sharedStyles.centeredContent}>No Data To Show</Text>
             </View>
         );
     }
@@ -31,19 +33,17 @@ const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteN
                 //     navigation.pop();
                 // }}}
             />
-            <FlatList
-                style={sharedStyles.scroll}
-                data={gameState.players}
-                renderItem={
-                    (itemData) =>
-                        <GameScoreListItem
-                            key={itemData.item.key}
-                            player={itemData.item}
-                            playerScoreHistory={gameState.scoreHistory[itemData.item.key]}
-                            winning={itemData.item.key === gameState.winningPlayerKey}
-                        />
-                }
-            />
+            <View style={[sharedStyles.column]}>
+                <GameScoresHeader gameState={gameState}/>
+
+                <GamePlayerScoresTable
+                    players={gameState.players}
+                    editable={false}
+                    scoreHistory={gameState.scoreHistory}
+                    scoreHistoryRounds={scoreHistoryRounds}
+                />
+            </View>
+
         </View>
     )
 }

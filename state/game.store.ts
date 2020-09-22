@@ -5,7 +5,7 @@ import { v4 as uuid } from 'react-native-uuid';
 import { Player } from '../model/player';
 import { swap } from '../util/array.util';
 import { GameState } from '../model/game-state';
-import { GameScoreHistory, determineWinner, buildInitialHistory } from '../model/game-score-history';
+import { GameScoreHistory, determineWinner, buildInitialHistory, buildScoreHistoryRounds } from '../model/game-score-history';
 import { ActivePlayerScore } from '../model/active-player-score';
 import { reCalcCurrentScore } from '../model/player-score-history';
 export interface PlayerScore {
@@ -65,13 +65,14 @@ class GameStore implements GameState {
             date: this.date,
             players: this.players,
             settings: this.settings,
+            winningPlayerKey: this.winningPlayerKey
         };
     }
 
     @computed
     get scoreHistoryRounds(): number[] {
-        const numberRounds = Math.max(...Object.values(this.scoreHistory).map(v => v.scores.length));
-        return Array.from({length: numberRounds}, (_, i) => i + 1);
+        // TODO memo?
+        return buildScoreHistoryRounds(this.scoreHistory);
     }
 
     @action

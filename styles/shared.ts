@@ -138,8 +138,9 @@ export const sharedStyles = StyleSheet.create({
     },
     scoreTabelCell: {
         width: 30,
-        margin: 5,
+        padding: 5,
+        marginRight: 20,
         textAlign: 'center',
-        fontFamily: 'Quicksand'
+        fontFamily: 'Quicksand',
     }
 });

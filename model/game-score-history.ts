@@ -9,7 +9,6 @@ function scoreBeatsWinner(winningScore: number, score: number, highScoreWins: bo
     return (highScoreWins && score > winningScore) || (!highScoreWins && score < winningScore)
 }
 
-
 export function determineWinner(gameScoreHistory: GameScoreHistory, highScoreWins = true): string {
     const winningScore = { playerKey: '', score: highScoreWins ? -Infinity : Infinity };
 
@@ -38,4 +37,9 @@ export function buildInitialHistory(players: Player[], startingScore: number): G
         }),
         {}
     );
+}
+
+export function buildScoreHistoryRounds(scoreHistory: GameScoreHistory): number[] {
+    const numberRounds = Math.max(...Object.values(scoreHistory).map(v => v.scores.length));
+    return Array.from({length: numberRounds}, (_, i) => i + 1);
 }
