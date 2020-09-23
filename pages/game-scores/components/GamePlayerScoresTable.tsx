@@ -1,5 +1,5 @@
-import React from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import React, { useEffect } from 'react'
+import { StyleSheet, Text, View, ScrollView, Animated } from 'react-native'
 import { sharedStyles } from '../../../styles/shared';
 import GamePlayerScoresTableRow from './GamePlayerScoresTableRow';
 import { Player } from '../../../model/player';
@@ -14,21 +14,49 @@ type GamePlayerScoresTableProps = {
 const GamePlayerScoresTable = ({
     players, scoreHistoryRounds, scoreHistory, editable = true
 }: GamePlayerScoresTableProps) => {
+    const scrollPosition = new Animated.Value(0);
+    const scrollEvent = Animated.event(
+        [{ nativeEvent: { contentOffset: { x: scrollPosition } } }],
+        { useNativeDriver: false },
+    );
+    let roundScrollRef: ScrollView;
+
+    useEffect(() => {
+        scrollPosition.addListener(position => {
+            roundScrollRef.scrollTo({ x: position.value, animated: false })
+        });
+        return () => {
+            scrollPosition.removeAllListeners();
+        }
+    }, [])
     return (
         <>
             <View style={[sharedStyles.plainRow]}>
-                <View style={[styles.players]}></View>
-                <View style={styles.scores}>
+                <View style={[styles.players]}>
                     <View style={sharedStyles.plainRowBordered}>
-                        {
-                            scoreHistoryRounds.map(
-                                r =>
-                                    <Text style={[sharedStyles.scoreTabelCell]} key={r}>
-                                        {r}
-                                    </Text>
-                            )
-                        }
+                        <Text style={[sharedStyles.scoreTabelLabel]}>
+                            Rounds
+                        </Text>
                     </View>
+                </View>
+                <View style={styles.scores}>
+                    <ScrollView
+                        horizontal={true}
+                        ref={(scrollViewRef: ScrollView) => roundScrollRef = scrollViewRef}
+                        scrollEnabled={false}
+                        scrollEventThrottle={16}
+                    >
+                        <View style={sharedStyles.plainRowBordered}>
+                                {
+                                    scoreHistoryRounds.map(
+                                        r =>
+                                            <Text style={[sharedStyles.scoreTabelCell]} key={r}>
+                                                {r}
+                                            </Text>
+                                    )
+                                }
+                        </View>
+                    </ScrollView>
                 </View>
             </View>
             <ScrollView>
@@ -45,7 +73,11 @@ const GamePlayerScoresTable = ({
                         }
                     </View>
                     <View style={styles.scores}>
-                        <ScrollView horizontal={true}>
+                        <ScrollView
+                            horizontal={true}
+                            onScroll={scrollEvent}
+                            scrollEventThrottle={16}
+                        >
                             <View style={sharedStyles.column}>
                                 {
                                     players.map(

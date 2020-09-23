@@ -10,7 +10,6 @@ import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
 import { PageNavigationProps } from '../../navigation';
 import { RouteName as GameScoresRoute } from '../game-scores/GameScores';
-import CenterContent from '../../components/CenterContent';
 
 const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     // const {timerValue} = useTimerState();
@@ -29,7 +28,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
         startGame();
     }, []);
 
-    const [turnScore, updateTurnScore] = useState(settings?.defaultScoreStep ?? 0); //TODO
+    const [turnScore, updateTurnScore] = useState(settings?.defaultScoreStep ?? 0);
 
     return ( activePlayerScore ?
         <View style={sharedStyles.pageContainer}>

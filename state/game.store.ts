@@ -30,7 +30,7 @@ class GameStore implements GameState {
         key: uuid(),
         // rounds: undefined,
         startingScore: 0,
-        defaultScoreStep: 1,
+        defaultScoreStep: 0,
         highScoreWins: true,
         // scoreIncreases: true
     };
@@ -91,7 +91,7 @@ class GameStore implements GameState {
             key: uuid(),
             // rounds: undefined;
             startingScore: 0,
-            defaultScoreStep: 1,
+            defaultScoreStep: 0,
             highScoreWins: true,
             // scoreIncreases: true
         };

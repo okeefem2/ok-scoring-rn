@@ -66,7 +66,7 @@ const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof Rout
                         <BodyText>Default Score Step</BodyText>
                         <TextInput
                             placeholder='1'
-                            onChangeText={(n) => setSetting('defaultScoreStep', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 1)}
+                            onChangeText={(n) => setSetting('defaultScoreStep', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 0)}
                             returnKeyType="done"
                             value={settings?.defaultScoreStep?.toString()}
                             autoCorrect={false}

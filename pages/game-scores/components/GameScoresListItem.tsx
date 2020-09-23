@@ -17,10 +17,10 @@ const GameScoreListItem = ({player, playerScoreHistory, winning }: GameScoreList
     return (
         <View style={sharedStyles.spacedRowNoBorder} key={player.key}>
             <View style={sharedStyles.rowGroup}>
+                    <Text style={[sharedStyles.bodyText, sharedStyles.mr5]} >{player.name}</Text>
                         {
                             winning && <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
                         }
-                        <Text style={[sharedStyles.bodyText, sharedStyles.ml5]} >{player.name}</Text>
                     </View>
                     <View>
                         <Text style={[sharedStyles.bodyText, sharedStyles.ml5]}>{playerScoreHistory.currentScore} points</Text>

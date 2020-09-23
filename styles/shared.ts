@@ -137,10 +137,15 @@ export const sharedStyles = StyleSheet.create({
         height: 150
     },
     scoreTabelCell: {
-        width: 30,
+        minWidth: 30,
         padding: 5,
         marginRight: 20,
         textAlign: 'center',
+        fontFamily: 'Quicksand',
+    },
+    scoreTabelLabel: {
+        paddingTop: 5,
+        paddingBottom: 5,
         fontFamily: 'Quicksand',
     }
 });
