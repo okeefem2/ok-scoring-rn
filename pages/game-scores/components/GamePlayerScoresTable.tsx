@@ -11,24 +11,28 @@ type GamePlayerScoresTableProps = {
     scoreHistory: GameScoreHistory,
     editable: boolean
 }
+const scrollPosition = new Animated.Value(0);
+const scrollEvent = Animated.event(
+    [{ nativeEvent: { contentOffset: { x: scrollPosition } } }],
+    { useNativeDriver: false },
+);
+let roundScrollRef: ScrollView;
+
 const GamePlayerScoresTable = ({
     players, scoreHistoryRounds, scoreHistory, editable = true
 }: GamePlayerScoresTableProps) => {
-    const scrollPosition = new Animated.Value(0);
-    const scrollEvent = Animated.event(
-        [{ nativeEvent: { contentOffset: { x: scrollPosition } } }],
-        { useNativeDriver: false },
-    );
-    let roundScrollRef: ScrollView;
+
 
     useEffect(() => {
+        console.log('Adding listeners!');
         scrollPosition.addListener(position => {
             roundScrollRef.scrollTo({ x: position.value, animated: false })
         });
         return () => {
+            console.log('removing listeners!');
             scrollPosition.removeAllListeners();
         }
-    }, [])
+    }, [scoreHistory])
     return (
         <>
             <View style={[sharedStyles.plainRow]}>
@@ -64,7 +68,7 @@ const GamePlayerScoresTable = ({
                     <View style={[styles.players]}>
                         {
                             players.map(player => (
-                                <View style={[sharedStyles.plainRow, sharedStyles.mb5, sharedStyles.mt5]}>
+                                <View style={[sharedStyles.plainRow, sharedStyles.mb5, sharedStyles.mt5]} key={player.key}>
                                     <Text style={[sharedStyles.bodyText]}>
                                         {player.name}
                                     </Text>
