@@ -21,18 +21,14 @@ let roundScrollRef: ScrollView;
 const GamePlayerScoresTable = ({
     players, scoreHistoryRounds, scoreHistory, editable = true
 }: GamePlayerScoresTableProps) => {
-
-
     useEffect(() => {
-        console.log('Adding listeners!');
         scrollPosition.addListener(position => {
-            roundScrollRef.scrollTo({ x: position.value, animated: false })
+            roundScrollRef.scrollTo({ x: position.value, animated: false });
         });
         return () => {
-            console.log('removing listeners!');
             scrollPosition.removeAllListeners();
         }
-    }, [scoreHistory])
+    }, [scoreHistory]);
     return (
         <>
             <View style={[sharedStyles.plainRow]}>
