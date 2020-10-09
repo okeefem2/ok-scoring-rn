@@ -64,10 +64,8 @@ export const initSQLLiteDb = () => {
             tx.executeSql(gameSettingsTable);
             tx.executeSql(playerScoreHistoryTable);
         }, (err) => {
-            console.log('Failed to init db', err);
             reject(err);
         }, () => {
-            console.log('Successfully inited DB')
             resolve();
         });
     });
@@ -170,7 +168,6 @@ export const insertGame = (gameState: GameState) => {
             return false;
         },
         () => {
-            console.log('saved game state');
             resolve();
         });
     });
@@ -244,7 +241,6 @@ export const fetchGames = (): Promise<GameState[]> => {
                     resolve(unwrapResult(result));
                 },
                 (_, err): boolean => {
-                    console.log('error fetching games', err);
                     reject(err);
                     return false;
                 },
@@ -265,11 +261,9 @@ export const fetchGameSettings = (gameKey: string): Promise<Settings> => {
                 [],
                 (_, result) => {
                     const settings = unwrapResult(result)[0];
-                    console.log('settings', settings);
                     resolve(settings);
                 },
                 (_, err): boolean => {
-                    console.log('error fetching settings', err);
                     reject(err);
                     return false;
                 },
@@ -289,11 +283,9 @@ export const fetchPlayerScores = (gameKey: string): Promise<PlayerScoreHistory[]
                 playerScoresSelect,
                 [],
                 (_, result) => {
-                    console.log('player score results', result);
                     resolve(unwrapResult(result));
                 },
                 (_, err): boolean => {
-                    console.log('error fetching player scores', err);
                     reject(err);
                     return false;
                 },

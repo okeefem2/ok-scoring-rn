@@ -1,8 +1,8 @@
 import React, { createContext } from 'react'
 
-import { BehaviorSubject, Subject, interval, NEVER, of, Observable } from 'rxjs';
-import { useEffect, useState, useContext } from 'react';
-import { switchMap, scan, takeUntil, map, take } from 'rxjs/operators';
+import { BehaviorSubject, interval, of, Observable } from 'rxjs';
+import { useEffect, useState } from 'react';
+import { switchMap, scan, map } from 'rxjs/operators';
 
 export const TimerContext = createContext<TimerState | undefined>(undefined);
 const TimerDispatchContext = createContext<TimerDispatch | undefined>(undefined);
@@ -64,12 +64,12 @@ export function useTimer(initialValue = 0): [ TimerState, TimerDispatch ] {
                 : of({ timerText: formatSeconds(event.value), timerValue: event.value, timerActive: false})
             )
         );
-        timer.subscribe((ts: TimerState) => {
+        const sub = timer.subscribe((ts: TimerState) => {
             setTimer(ts);
         });
 
         return () => {
-            console.log('tear down timer');
+            sub.unsubscribe();
         }
     }, []);
 

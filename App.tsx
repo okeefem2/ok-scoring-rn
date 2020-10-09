@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StatusBar } from 'react-native';
 import { useFonts } from 'expo-font';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -67,18 +67,21 @@ function App() {
   const Stack = createStackNavigator();
 
   return (
-    <ActionSheetProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName={NewGameRoute} screenOptions={{ headerShown: false }}>
-          <Stack.Screen name={NewGameRoute} component={NewGame}/>
-          <Stack.Screen name={GameRoute} component={Game}/>
-          <Stack.Screen name={GameHistoryRoute} component={GameHistory}/>
-          <Stack.Screen name={GameScoresRoute} component={GameScores}/>
-          <Stack.Screen name={GameSettingsRoute} component={GameSettings}/>
-          <Stack.Screen name={GameScoreHistoryModalRoute} component={GameScoreHistoryModal}/>
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ActionSheetProvider>
+    <>
+      <StatusBar  barStyle="dark-content" translucent={true} />
+      <ActionSheetProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={NewGameRoute} screenOptions={{ headerShown: false, gestureEnabled: false }}>
+            <Stack.Screen name={NewGameRoute} component={NewGame}/>
+            <Stack.Screen name={GameRoute} component={Game}/>
+            <Stack.Screen name={GameHistoryRoute} component={GameHistory}/>
+            <Stack.Screen name={GameScoresRoute} component={GameScores}/>
+            <Stack.Screen name={GameSettingsRoute} component={GameSettings}/>
+            <Stack.Screen name={GameScoreHistoryModalRoute} component={GameScoreHistoryModal}/>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ActionSheetProvider>
+    </>
   );
 }
 

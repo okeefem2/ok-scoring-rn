@@ -7,7 +7,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "publish-test": "expo publish --release-channel ok-scoring-test",
-    "publish-prod": "expo publish --release-channel ok-scoring"
+    "publish-prod": "expo publish --release-channel ok-scoring",
+    "deploy:ios:test": "expo upload:ios --app-name 'OK Scoring'"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.8.0",

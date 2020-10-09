@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontFamily: 'Quicksand',
-        fontSize: 18,
+        fontSize: 20,
         color: colors.primary,
         marginRight: 5,
         marginLeft: 5,

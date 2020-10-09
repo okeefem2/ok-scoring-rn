@@ -46,7 +46,6 @@ class GameStore implements GameState {
 
     constructor() {
         reaction(() => this.activePlayerScore, () => {
-            console.log('setting winner');
             this.setWinningPlayerKey(determineWinner(this.scoreHistory, this.settings.highScoreWins));
         });
     }
@@ -110,7 +109,6 @@ class GameStore implements GameState {
     @action
     addPlayer = (player: Player) => {
         if (player && this.players) {
-            console.log('Adding player!', player);
             this.players = [...this.players, player];
         }
     };

@@ -13,7 +13,6 @@ class LocalDbStore {
     initLocalDb = async () => {
         try {
             await initSQLLiteDb();
-            console.log('db initialized!')
             this.setDbInitialized(true);
         } catch (e) {
             this.dbInitialized = true;

@@ -18,7 +18,6 @@ import { PageNavigationProps } from '../../navigation'
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
 
 const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
-    console.log('New game!');
     const { dbInitialized, dbError } = useContext(localDbContext);
     const { gameCanStart, description } =  useContext(gameContext);
     const diceIcon = useDiceIcon();

@@ -14,18 +14,15 @@ export function determineWinner(gameScoreHistory: GameScoreHistory, highScoreWin
 
     Object.keys(gameScoreHistory).forEach((playerKey: string) => {
         const { currentScore, scores } = gameScoreHistory[playerKey];
-        console.log(`Checking if ${playerKey} is the winner`, currentScore, scores);
         if (scores.length && scoreBeatsWinner(winningScore.score, currentScore, highScoreWins)) {
             winningScore.playerKey = playerKey;
             winningScore.score = currentScore;
         }
     });
-    console.log('the winner is', winningScore.playerKey);
     return winningScore.playerKey;
 }
 
 export function buildInitialHistory(players: Player[], startingScore: number): GameScoreHistory {
-    console.log('setting initial history');
     return players.reduce(
         (history, player): GameScoreHistory => ({
             ...history,

@@ -28,10 +28,12 @@ const NewGameDescription = () => {
                     returnKeyType="done"
                     clearButtonMode="while-editing"
                     autoCorrect={false}
-                    onEndEditing={() => {
-                        setGameDescription(tempDescription as string);
-                        setTempDescription('');
-                        setShowInput(false);
+                    onSubmitEditing={() => {
+                        if (!!tempDescription) {
+                            setGameDescription(tempDescription as string);
+                            setTempDescription('');
+                            setShowInput(false);
+                        }
                     }}
                     onChangeText={(description) => setTempDescription(description)}
                     value={tempDescription}

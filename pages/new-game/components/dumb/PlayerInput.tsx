@@ -43,8 +43,10 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                         clearButtonMode="while-editing"
                         autoCorrect={false}
                         onSubmitEditing={() => {
-                            addPlayer(newPlayer);
-                            setShowInput(false);
+                            if (!!newPlayer) {
+                                addPlayer(newPlayer);
+                                setShowInput(false);
+                            }
                         }}
                         onChangeText={(name) => setNewPlayer({ name })}
                         value={newPlayer?.name}

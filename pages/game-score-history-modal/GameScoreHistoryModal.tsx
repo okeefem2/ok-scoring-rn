@@ -13,7 +13,6 @@ import GameScoresHeader from '../game-scores/components/GameScoresHeader';
 const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const { gameState, setGameState, scoreHistoryRounds } = useContext(gameHistoryContext);
 
-    console.log('the game state!!!', gameState);
     if (!gameState) {
         return (
             <View style={[sharedStyles.column]}>

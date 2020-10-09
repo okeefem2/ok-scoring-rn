@@ -8,7 +8,6 @@ const GameTimer = () => {
     const timerState = useTimerState();
     const dispatchTimerEvent = useTimerDispatch();
     const onToggleTimer = () => {
-        console.log('toggle timer');
         dispatchTimerEvent({ value: timerState.timerValue, on: !timerState.timerActive});
     };
 

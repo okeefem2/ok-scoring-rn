@@ -3,10 +3,10 @@ import { colors } from './colors';
 
 export const sharedStyles = StyleSheet.create({
     pageContainer: {
-        paddingLeft: 10,
-        paddingRight: 10,
-        paddingBottom: 10,
-        paddingTop: 25,
+        paddingLeft: 15,
+        paddingRight: 15,
+        paddingBottom: 50,
+        paddingTop: 50,
         backgroundColor: '#fff',
         flex: 1,
         alignItems: 'flex-start',

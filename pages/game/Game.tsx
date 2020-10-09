@@ -28,7 +28,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
         startGame();
     }, []);
 
-    const [turnScore, updateTurnScore] = useState(settings?.defaultScoreStep ?? 0);
+    const [turnScore, updateTurnScore] = useState<number | undefined>(settings?.defaultScoreStep ?? 0);
 
     return ( activePlayerScore ?
         <View style={sharedStyles.pageContainer}>
@@ -88,9 +88,10 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                                     <TextInput
                                         style={[styles.scoreInput]}
                                         onChangeText={(n) => {
-                                            console.log('changed', n)
                                             if (!!n || n === '0') {
                                                 updateTurnScore(parseInt(n.replace(/[^0-9]/g, ''), 10));
+                                            } else {
+                                                updateTurnScore(undefined);
                                             }
                                         }}
                                         placeholder='Turn Score'
@@ -116,10 +117,10 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                         </Text>
                     </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
-                        <Button title={`End Turn`} onPress={() => {
+                        <IconButton title={`End Turn`} clickHandler={() => {
                             endPlayerTurn(turnScore, players)
                             updateTurnScore(settings?.defaultScoreStep ?? 0)
-                        }} color={colors.primary}/>
+                        }}/>
                     </View>
                 </View>
             </View>
