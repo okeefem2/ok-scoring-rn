@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Text, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Animated, Text, View, ViewStyle } from 'react-native'
 import { sharedStyles } from '../../../../styles/shared'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { commaSeperateWithEllipsis } from '../../../../util/array.util';
@@ -9,26 +9,54 @@ import { Player } from '../../../../model/player';
 import { Settings } from '../../../../model/settings';
 import { useDiceIcon } from '../../../../hooks/useDiceIcon';
 import { GameState } from '../../../../model/game-state';
+import { GameHistorySort } from '../../../../state/game-history.store';
 
 interface GameHistoryListItemProps {
+    index: number;
     game: GameState;
+    sort: GameHistorySort;
     copyGameSetup: (players: Player[], settings: Settings, description: string) => void;
     continueGame: (game: GameState) => void;
     showGameState: (gameState: GameState) => void;
 };
 
-const GameHistoryListItem = ({ game, copyGameSetup, continueGame, showGameState }: GameHistoryListItemProps) => {
+const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, showGameState }: GameHistoryListItemProps) => {
     // TODO set state score history and navigate
     const diceIcon = useDiceIcon();
     const [playerNames, setPlayerNames] = useState('');
+    const fadeAnim = useRef(new Animated.Value(0)).current;
     // get the winning player to the front of the list
     useEffect(() => {
+        fadeAnim.setValue(0);
         // TODO should probably switch this to state
         const playerNames = game.players.slice().sort((a) => game.winningPlayerKey === a.key ? -1 : 1).map(p => p.name);
         setPlayerNames(commaSeperateWithEllipsis(playerNames));
-    }, [game]);
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 350 * (index + 1),
+            useNativeDriver: true
+        }).start();
+    }, [game, sort]);
+
     return (
-        <View style={sharedStyles.spacedRowBordered}>
+        <Animated.View
+        style={[
+            sharedStyles.spacedRowBordered,
+            { opacity: fadeAnim },
+            // {
+            //     transform: [
+            //         { scale: animated },
+            //         // {
+            //         //     rotate: animated.interpolate({
+            //         //         inputRange: [0, 1],
+            //         //         outputRange: ['35deg', '0deg'],
+            //         //         extrapolate: 'clamp',
+            //         //     })
+            //         // }
+            //     ],
+            // },
+        ]}
+        >
             <View style={sharedStyles.column}>
                 <View style={sharedStyles.plainRow}>
                     <Text style={[sharedStyles.ml5, sharedStyles.subHeaderText]}>
@@ -57,7 +85,7 @@ const GameHistoryListItem = ({ game, copyGameSetup, continueGame, showGameState 
                     <IconButton icon='book' title='View Scores' clickHandler={() => showGameState(game)} />
                 </View>
             </View>
-        </View>
+        </Animated.View>
     )
 }
 

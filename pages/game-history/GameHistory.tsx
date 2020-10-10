@@ -32,6 +32,8 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                 }
                 renderItem={
                     (itemData) => <GameHistoryListItem
+                                        sort={sort}
+                                        index={itemData.index}
                                         game={itemData.item}
                                         copyGameSetup={(...args) => {
                                             copyGameSetup(...args);
