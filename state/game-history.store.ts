@@ -65,7 +65,6 @@ class GameHistoryStore {
     }
 
     @action sortAndSetGameHistory = (gameHistory: GameState[]) => {
-        console.log('computing sort')
         const { asc, sortProp } = this.sort;
         this.gameHistory = gameHistory.sort((a, b) => {
             if (a.key === b.key) {
