@@ -12,7 +12,7 @@ import { RouteName as GameScoreHistoryModalRoute } from '../game-score-history-m
 import { GameState } from '../../model/game-state';
 
 const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
-    const {gameHistory, setGameState} = useContext(gameHistoryContext);
+    const {gameHistory, setGameState, setHistorySort, sort } = useContext(gameHistoryContext);
     const {copyGameSetup, initGameState: initNewGame} = useContext(gameContext);
     const showGameState = (gameState: GameState) => {
         setGameState(gameState);
@@ -22,6 +22,7 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
         <View style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: navigation.goBack }}
+                rightButton={{ icon: sort.asc ? 'sort-descending' : 'sort-ascending', title: 'Sort By Date', clickHandler: () => setHistorySort({ ...sort, asc: !sort.asc }) }}
             />
             <FlatList
                 style={sharedStyles.scroll}

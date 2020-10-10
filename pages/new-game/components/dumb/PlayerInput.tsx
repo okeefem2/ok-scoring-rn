@@ -69,7 +69,10 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                         onModalOpen={() => {
                             Keyboard.dismiss();
                         }}
-                        onModalClose={() => addPlayer(newPlayer)}
+                        onModalClose={() => {
+                            addPlayer(newPlayer);
+                            setShowInput(false);
+                        }}
                         keyExtractor= {player => player.key}
                         labelExtractor= {player => player.name}
                         selectedKey={newPlayer?.key}

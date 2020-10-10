@@ -24,12 +24,10 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
 
     return (
         <View style={sharedStyles.pageContainer}>
-            {
-                dbInitialized &&
-                <NavBar
-                    leftButton={{ icon: 'book', title: 'Game History', clickHandler: () => navigation.navigate(GameHistoryRoute)}}
-                />
-            }
+            <NavBar
+                leftButton={{ icon: 'settings', title: 'Game Settings', clickHandler: () => navigation.navigate(GameSettingsRoute)}}
+                rightButton={{ disabled: !gameCanStart, icon: diceIcon, title: 'Start Game', clickHandler: () => navigation.navigate(GameRoute)}}
+            />
             <CenterContent>
                 <Image
                     source={require('../../assets/icon.png')}
@@ -44,10 +42,12 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
             </CenterContent>
             <NewGameDescription/>
             <NewGamePlayers/>
-            <NavBar
-                leftButton={{ icon: 'settings', title: 'Game Settings', clickHandler: () => navigation.navigate(GameSettingsRoute)}}
-                rightButton={{ disabled: !gameCanStart, icon: diceIcon, title: 'Start Game', clickHandler: () => navigation.navigate(GameRoute)}}
-            />
+            {
+                dbInitialized &&
+                <NavBar
+                    leftButton={{ icon: 'book', title: 'Game History', clickHandler: () => navigation.navigate(GameHistoryRoute)}}
+                />
+            }
         </View>
     );
 }

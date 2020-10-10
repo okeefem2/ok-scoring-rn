@@ -2,7 +2,7 @@
   "expo": {
     "name": "OK Scoring",
     "description": "A simple but elegant application for keeping track of game scores of all kinds.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "sdkVersion": "38.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.okenterprises.okscoring",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.0.1",
       "supportsTablet": true
     },
     "android": {

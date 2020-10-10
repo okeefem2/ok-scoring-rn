@@ -8,6 +8,7 @@
     "eject": "expo eject",
     "publish-test": "expo publish --release-channel ok-scoring-test",
     "publish-prod": "expo publish --release-channel ok-scoring",
+    "build:ios": "expo build:ios --apple-id $EXPO_APPLE_ID",
     "deploy:ios:test": "expo upload:ios --app-name 'OK Scoring'"
   },
   "dependencies": {

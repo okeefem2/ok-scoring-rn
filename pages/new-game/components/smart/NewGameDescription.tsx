@@ -10,7 +10,7 @@ import { focusInputOnCreation } from '../../../../hooks/focusInputOnCreation'
 import IconButton from '../../../../components/IconButton'
 
 const NewGameDescription = () => {
-    const {setGameDescription} = useContext(gameContext);
+    const {setGameDescription, description} = useContext(gameContext);
     const { previousGamesSelectable } =  useContext(gameHistoryContext);
 
     const [tempDescription, setTempDescription] = useState('');
@@ -63,6 +63,7 @@ const NewGameDescription = () => {
                             if (tempDescription) {
                                 setGameDescription(tempDescription);
                                 setTempDescription('');
+                                setShowInput(false);
                             }
                         }}
                     />
@@ -70,7 +71,10 @@ const NewGameDescription = () => {
                 }
                 {
                     !showInput ?
-                        <IconButton icon='pencil-outline' title='Edit Game' alignSelf={'center'} clickHandler={() => {
+                        <IconButton icon='pencil-outline' title='Edit Game Name' alignSelf={'center'} clickHandler={() => {
+                            if (description) {
+                                setTempDescription(description);
+                            }
                             setShowInput(true)
                         }}/> :
                         <></>
