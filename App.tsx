@@ -10,7 +10,7 @@ import Game, { RouteName as GameRoute } from './pages/game/Game';
 import GameHistory, { RouteName as GameHistoryRoute } from './pages/game-history/GameHistory';
 import GameScores, { RouteName as GameScoresRoute } from './pages/game-scores/GameScores';
 import GameSettings, { RouteName as GameSettingsRoute } from './pages/game-settings/GameSettings';
-import GameScoreHistoryModal, { RouteName as GameScoreHistoryModalRoute }  from './pages/game-score-history-modal/GameScoreHistoryModal';
+import GameScoreHistory, { RouteName as GameScoreHistoryModalRoute }  from './pages/game-score-history/GameScoreHistory';
 import CenterContent from './components/CenterContent';
 import { localDbContext } from './state/local-db.store';
 import { sharedStyles } from './styles/shared';
@@ -59,7 +59,7 @@ function App() {
     </>;
   }
 
-  // TODO set some global font family?
+  // TODO set some backup global font family?
   if (error) {
     console.error('error loading fonts!!', error);
   }
@@ -77,7 +77,7 @@ function App() {
             <Stack.Screen name={GameHistoryRoute} component={GameHistory}/>
             <Stack.Screen name={GameScoresRoute} component={GameScores}/>
             <Stack.Screen name={GameSettingsRoute} component={GameSettings}/>
-            <Stack.Screen name={GameScoreHistoryModalRoute} component={GameScoreHistoryModal}/>
+            <Stack.Screen name={GameScoreHistoryModalRoute} component={GameScoreHistory}/>
           </Stack.Navigator>
         </NavigationContainer>
       </ActionSheetProvider>

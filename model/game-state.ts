@@ -11,4 +11,5 @@ export interface GameState {
     settings?: Settings;
     players: Player[];
     scoreHistory: GameScoreHistory;
+    playerNamesForDisplay?: string;
 }

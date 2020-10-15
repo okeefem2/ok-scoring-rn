@@ -9,7 +9,7 @@ type GamePlayerScoresTableProps = {
     players: Player[],
     scoreHistoryRounds: number[],
     scoreHistory: GameScoreHistory,
-    editable: boolean
+    editable?: boolean
 }
 const scrollPosition = new Animated.Value(0);
 const scrollEvent = Animated.event(
@@ -18,7 +18,7 @@ const scrollEvent = Animated.event(
 );
 let roundScrollRef: ScrollView;
 
-const GamePlayerScoresTable = ({
+export const GamePlayerScoresTable = ({
     players, scoreHistoryRounds, scoreHistory, editable = true
 }: GamePlayerScoresTableProps) => {
     useEffect(() => {

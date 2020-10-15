@@ -8,9 +8,7 @@ import { gameHistoryContext } from '../../state/game-history.store';
 import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTable';
 import GameScoresHeader from '../game-scores/components/GameScoresHeader';
 
-// TODO make this an actual modal
-
-const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
+const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const { gameState, setGameState, scoreHistoryRounds } = useContext(gameHistoryContext);
 
     if (!gameState) {
@@ -27,10 +25,6 @@ const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteN
                     setGameState(undefined);
                     navigation.pop();
                 }}}
-                // rightButton={{ icon: 'window-close', title: 'Close', clickHandler: () => {
-                //     setGameState(undefined);
-                //     navigation.pop();
-                // }}}
             />
             <View style={[sharedStyles.column]}>
                 <GameScoresHeader gameState={gameState}/>
@@ -48,4 +42,4 @@ const GameScoreHistoryModal = ({ navigation }: PageNavigationProps<typeof RouteN
 }
 
 export const RouteName = 'GameScoreHistoryModal';
-export default observer(GameScoreHistoryModal);
+export default observer(GameScoreHistory);

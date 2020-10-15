@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import { StyleSheet, Text, View, Button, TextInput, Animated } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Animated } from 'react-native'
 import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
@@ -12,7 +12,6 @@ import { PageNavigationProps } from '../../navigation';
 import { RouteName as GameScoresRoute } from '../game-scores/GameScores';
 
 const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
-    // const {timerValue} = useTimerState();
     const {
         settings,
         players,
@@ -38,8 +37,6 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
         startGame();
         runFadeAnimation();
     }, []);
-
-
 
     const [turnScore, updateTurnScore] = useState<number | undefined>(settings?.defaultScoreStep ?? 0);
 
@@ -100,38 +97,31 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                         </View>
                     </Animated.View>
                     <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt10 ]}>
-                            <View style={[styles.buttonRowItem]}>
-                                <IconButton icon='plus-minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} size={34}/>
-                            </View>
-                            <View style={[ styles.buttonRowItem ]}>
-                                {/* <View style={[sharedStyles.plainRow]}> */}
-                                    {/* <View style={[sharedStyles.mr5]}>
-                                        <IconButton icon='plus-minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} size={34}/>
-                                    </View> */}
-                                    <TextInput
-                                        style={[styles.scoreInput]}
-                                        onChangeText={(n) => {
-                                            if (!!n || n === '0') {
-                                                updateTurnScore(parseInt(n.replace(/[^0-9]/g, ''), 10));
-                                            } else {
-                                                updateTurnScore(undefined);
-                                            }
-                                        }}
-                                        placeholder='Turn Score'
-                                        value={turnScore?.toString()}
-                                        clearTextOnFocus={true}
-                                        keyboardType='number-pad'
-                                        returnKeyType="done"
-                                        ref={(input: TextInput) => { turnScoreInputRef = input; }}
-                                    />
-                                {/* </View> */}
-                                <View style={sharedStyles.mt25}>
-                                    <IconButton icon='dialpad' clickHandler={() => turnScoreInputRef.focus()} size={34} />
-                                </View>
-                            </View>
-
                         <View style={[styles.buttonRowItem]}>
-                            {/* <IconButton icon='plus' clickHandler={() => turnScore && updateTurnScore(Math.abs(turnScore))} disabled={!turnScore || turnScore > 0} width={'100%'} size={34}/> */}
+                            <IconButton icon='plus-minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} size={34}/>
+                        </View>
+                        <View style={[ styles.buttonRowItem ]}>
+                            <TextInput
+                                style={[styles.scoreInput]}
+                                onChangeText={(n) => {
+                                    if (!!n || n === '0') {
+                                        updateTurnScore(parseInt(n.replace(/[^0-9]/g, ''), 10));
+                                    } else {
+                                        updateTurnScore(undefined);
+                                    }
+                                }}
+                                placeholder='Turn Score'
+                                value={turnScore?.toString()}
+                                clearTextOnFocus={true}
+                                keyboardType='number-pad'
+                                returnKeyType="done"
+                                ref={(input: TextInput) => { turnScoreInputRef = input; }}
+                            />
+                            <View style={sharedStyles.mt25}>
+                                <IconButton icon='dialpad' clickHandler={() => turnScoreInputRef.focus()} size={34} />
+                            </View>
+                        </View>
+                        <View style={[styles.buttonRowItem]}>
                         </View>
                     </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>

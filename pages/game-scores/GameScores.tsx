@@ -1,18 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { FlatList, View, Text, StyleSheet, TextInput } from 'react-native'
+import {View, Text, TextInput } from 'react-native'
 import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
-import GameScoreListItem from './components/GameScoresListItem'
 import { gameContext } from '../../state/game.store'
 import { observer } from 'mobx-react'
 import { PageNavigationProps } from '../../navigation'
 import { RouteName as NewGameRoute } from '../new-game/NewGame';
 import { gameHistoryContext } from '../../state/game-history.store'
 import { playerHistoryContext } from '../../state/players-history.store'
-import GamePlayerScsoresTableRow from './components/GamePlayerScoresTableRow'
-import Header from '../../components/Header'
-import GamePlayerScoresTableRow from './components/GamePlayerScoresTableRow'
-import { ScrollView } from 'react-native-gesture-handler'
 import GamePlayerScoresTable from './components/GamePlayerScoresTable'
 import GameScoresHeader from './components/GameScoresHeader'
 
@@ -92,7 +87,11 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                                 keyboardType='number-pad'/>
                     </View> : null
                 }
-                <GamePlayerScoresTable players={players} scoreHistory={scoreHistory} scoreHistoryRounds={scoreHistoryRounds} />
+                <GamePlayerScoresTable
+                    players={players}
+                    scoreHistory={scoreHistory}
+                    scoreHistoryRounds={scoreHistoryRounds}
+                />
             </View>
         </View>
     );

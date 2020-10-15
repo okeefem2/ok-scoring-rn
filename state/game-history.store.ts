@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import { observable, action, computed, reaction } from 'mobx';
 import { localDbStore } from './local-db.store';
 import { fetchGameStates, insertGame } from '../db/db';
-import { addOrReplaceByKey } from '../util/array.util';
+import { addOrReplaceByKey, commaSeperateWithEllipsis } from '../util/array.util';
 import { GameState } from '../model/game-state';
 import { buildScoreHistoryRounds } from '../model/game-score-history';
 
@@ -12,7 +12,6 @@ class GameHistoryStore {
     @observable sort: GameHistorySort = { sortProp: 'date', asc: false };
     @observable gameHistory: GameState[] = [];
     @observable gameState?: GameState;
-    @observable gameHistorySorted: GameState[] = [];
 
     constructor() {
         reaction(() => this.sort, () => this.sortAndSetGameHistory([ ...this.gameHistory ]));
@@ -29,26 +28,14 @@ class GameHistoryStore {
         return buildScoreHistoryRounds(this.gameState?.scoreHistory ?? {});
     }
 
-    async saveGameToDb(gameState: GameState) {
-        try {
-            await insertGame(gameState);
-        } catch(e) {
-            console.error('Error saving game to local db', e);
-        }
-    }
-
-    saveGame = (gameState: GameState) => {
-        const gameHistory = addOrReplaceByKey(this.gameHistory, gameState);
-        this.sortAndSetGameHistory(gameHistory)
-        this.saveGameToDb(gameState);
-    }
-
     @action loadGames = async () => {
         if (localDbStore.dbInitialized) {
             try {
                 const games: GameState[] = await fetchGameStates();
                 if (games?.length) {
-                    this.sortAndSetGameHistory(games);
+                    this.sortAndSetGameHistory(
+                        games.map(g => this.hydrateGameStateForHistory(g))
+                    );
                 }
             } catch(e) {
                 console.error('Error loading games from local db', e);
@@ -77,14 +64,48 @@ class GameHistoryStore {
                 // If we are ascending, the undefined values should be pushed to the start of the array
                 sortDown = asc ? !!bValue && !aValue : false;
             } else {
-
                 // If we want ascending, the lower value should be pushed to the front of the array
                 sortDown = asc ? aValue < bValue : aValue > bValue;
             }
-
             // if a should be sorted to a lower index than b, return -1 else 1
             return sortDown ? -1 : 1;
         });
+    }
+
+    async saveGameToDb(gameState: GameState) {
+        try {
+            await insertGame(gameState);
+        } catch(e) {
+            console.error('Error saving game to local db', e);
+        }
+    }
+
+    saveGame = (gameState: GameState) => {
+        gameState = this.hydrateGameStateForHistory(gameState);
+        const gameHistory = addOrReplaceByKey(this.gameHistory, gameState);
+        this.sortAndSetGameHistory(gameHistory)
+        this.saveGameToDb(gameState);
+    }
+
+    hydrateGameStateForHistory(gameState: GameState): GameState {
+        gameState = this.sortGameStatePlayersByScore(gameState);
+        gameState = this.setPlayerNamesForDisplay(gameState);
+        return gameState;
+    }
+
+    sortGameStatePlayersByScore(gameState: GameState): GameState {
+        gameState.players = gameState?.players?.sort((playerA, playerB) => {
+            const { currentScore: scoreA } = gameState.scoreHistory[playerA.key];
+            const { currentScore: scoreB } = gameState.scoreHistory[playerB.key];
+            return scoreB - scoreA;
+        });
+        return gameState;
+    }
+
+    setPlayerNamesForDisplay(gameState: GameState): GameState {
+        const playerNames = gameState.players.map(p => p.name);
+        gameState.playerNamesForDisplay = commaSeperateWithEllipsis(playerNames);
+        return gameState;
     }
 }
 

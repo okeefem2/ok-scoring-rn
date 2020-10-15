@@ -16,7 +16,6 @@ const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerS
 
     const { showActionSheetWithOptions } = useActionSheet();
 
-
     return (
         <TouchableOpacity onPress={() => showActionSheetWithOptions({
             options: [ 'Edit', 'Delete', 'Cancel'],

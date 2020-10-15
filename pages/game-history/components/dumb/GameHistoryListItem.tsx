@@ -23,14 +23,10 @@ interface GameHistoryListItemProps {
 const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, showGameState }: GameHistoryListItemProps) => {
     // TODO set state score history and navigate
     const diceIcon = useDiceIcon();
-    const [playerNames, setPlayerNames] = useState('');
     const fadeAnim = useRef(new Animated.Value(0)).current;
     // get the winning player to the front of the list
     useEffect(() => {
         fadeAnim.setValue(0);
-        // TODO should probably switch this to state
-        const playerNames = game.players.slice().sort((a) => game.winningPlayerKey === a.key ? -1 : 1).map(p => p.name);
-        setPlayerNames(commaSeperateWithEllipsis(playerNames));
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 350 * (index + 1),
@@ -43,18 +39,6 @@ const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, s
         style={[
             sharedStyles.spacedRowBordered,
             { opacity: fadeAnim },
-            // {
-            //     transform: [
-            //         { scale: animated },
-            //         // {
-            //         //     rotate: animated.interpolate({
-            //         //         inputRange: [0, 1],
-            //         //         outputRange: ['35deg', '0deg'],
-            //         //         extrapolate: 'clamp',
-            //         //     })
-            //         // }
-            //     ],
-            // },
         ]}
         >
             <View style={sharedStyles.column}>
@@ -72,7 +56,7 @@ const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, s
                 <View style={[sharedStyles.plainRow]}>
                     <MaterialCommunityIcons name='crown' size={18} color={colors.tertiary} />
                     <Text style={[sharedStyles.ml5, sharedStyles.bodyText]}>
-                        {playerNames}
+                        {game.playerNamesForDisplay}
                     </Text>
                 </View>
                 <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>

@@ -20,7 +20,7 @@ const GamePlayerScoresTableRow = ({ playerScoreHistory, editable }: GamePlayerSc
                             playerKey={playerScoreHistory.playerKey}
                             key={`${playerScoreHistory.key}-${s}-${i}`}
                         /> :
-                        <Text style={[sharedStyles.scoreTabelCell]}>{s}</Text>
+                        <Text style={[sharedStyles.scoreTabelCell]} key={`${playerScoreHistory.key}-${s}-${i}`}>{s}</Text>
 
                 ))
             }

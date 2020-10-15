@@ -8,7 +8,7 @@ import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
 import { PageNavigationProps } from '../../navigation';
 import { RouteName as GameRoute } from '../game/Game';
-import { RouteName as GameScoreHistoryModalRoute } from '../game-score-history-modal/GameScoreHistoryModal';
+import { RouteName as GameScoreHistoryModalRoute } from '../game-score-history/GameScoreHistory';
 import { GameState } from '../../model/game-state';
 
 const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
@@ -31,24 +31,25 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                     <Text style={[sharedStyles.bodyText, sharedStyles.centeredText, sharedStyles.mt25]}>No Games Played Yet!</Text>
                 }
                 renderItem={
-                    (itemData) => <GameHistoryListItem
-                                        sort={sort}
-                                        index={itemData.index}
-                                        game={itemData.item}
-                                        copyGameSetup={(...args) => {
-                                            copyGameSetup(...args);
-                                            navigation.goBack();
-                                        }}
-                                        continueGame={(gameState) => {
-                                            initNewGame(gameState);
-                                            navigation.reset({
-                                                index: 0,
-                                                routes: [{ name: GameRoute }],
-                                            })
-                                        }}
-                                        key={itemData.item.key}
-                                        showGameState={showGameState}
-                                        />
+                    (itemData) =>
+                        <GameHistoryListItem
+                            sort={sort}
+                            index={itemData.index}
+                            game={itemData.item}
+                            copyGameSetup={(...args) => {
+                                copyGameSetup(...args);
+                                navigation.goBack();
+                            }}
+                            continueGame={(gameState) => {
+                                initNewGame(gameState);
+                                navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: GameRoute }],
+                                })
+                            }}
+                            showGameState={showGameState}
+                            key={itemData.item.key}
+                        />
                 }
             />
         </View>

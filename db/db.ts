@@ -1,12 +1,13 @@
 import * as SQLite from 'expo-sqlite';
 import { Player } from '../model/player';
-import { GameState, PlayerScoreHistory, GameScoreHistory } from '../model/game-score-history';
+import { GameScoreHistory } from '../model/game-score-history';
 import { Settings } from '../model/settings';
 import { SQLResultSet } from 'expo-sqlite';
 import { v4 as uuid } from 'react-native-uuid';
+import { PlayerScoreHistory } from '../model/player-score-history';
+import { GameState } from '../model/game-state';
 
 const db = SQLite.openDatabase('ok-scores.db');
-
 type SQLInsertData = [string, any[]];
 
 export const initSQLLiteDb = () => {

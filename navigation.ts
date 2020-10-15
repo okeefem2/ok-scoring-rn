@@ -4,7 +4,7 @@ import { RouteName as GameRoute } from './pages/game/Game';
 import { RouteName as GameHistoryRoute } from './pages/game-history/GameHistory';
 import { RouteName as GameScoresRoute } from './pages/game-scores/GameScores';
 import { RouteName as GameSettingsRoute } from './pages/game-settings/GameSettings';
-import { RouteName as GameScoreHistoryModal } from './pages/game-score-history-modal/GameScoreHistoryModal';
+import { RouteName as GameScoreHistoryModal } from './pages/game-score-history/GameScoreHistory';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 
