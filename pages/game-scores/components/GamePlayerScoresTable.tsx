@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { StyleSheet, Text, View, ScrollView, Animated } from 'react-native'
 import { sharedStyles } from '../../../styles/shared';
 import GamePlayerScoresTableRow from './GamePlayerScoresTableRow';
 import { Player } from '../../../model/player';
 import { GameScoreHistory } from '../../../model/game-score-history';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { gameContext } from '../../../state/game.store';
 
 type GamePlayerScoresTableProps = {
     players: Player[],
     scoreHistoryRounds: number[],
     scoreHistory: GameScoreHistory,
-    editable?: boolean
+    editable?: boolean,
+    playersSelectable?: boolean,
 }
 const scrollPosition = new Animated.Value(0);
 const scrollEvent = Animated.event(
@@ -19,8 +22,10 @@ const scrollEvent = Animated.event(
 let roundScrollRef: ScrollView;
 
 export const GamePlayerScoresTable = ({
-    players, scoreHistoryRounds, scoreHistory, editable = true
+    players, scoreHistoryRounds, scoreHistory, editable = true, playersSelectable = false
 }: GamePlayerScoresTableProps) => {
+    const {setActivePlayer} = useContext(gameContext);
+
     useEffect(() => {
         scrollPosition.addListener(position => {
             roundScrollRef.scrollTo({ x: position.value, animated: false });
@@ -64,10 +69,18 @@ export const GamePlayerScoresTable = ({
                     <View style={[styles.players]}>
                         {
                             players.map(player => (
-                                <View style={[sharedStyles.plainRow, sharedStyles.mb5, sharedStyles.mt5]} key={player.key}>
-                                    <Text style={[sharedStyles.bodyText]}>
-                                        {player.name}
-                                    </Text>
+                                <View style={[sharedStyles.plainRow]} key={player.key}>
+                                    {
+                                        playersSelectable ?
+                                        <TouchableOpacity onPress={() => setActivePlayer(player)}>
+                                            <Text style={[sharedStyles.bodyText, sharedStyles.touchableCell, sharedStyles.p5]}>
+                                                {player.name}
+                                            </Text>
+                                        </TouchableOpacity> :
+                                        <Text style={[sharedStyles.bodyText, sharedStyles.p5]}>
+                                            {player.name}
+                                        </Text>
+                                    }
                                 </View>
                             ))
                         }

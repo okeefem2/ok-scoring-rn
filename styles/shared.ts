@@ -88,6 +88,9 @@ export const sharedStyles = StyleSheet.create({
     bodyText: {
         fontFamily: 'Quicksand',
     },
+    p5: {
+        padding: 5,
+    },
     ml5: {
         marginLeft: 5,
     },
@@ -142,6 +145,9 @@ export const sharedStyles = StyleSheet.create({
         marginRight: 20,
         textAlign: 'center',
         fontFamily: 'Quicksand',
+    },
+    touchableCell: {
+        backgroundColor: colors.primaryLight,
     },
     scoreTabelLabel: {
         paddingTop: 5,

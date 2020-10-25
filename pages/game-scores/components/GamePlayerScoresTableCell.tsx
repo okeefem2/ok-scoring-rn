@@ -30,7 +30,7 @@ const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerS
                 deletePlayerScore({ playerKey, scoreIndex });
             }
         })}>
-            <Text style={[sharedStyles.scoreTabelCell, styles.touchableCell]}>
+            <Text style={[sharedStyles.scoreTabelCell, sharedStyles.touchableCell]}>
                 {score}
             </Text>
         </TouchableOpacity>
@@ -38,9 +38,6 @@ const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerS
 }
 
 const styles = StyleSheet.create({
-    touchableCell: {
-        backgroundColor: colors.primaryLight,
-    },
     winningCell: {
         backgroundColor: colors.primaryLight,
     }

@@ -6,7 +6,7 @@
  * @param i2
  */
 export function swap<T = any>(arr: T[], i1: number, i2: number) {
-    if (!arr[i1] || !arr[i2]) {
+    if (!arr?.length || !arr[i1] || !arr[i2]) {
         return arr;
     }
     const copy = [ ...arr ];

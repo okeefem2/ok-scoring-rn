@@ -153,12 +153,11 @@ class GameStore implements GameState {
                 this.players ?? [],
                 this.settings?.startingScore ?? 0
             );
-            const players = this.players;
-            this.activePlayerScore = {
-                playerScore: this.scoreHistory[players[0].key],
-                player: players[0],
-                index: 0,
-            }
+        }
+        this.activePlayerScore = {
+            playerScore: this.scoreHistory[this.players[0].key],
+            player: this.players[0],
+            index: 0,
         }
     }
 
@@ -195,6 +194,15 @@ class GameStore implements GameState {
             const player = gamePlayers[newIndex];
             const playerScore = this.scoreHistory[player.key];
             this.activePlayerScore = { playerScore, index: newIndex, player, };
+        }
+    }
+
+    @action
+    setActivePlayer = (player: Player) => {
+        if (this.activePlayerScore?.player.key !== player.key) {
+            const index = this.players.findIndex(p => p.key === player.key);
+            const playerScore = this.scoreHistory[player.key];
+            this.activePlayerScore = { playerScore, index, player, };
         }
     }
 
