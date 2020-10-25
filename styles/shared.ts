@@ -149,6 +149,9 @@ export const sharedStyles = StyleSheet.create({
     touchableCell: {
         backgroundColor: colors.primaryLight,
     },
+    editingCell: {
+        backgroundColor: colors.warning,
+    },
     scoreTabelLabel: {
         paddingTop: 5,
         paddingBottom: 5,

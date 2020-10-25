@@ -24,7 +24,7 @@ let roundScrollRef: ScrollView;
 export const GamePlayerScoresTable = ({
     players, scoreHistoryRounds, scoreHistory, editable = true, playersSelectable = false
 }: GamePlayerScoresTableProps) => {
-    const {setActivePlayer} = useContext(gameContext);
+    const {setActivePlayer, activeGamePlayerScore} = useContext(gameContext);
 
     useEffect(() => {
         scrollPosition.addListener(position => {
@@ -73,7 +73,7 @@ export const GamePlayerScoresTable = ({
                                     {
                                         playersSelectable ?
                                         <TouchableOpacity onPress={() => setActivePlayer(player)}>
-                                            <Text style={[sharedStyles.bodyText, sharedStyles.touchableCell, sharedStyles.p5]}>
+                                            <Text style={[sharedStyles.bodyText, activeGamePlayerScore?.player.key === player.key ? sharedStyles.editingCell : sharedStyles.touchableCell, sharedStyles.p5]}>
                                                 {player.name}
                                             </Text>
                                         </TouchableOpacity> :

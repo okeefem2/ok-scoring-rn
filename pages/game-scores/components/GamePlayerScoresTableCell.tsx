@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Text, StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { sharedStyles } from '../../../styles/shared';
@@ -12,7 +12,14 @@ type GamePlayerScoresTableCellProps = {
     score: number;
 }
 const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerScoresTableCellProps) => {
-    const {editPlayerScore, deletePlayerScore} = useContext(gameContext);
+    const {editPlayerScore, deletePlayerScore, editingPlayerScore} = useContext(gameContext);
+
+    const [isBeingEdited, setIsBeingEdited] = useState(false);
+
+    useEffect(() => {
+        const cellIsBeingEdited = editingPlayerScore?.player?.key === playerKey && editingPlayerScore?.scoreIndex === scoreIndex;
+        setIsBeingEdited(cellIsBeingEdited);
+    }, [editingPlayerScore]);
 
     const { showActionSheetWithOptions } = useActionSheet();
 
@@ -30,7 +37,7 @@ const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerS
                 deletePlayerScore({ playerKey, scoreIndex });
             }
         })}>
-            <Text style={[sharedStyles.scoreTabelCell, sharedStyles.touchableCell]}>
+            <Text style={[sharedStyles.scoreTabelCell, isBeingEdited ?  sharedStyles.editingCell : sharedStyles.touchableCell ]}>
                 {score}
             </Text>
         </TouchableOpacity>

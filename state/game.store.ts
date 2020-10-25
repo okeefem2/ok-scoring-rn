@@ -6,14 +6,8 @@ import { Player } from '../model/player';
 import { swap } from '../util/array.util';
 import { GameState } from '../model/game-state';
 import { GameScoreHistory, determineWinner, buildInitialHistory, buildScoreHistoryRounds } from '../model/game-score-history';
-import { ActivePlayerScore } from '../model/active-player-score';
+import { PlayerScore, PlayerScoreMode } from '../model/player-score';
 import { reCalcCurrentScore } from '../model/player-score-history';
-export interface PlayerScore {
-    playerKey: string;
-    playerName: string;
-    scoreIndex: number;
-    score: number;
-}
 
 class GameStore implements GameState {
     key = uuid();
@@ -40,7 +34,7 @@ class GameStore implements GameState {
     scoreHistory: GameScoreHistory = {};
 
     @observable
-    activePlayerScore?: ActivePlayerScore;
+    activePlayerScore?: PlayerScore;
     @observable
     editingPlayerScore?: PlayerScore;
 
@@ -51,8 +45,18 @@ class GameStore implements GameState {
     }
 
     @computed
+    get playerScoreMode(): PlayerScoreMode {
+        return !!this.editingPlayerScore ? PlayerScoreMode.Editing : PlayerScoreMode.Current;
+    }
+
+    @computed
+    get activeGamePlayerScore(): PlayerScore | undefined {
+        return !!this.editingPlayerScore ? this.editingPlayerScore : this.activePlayerScore;
+    }
+
+    @computed
     get gameCanStart() {
-        return !!this.players.length && !!this.description;
+        return this.players.length && !!this.description;
     }
 
     @computed
@@ -147,21 +151,6 @@ class GameStore implements GameState {
     }
 
     @action
-    startGame = () => {
-        if (!Object.keys(this.scoreHistory ?? {}).length && this.players?.length) {
-            this.scoreHistory = buildInitialHistory(
-                this.players ?? [],
-                this.settings?.startingScore ?? 0
-            );
-        }
-        this.activePlayerScore = {
-            playerScore: this.scoreHistory[this.players[0].key],
-            player: this.players[0],
-            index: 0,
-        }
-    }
-
-    @action
     updateRoundScore = (playerKey: string, roundIndex: number, newScore: number) => {
         if (this.scoreHistory && this.scoreHistory.hasOwnProperty(playerKey)) {
             this.scoreHistory[playerKey].scores.splice(roundIndex, 1, newScore);
@@ -182,28 +171,8 @@ class GameStore implements GameState {
     }
 
     @action
-    changeActivePlayer = (n: 1 | -1, gamePlayers: Player[]) => {
-        if (this.scoreHistory && this.activePlayerScore) {
-            const { index } = this.activePlayerScore;
-            let newIndex = index + n;
-            if (newIndex >= gamePlayers.length) {
-                newIndex = 0;
-            } else if (newIndex < 0) {
-                newIndex = gamePlayers.length - 1;
-            }
-            const player = gamePlayers[newIndex];
-            const playerScore = this.scoreHistory[player.key];
-            this.activePlayerScore = { playerScore, index: newIndex, player, };
-        }
-    }
-
-    @action
     setActivePlayer = (player: Player) => {
-        if (this.activePlayerScore?.player.key !== player.key) {
-            const index = this.players.findIndex(p => p.key === player.key);
-            const playerScore = this.scoreHistory[player.key];
-            this.activePlayerScore = { playerScore, index, player, };
-        }
+        this.activePlayerScore = this.createPlayerScore(player);
     }
 
     @action
@@ -214,7 +183,7 @@ class GameStore implements GameState {
     }) => {
         const player = this.players.find(p => p.key === data.playerKey);
         if (player) {
-            this.editingPlayerScore = { ...data, playerName: player.name };
+            this.editingPlayerScore = this.createPlayerScore(player, data.scoreIndex);
         }
     }
 
@@ -223,6 +192,52 @@ class GameStore implements GameState {
         if (this.scoreHistory) {
             this.scoreHistory[playerKey].scores.splice(scoreIndex, 1);
             this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);
+        }
+    }
+
+    @action
+    startGame = () => {
+        if (!Object.keys(this.scoreHistory ?? {}).length && this.players?.length) {
+            this.scoreHistory = buildInitialHistory(
+                this.players ?? [],
+                this.settings?.startingScore ?? 0
+            );
+        }
+        this.setActivePlayer(this.players[0]);
+    }
+
+    changeActivePlayer = (n: 1 | -1, gamePlayers: Player[]) => {
+        if (this.scoreHistory && this.activePlayerScore) {
+            const { playerIndex: index } = this.activePlayerScore;
+            let newIndex = index + n;
+            if (newIndex >= gamePlayers.length) {
+                newIndex = 0;
+            } else if (newIndex < 0) {
+                newIndex = gamePlayers.length - 1;
+            }
+            const player = gamePlayers[newIndex];
+            this.setActivePlayer(player);
+        }
+    }
+
+    createPlayerScore = (player: Player, round?: number) => {
+        if (player) {
+            const playerIndex = this.players.findIndex(p => p.key === player.key);
+            const playerScore = this.scoreHistory[player.key];
+            const roundIndex = round !== undefined ?
+                round :
+                playerScore.scores.length ?? 0;
+            let roundScore = this.settings.defaultScoreStep || 0;
+            if (round !== undefined) {
+                roundScore =  playerScore?.scores[round];
+            }
+            return {
+                playerScore,
+                player,
+                playerIndex,
+                scoreIndex: roundIndex,
+                score: roundScore,
+            };
         }
     }
 }

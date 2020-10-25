@@ -12,18 +12,21 @@ import { PageNavigationProps } from '../../navigation';
 import { RouteName as GameScoresRoute } from '../game-scores/GameScores';
 import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTable';
 import GestureRecognizer from 'react-native-swipe-gestures';
+import { PlayerScoreMode } from '../../model/player-score';
 
 const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const {
         settings,
         players,
         startGame,
-        activePlayerScore,
         winningPlayerKey,
         changeActivePlayer,
         endPlayerTurn,
         scoreHistory,
         scoreHistoryRounds,
+        activeGamePlayerScore,
+        playerScoreMode,
+        updateRoundScore
     } = useContext(gameContext);
     const slideAnim = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -45,6 +48,10 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
 
     let turnScoreInputRef: TextInput;
     useEffect(() => {
+        updateTurnScore(activeGamePlayerScore?.score);
+    }, [activeGamePlayerScore]);
+
+    useEffect(() => {
         startGame();
         runFadeAnimation(1);
     }, []);
@@ -61,7 +68,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
         runFadeAnimation(1);
     };
 
-    return ( activePlayerScore ?
+    return ( activeGamePlayerScore ?
         <View style={sharedStyles.pageContainer}>
             <GestureRecognizer onSwipeRight={changePlayerLeft} onSwipeLeft={changePlayerRight}>
                 <View style={styles.gameContainer}>
@@ -75,18 +82,18 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                     />
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
                         {
-                            winningPlayerKey === activePlayerScore.player.key &&
+                            winningPlayerKey === activeGamePlayerScore.player.key &&
                             <Animated.View style={[{ transform: [{ translateX: slideAnim}]}, { opacity: fadeAnim }]}>
                                 <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
                             </Animated.View>
                         }
                     </View>
-                    <View style={[sharedStyles.spacedEvenlyNoBorder, winningPlayerKey !== activePlayerScore.player.key && sharedStyles.mt25 ]}>
+                    <View style={[sharedStyles.spacedEvenlyNoBorder, winningPlayerKey !== activeGamePlayerScore.player.key && sharedStyles.mt25 ]}>
                         <View style={[styles.buttonRowItem]}>
                             <IconButton icon='chevron-left' clickHandler={changePlayerLeft} width={'100%'} size={34} />
                         </View>
                         <Animated.View style={[styles.buttonRowItem, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim}]}]}>
-                            <Header title={activePlayerScore.player.name}/>
+                            <Header title={activeGamePlayerScore.player.name}/>
                         </Animated.View>
                         <View style={[styles.buttonRowItem]}>
                             <IconButton icon='chevron-right' clickHandler={changePlayerRight} width={'100%'} size={34} />
@@ -95,13 +102,13 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
 
                     <Animated.View style={[{ opacity: fadeAnim }, { transform: [{ translateX: slideAnim}]}]}>
                         <Text style={[styles.turnDetails, sharedStyles.mt15]}>
-                            Turn {activePlayerScore.playerScore.scores.length + 1}
+                            Turn {activeGamePlayerScore.scoreIndex + 1}
                         </Text>
                     </Animated.View>
                     <Animated.View style={[styles.scoreContainer, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim}]}]}>
                         <View style={styles.middleTextInner}>
                             <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
-                                {activePlayerScore.playerScore.currentScore?.toString() || '0'}
+                                {activeGamePlayerScore.playerScore.currentScore?.toString() || '0'}
                             </Text>
                         </View>
                     </Animated.View>
@@ -139,9 +146,12 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                         </Text>
                     </View>
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
-                        <IconButton title={`End Turn`} clickHandler={() => {
-                            endPlayerTurn(turnScore, players);
-                            updateTurnScore(settings?.defaultScoreStep ?? 0);
+                        <IconButton title={playerScoreMode === PlayerScoreMode.Editing ? `Update Turn`: `End Turn`} clickHandler={() => {
+                            if (playerScoreMode === PlayerScoreMode.Editing) {
+                                updateRoundScore(activeGamePlayerScore.player.key, activeGamePlayerScore.scoreIndex, turnScore as number);
+                            } else {
+                                endPlayerTurn(turnScore, players);
+                            }
                             runFadeAnimation(1);
                         }}/>
                     </View>
@@ -149,7 +159,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                         players={players}
                         scoreHistory={scoreHistory}
                         scoreHistoryRounds={scoreHistoryRounds}
-                        editable={false}
+                        editable={true}
                         playersSelectable={true}
                     />
                 </View>
