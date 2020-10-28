@@ -192,6 +192,9 @@ class GameStore implements GameState {
         if (this.scoreHistory) {
             this.scoreHistory[playerKey].scores.splice(scoreIndex, 1);
             this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);
+            if (this.activePlayerScore?.player.key === playerKey && this.activePlayerScore.scoreIndex >= scoreIndex) {
+                this.activePlayerScore = { ...this.activePlayerScore, scoreIndex: this.activePlayerScore.scoreIndex - 1 }
+            }
         }
     }
 
