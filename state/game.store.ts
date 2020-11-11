@@ -11,7 +11,7 @@ import { reCalcCurrentScore } from '../model/player-score-history';
 
 class GameStore implements GameState {
     key = uuid();
-    date = new Date().toLocaleDateString();
+    date = 0;
     duration = 0;
 
     // Observable props
@@ -88,7 +88,7 @@ class GameStore implements GameState {
         this.key = gameState?.key ?? uuid();
         this.description = gameState?.description ?? '';
         this.scoreHistory = gameState?.scoreHistory ?? {};
-        this.date = gameState?.date ?? new Date().toLocaleDateString();
+        this.date = gameState?.date ?? new Date().getTime();
         this.players = gameState?.players ?? [];
         this.settings = gameState?.settings ?? {
             key: uuid(),
@@ -144,7 +144,7 @@ class GameStore implements GameState {
             key: uuid(),
             description,
             scoreHistory: {},
-            date: '',
+            date: new Date().getTime(),
             players,
             settings
         });
@@ -206,6 +206,7 @@ class GameStore implements GameState {
                 this.settings?.startingScore ?? 0
             );
         }
+        this.date = new Date().getTime();
         this.setActivePlayer(this.players[0]);
     }
 

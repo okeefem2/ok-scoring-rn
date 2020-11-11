@@ -5,7 +5,7 @@ import { Settings } from './settings';
 export interface GameState {
     key: string;
     description: string;
-    date: string;
+    date: number;
     duration?: number;
     winningPlayerKey?: string;
     settings?: Settings;

@@ -79,7 +79,7 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                                     ref={(input: TextInput) => setPlayerRoundScoreInputRef(input)}
                                     onEndEditing={() => {
                                         if (tempNewScore !== undefined) {
-                                            updateRoundScore(editingPlayerScore.playerKey, editingPlayerScore.scoreIndex, tempNewScore);
+                                            updateRoundScore(editingPlayerScore.player.key, editingPlayerScore.scoreIndex, tempNewScore);
                                             setTempNewScore(undefined);
                                         }
                                     }}

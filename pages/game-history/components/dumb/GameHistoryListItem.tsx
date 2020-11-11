@@ -10,6 +10,7 @@ import { Settings } from '../../../../model/settings';
 import { useDiceIcon } from '../../../../hooks/useDiceIcon';
 import { GameState } from '../../../../model/game-state';
 import { GameHistorySort } from '../../../../state/game-history.store';
+import { formatDate } from '../../../../hooks/formatDate';
 
 interface GameHistoryListItemProps {
     index: number;
@@ -24,6 +25,7 @@ const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, s
     // TODO set state score history and navigate
     const diceIcon = useDiceIcon();
     const fadeAnim = useRef(new Animated.Value(0)).current;
+    const formattedDate = formatDate(game.date);
     // get the winning player to the front of the list
     useEffect(() => {
         fadeAnim.setValue(0);
@@ -50,7 +52,7 @@ const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, s
                 <View style={sharedStyles.plainRow}>
                     <MaterialCommunityIcons name='calendar-outline' size={28} color={colors.tertiary} />
                     <Text style={[sharedStyles.ml5, sharedStyles.subHeaderText]}>
-                        {game.date}
+                        {formattedDate}
                     </Text>
                 </View>
                 <View style={[sharedStyles.plainRow]}>

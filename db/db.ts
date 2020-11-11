@@ -27,7 +27,7 @@ export const initSQLLiteDb = () => {
                     key TEXT PRIMARY KEY NOT NULL,
                     description TEXT,
                     winningPlayerKey TEXT,
-                    date TEXT,
+                    date INTEGER,
                     duration INTEGER,
 
                     FOREIGN KEY (winningPlayerKey)
@@ -211,6 +211,7 @@ export const fetchGameStates = async (): Promise<GameState[]> => {
     for (let gameState of gameStates) {
         const playerScores = await fetchPlayerScores(gameState.key);
         const players = await fetchPlayers(playerScores.map(p => p.playerKey));
+        gameState.date = parseInt(gameState.date.toString(), 10);
         gameState.scoreHistory = playerScores.reduce(
             (history, playerScore) => ({
                 ...history,

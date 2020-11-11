@@ -4,16 +4,18 @@ import { GameState } from '../../../model/game-state'
 import Header from '../../../components/Header'
 import { sharedStyles } from '../../../styles/shared'
 import GameScoreListItem from './GameScoresListItem'
+import { formatDate } from '../../../hooks/formatDate'
 
 type GameScoresHeaderProps = {
     gameState: GameState;
 }
 const GameScoresHeader = ({ gameState }: GameScoresHeaderProps) => {
+    const formattedDate = formatDate(gameState.date);
     return (
         <>
             <Header title={gameState.description} />
             <Text style={[sharedStyles.bodyText, sharedStyles.mb25, sharedStyles.centeredText]}>
-                {gameState.date}
+                {formattedDate}
             </Text>
             <FlatList
                 style={[sharedStyles.scroll, sharedStyles.mb25]}

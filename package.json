@@ -19,6 +19,7 @@
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
     "buffer": "^5.6.0",
+    "date-fns": "^2.16.1",
     "expo": "^38.0.0",
     "expo-font": "~8.2.1",
     "expo-sqlite": "~8.2.1",

@@ -83,6 +83,7 @@ class GameHistoryStore {
     saveGame = (gameState: GameState) => {
         gameState = this.hydrateGameStateForHistory(gameState);
         const gameHistory = addOrReplaceByKey(this.gameHistory, gameState);
+        console.log('New game history!', gameHistory);
         this.sortAndSetGameHistory(gameHistory)
         this.saveGameToDb(gameState);
     }
@@ -90,6 +91,7 @@ class GameHistoryStore {
     hydrateGameStateForHistory(gameState: GameState): GameState {
         gameState = this.sortGameStatePlayersByScore(gameState);
         gameState = this.setPlayerNamesForDisplay(gameState);
+        gameState.duration = new Date().getTime() - gameState.date;
         return gameState;
     }
 
