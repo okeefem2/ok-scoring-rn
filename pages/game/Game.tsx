@@ -70,8 +70,8 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
 
     return ( activeGamePlayerScore ?
         <View style={sharedStyles.pageContainer}>
-            <GestureRecognizer onSwipeRight={changePlayerLeft} onSwipeLeft={changePlayerRight}>
-                <View style={styles.gameContainer}>
+            <View style={styles.gameContainer}>
+                <GestureRecognizer onSwipeRight={changePlayerLeft} onSwipeLeft={changePlayerRight}>
                     <NavBar
                         leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => {
                             navigation.navigate(GameScoresRoute, { gameOver: false });
@@ -82,13 +82,12 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                     />
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
                         {
-                            winningPlayerKey === activeGamePlayerScore.player.key &&
                             <Animated.View style={[{ transform: [{ translateX: slideAnim}]}, { opacity: fadeAnim }]}>
-                                <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />
+                                <MaterialCommunityIcons name={'crown'} size={28} color={winningPlayerKey === activeGamePlayerScore.player.key ? colors.tertiary : colors.white } />
                             </Animated.View>
                         }
                     </View>
-                    <View style={[sharedStyles.spacedEvenlyNoBorder, winningPlayerKey !== activeGamePlayerScore.player.key && sharedStyles.mt25 ]}>
+                    <View style={[sharedStyles.spacedEvenlyNoBorder ]}>
                         <View style={[styles.buttonRowItem]}>
                             <IconButton icon='chevron-left' clickHandler={changePlayerLeft} width={'100%'} size={34} />
                         </View>
@@ -155,15 +154,15 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             runFadeAnimation(1);
                         }}/>
                     </View>
-                    <GamePlayerScoresTable
-                        players={players}
-                        scoreHistory={scoreHistory}
-                        scoreHistoryRounds={scoreHistoryRounds}
-                        editable={true}
-                        playersSelectable={true}
-                    />
-                </View>
-            </GestureRecognizer>
+                </GestureRecognizer>
+                <GamePlayerScoresTable
+                    players={players}
+                    scoreHistory={scoreHistory}
+                    scoreHistoryRounds={scoreHistoryRounds}
+                    editable={true}
+                    playersSelectable={true}
+                />
+            </View>
         </View>
         : <Text>Loading...</Text>
     );
