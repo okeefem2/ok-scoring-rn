@@ -12,6 +12,7 @@ const GamePlayerScoresTableRow = ({ playerScoreHistory, editable }: GamePlayerSc
     return playerScoreHistory ? (
         <View style={[sharedStyles.plainRow]} key={playerScoreHistory.key}>
             {
+                playerScoreHistory.scores.length ?
                 playerScoreHistory.scores.map((s, i) => (
                     editable ?
                         <GamePlayerScoresTableCell
@@ -21,7 +22,7 @@ const GamePlayerScoresTableRow = ({ playerScoreHistory, editable }: GamePlayerSc
                             key={`${playerScoreHistory.key}-${s}-${i}`}
                         /> :
                         <Text style={[sharedStyles.scoreTabelCell]} key={`${playerScoreHistory.key}-${s}-${i}`}>{s}</Text>
-                ))
+                )) : <View style={[sharedStyles.scoreTabelCell]}></View>
             }
         </View>
     ) : null;

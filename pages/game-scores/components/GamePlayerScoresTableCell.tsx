@@ -44,10 +44,4 @@ const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerS
     );
 }
 
-const styles = StyleSheet.create({
-    winningCell: {
-        backgroundColor: colors.primaryLight,
-    }
-});
-
 export default connectActionSheet(GamePlayerScoresTableCell);

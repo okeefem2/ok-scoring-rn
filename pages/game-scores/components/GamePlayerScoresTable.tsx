@@ -91,7 +91,7 @@ export const GamePlayerScoresTable = ({
                             onScroll={scrollEvent}
                             scrollEventThrottle={16}
                         >
-                            <View style={sharedStyles.column}>
+                            <View style={[sharedStyles.column]}>
                                 {
                                     players.map(
                                         player => <GamePlayerScoresTableRow

@@ -14,6 +14,7 @@ import { RouteName as GameHistoryRoute } from '../game-history/GameHistory';
 import { RouteName as GameRoute } from '../game/Game';
 import { RouteName as GameSettingsRoute } from '../game-settings/GameSettings';
 import { PageNavigationProps } from '../../navigation'
+import Header from '../../components/Header'
 
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
 
@@ -36,9 +37,7 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                 />
             </CenterContent>
             <CenterContent>
-                <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
-                    {description || 'New Game'}
-                </Text>
+                <Header title={description || 'New Game'}/>
             </CenterContent>
             <NewGameDescription/>
             <NewGamePlayers/>

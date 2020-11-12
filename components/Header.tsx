@@ -4,13 +4,13 @@ import { StyleSheet, Text, View } from 'react-native'
 
 interface HeaderProps {
     title?: string;
-    padding?: number;
+    fontSize?: number;
 }
 
-const Header = ({ title }: HeaderProps) => {
+const Header = ({ title, fontSize = 30 }: HeaderProps) => {
     return (
-        <View style={styles.header}>
-            <Text style={styles.headerText}>{ title }</Text>
+        <View style={[styles.header]}>
+            <Text style={[styles.headerText, { fontSize }]}>{ title }</Text>
         </View>
     )
 }
@@ -24,9 +24,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
+        flexWrap: 'wrap',
     },
     headerText: {
-        fontSize: 36,
-        fontFamily: 'Quicksand'
+        fontFamily: 'Quicksand',
+        textAlign: 'center',
     }
 })
