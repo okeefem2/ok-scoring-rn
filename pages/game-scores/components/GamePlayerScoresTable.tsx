@@ -6,6 +6,7 @@ import { Player } from '../../../model/player';
 import { GameScoreHistory } from '../../../model/game-score-history';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gameContext } from '../../../state/game.store';
+import GamePlayerScoresTablePlayerCell from './GamePlayerScoresTablePlayerCell';
 
 type GamePlayerScoresTableProps = {
     players: Player[],
@@ -24,7 +25,7 @@ let roundScrollRef: ScrollView;
 export const GamePlayerScoresTable = ({
     players, scoreHistoryRounds, scoreHistory, editable = true, playersSelectable = false
 }: GamePlayerScoresTableProps) => {
-    const {setActivePlayer, activeGamePlayerScore} = useContext(gameContext);
+    const {activeGamePlayerScore} = useContext(gameContext);
 
     useEffect(() => {
         scrollPosition.addListener(position => {
@@ -69,19 +70,12 @@ export const GamePlayerScoresTable = ({
                     <View style={[styles.players]}>
                         {
                             players.map(player => (
-                                <View style={[sharedStyles.plainRow]} key={player.key}>
-                                    {
-                                        playersSelectable ?
-                                        <TouchableOpacity onPress={() => setActivePlayer(player)}>
-                                            <Text style={[sharedStyles.bodyText, activeGamePlayerScore?.player.key === player.key ? sharedStyles.editingCell : sharedStyles.touchableCell, sharedStyles.p5]}>
-                                                {player.name}
-                                            </Text>
-                                        </TouchableOpacity> :
-                                        <Text style={[sharedStyles.bodyText, sharedStyles.p5]}>
-                                            {player.name}
-                                        </Text>
-                                    }
-                                </View>
+                                <GamePlayerScoresTablePlayerCell
+                                    key={player.key}
+                                    selectable={playersSelectable}
+                                    player={player}
+                                    active={activeGamePlayerScore?.player.key === player.key}
+                                />
                             ))
                         }
                     </View>
