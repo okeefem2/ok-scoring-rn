@@ -140,7 +140,7 @@ export const sharedStyles = StyleSheet.create({
         height: 150
     },
     scoreTabelCell: {
-        minWidth: 30,
+        minWidth: 60,
         minHeight: 28,
         padding: 5,
         marginRight: 20,
