@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        flexWrap: 'wrap',
     },
     headerText: {
         fontFamily: 'Quicksand',

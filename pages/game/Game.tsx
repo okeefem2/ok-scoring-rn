@@ -13,6 +13,8 @@ import { RouteName as GameScoresRoute } from '../game-scores/GameScores';
 import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTable';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { PlayerScoreMode } from '../../model/player-score';
+import { truncateText } from '../../hooks/truncateString';
+import Tooltip from '../../components/Tooltip';
 
 const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const {
@@ -68,6 +70,8 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
         runFadeAnimation(1);
     };
 
+    const displayName = truncateText(activeGamePlayerScore?.player?.name ?? '', 10);
+
     return ( activeGamePlayerScore ?
         <View style={sharedStyles.pageContainer}>
             <View style={styles.gameContainer}>
@@ -80,7 +84,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             navigation.navigate(GameScoresRoute, { gameOver: true });
                         }}}
                     />
-                    <View style={[sharedStyles.centeredContent, sharedStyles.mt25 ]}>
+                    <View style={[sharedStyles.centeredContent, sharedStyles.mt10 ]}>
                         {
                             <Animated.View style={[{ transform: [{ translateX: slideAnim}]}, { opacity: fadeAnim }]}>
                                 <MaterialCommunityIcons name={'crown'} size={28} color={winningPlayerKey === activeGamePlayerScore.player.key ? colors.tertiary : colors.white } />
@@ -92,7 +96,9 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             <IconButton icon='chevron-left' clickHandler={changePlayerLeft} width={'100%'} size={34} />
                         </View>
                         <Animated.View style={[styles.buttonRowItem, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim}]}]}>
-                            <Header title={activeGamePlayerScore.player.name}/>
+                            {/* <Tooltip text={activeGamePlayerScore.player.name}> */}
+                            <Header title={displayName}/>
+                            {/* </Tooltip> */}
                         </Animated.View>
                         <View style={[styles.buttonRowItem]}>
                             <IconButton icon='chevron-right' clickHandler={changePlayerRight} width={'100%'} size={34} />
@@ -111,7 +117,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             </Text>
                         </View>
                     </Animated.View>
-                    <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt10 ]}>
+                    <View style={[sharedStyles.spacedEvenlyNoBorder ]}>
                         <View style={[styles.buttonRowItem]}>
                             <IconButton icon='plus-minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} size={34}/>
                         </View>

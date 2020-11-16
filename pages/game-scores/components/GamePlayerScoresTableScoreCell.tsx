@@ -5,13 +5,16 @@ import { sharedStyles } from '../../../styles/shared';
 import { gameContext } from '../../../state/game.store';
 import { connectActionSheet, useActionSheet } from '@expo/react-native-action-sheet';
 import { colors } from '../../../styles/colors';
+import { abbreviateNumber } from '../../../hooks/abbreviateNumber';
 
-type GamePlayerScoresTableCellProps = {
+type GamePlayerScoresTableScoreCellProps = {
     playerKey: string;
     scoreIndex: number;
     score: number;
+    editable: boolean;
 }
-const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerScoresTableCellProps) => {
+
+const GamePlayerScoresTableScoreCell = ({ playerKey, score, scoreIndex, editable }: GamePlayerScoresTableScoreCellProps) => {
     const {editPlayerScore, deletePlayerScore, editingPlayerScore} = useContext(gameContext);
 
     const [isBeingEdited, setIsBeingEdited] = useState(false);
@@ -23,8 +26,10 @@ const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerS
 
     const { showActionSheetWithOptions } = useActionSheet();
 
+    const displayScore = abbreviateNumber(score);
+
     return (
-        <TouchableOpacity onPress={() => showActionSheetWithOptions({
+        editable ? <TouchableOpacity onPress={() => showActionSheetWithOptions({
             options: [ 'Edit', 'Delete', 'Cancel'],
             tintColor: colors.primary,
             cancelButtonIndex: 2,
@@ -38,10 +43,11 @@ const GamePlayerScoresTableCell = ({ playerKey, score, scoreIndex }: GamePlayerS
             }
         })}>
             <Text style={[sharedStyles.scoreTabelCell, isBeingEdited ?  sharedStyles.editingCell : sharedStyles.touchableCell ]}>
-                {score}
+                {displayScore}
             </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> :
+        <Text style={[sharedStyles.scoreTabelCell]}>{displayScore}</Text>
     );
 }
 
-export default connectActionSheet(GamePlayerScoresTableCell);
+export default connectActionSheet(GamePlayerScoresTableScoreCell);
