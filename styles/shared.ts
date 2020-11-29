@@ -156,6 +156,7 @@ export const sharedStyles = StyleSheet.create({
     scoreTabelLabel: {
         paddingTop: 5,
         paddingBottom: 5,
+        minHeight: 28,
         fontFamily: 'Quicksand',
     }
 });

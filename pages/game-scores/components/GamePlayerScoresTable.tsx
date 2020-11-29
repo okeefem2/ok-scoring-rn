@@ -64,6 +64,13 @@ export const GamePlayerScoresTable = ({
                         </View>
                     </ScrollView>
                 </View>
+                <View style={[styles.players]}>
+                    <View style={sharedStyles.plainRowBordered}>
+                        <Text style={[sharedStyles.scoreTabelLabel]}>
+                            Total
+                        </Text>
+                    </View>
+                </View>
             </View>
             <ScrollView>
                 <View style={[sharedStyles.plainRow]}>
@@ -96,6 +103,17 @@ export const GamePlayerScoresTable = ({
                                 }
                             </View>
                         </ScrollView>
+                    </View>
+                    <View style={[styles.players]}>
+                        {
+                            players.map(player => (
+                                <View style={[sharedStyles.plainRow, { minWidth: 50 }]} key={player.key}>
+                                    <Text style={[sharedStyles.bodyText, sharedStyles.p5, { minWidth: 50 }]} key={player.key}>
+                                        {scoreHistory[player.key].currentScore}
+                                    </Text>
+                                </View>
+                            ))
+                        }
                     </View>
                 </View>
             </ScrollView>
