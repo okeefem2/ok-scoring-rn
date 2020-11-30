@@ -109,7 +109,7 @@ export const GamePlayerScoresTable = ({
                             players.map(player => (
                                 <View style={[sharedStyles.plainRow, { minWidth: 50 }]} key={player.key}>
                                     <Text style={[sharedStyles.bodyText, sharedStyles.p5, { minWidth: 50 }]} key={player.key}>
-                                        {scoreHistory[player.key].currentScore}
+                                        {scoreHistory[player.key]?.currentScore ?? 0}
                                     </Text>
                                 </View>
                             ))

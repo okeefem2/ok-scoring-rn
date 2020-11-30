@@ -10,7 +10,8 @@ import { gameHistoryContext } from '../../state/game-history.store'
 import { playerHistoryContext } from '../../state/players-history.store'
 import GamePlayerScoresTable from './components/GamePlayerScoresTable'
 import GameScoresHeader from './components/GameScoresHeader'
-
+import GameScoresNavBar from './GameScoresNavBar'
+import { RouteName as GameRoute } from '../game/Game';
 export type GameScoreProps = {
     gameOver?: boolean;
 }
@@ -23,7 +24,11 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
         scoreHistory,
         scoreHistoryRounds,
         editingPlayerScore,
-        updateRoundScore
+        updateRoundScore,
+        winningPlayerName,
+        copyGameSetup,
+        settings,
+        description,
     } = useContext(gameContext);
     const { saveGame } = useContext(gameHistoryContext);
     const { savePlayers } = useContext(playerHistoryContext);
@@ -35,7 +40,7 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
         if (playerRoundScoreInputRef) {
             playerRoundScoreInputRef.focus();
         }
-    }, [playerRoundScoreInputRef])
+    }, [playerRoundScoreInputRef]);
 
     const exitToNewGame = () => {
         initGameState(undefined);
@@ -45,28 +50,37 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
         });
     };
 
+    const exitAndplayAgain = () => {
+        copyGameSetup(players, settings, description);
+        navigation.reset({
+            index: 0,
+            routes: [{ name: GameRoute }],
+        });
+    };
+
+    const saveAndQuit = (playAgain: boolean) => {
+        savePlayers(gameState.players);
+        saveGame(gameState);
+        if (playAgain) {
+            exitAndplayAgain();
+        } else {
+            exitToNewGame();
+        }
+    }
     // TODO make a read only view version of this for game history
     // Rename this to game scores or something similar
 
     return (
         <View style={[sharedStyles.pageContainer]}>
+
             <View style={[ styles.gameScoresContainer]}>
                 <View style={[sharedStyles.column]}>
-                    <NavBar
-                        leftButton={
-                            { icon: 'chevron-left', title: 'Back', clickHandler: navigation.pop }
-                        }
-                        rightButton={gameOver ? { icon: 'content-save-outline', title: 'Save & Quit', clickHandler: () => {
-                            savePlayers(gameState.players);
-                            saveGame(gameState);
-                            exitToNewGame();
-                        } } : undefined}
-                    />
+                    <GameScoresNavBar backHandler={navigation.pop} saveHandler={gameOver ? saveAndQuit : null} winningPlayerName={winningPlayerName} />
                     <GameScoresHeader gameState={gameState}/>
                     {
                         editingPlayerScore ? <View style={sharedStyles.spacedRowNoBorder}>
                                 <Text style={[sharedStyles.bodyText]}>
-                                    Update Round {editingPlayerScore.scoreIndex + 1} Score For { editingPlayerScore.playerName }:
+                                    Update Round {editingPlayerScore.scoreIndex + 1} Score For { editingPlayerScore.player.name }:
                                 </Text>
                                 <TextInput
                                     style={[]}

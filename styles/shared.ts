@@ -71,6 +71,14 @@ export const sharedStyles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
     },
+    centeredColumn: {
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     centeredContent: {
         width: '100%',
         display: 'flex',

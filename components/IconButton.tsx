@@ -34,7 +34,7 @@ const IconButton = ({
             <TouchableOpacity onPress={() => !disabled && clickHandler()} disabled={disabled} style={{ width: width, }}>
                 <View style={styles.buttonRow}>
                     { !!icon && iconSide === 'left' ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
-                    { !!title ? <Text style={textStyles}>{title}</Text> : <></> }
+                    { !!title ? <Text style={[textStyles, { color: disabled ? colors.greyMid : color }]}>{title}</Text> : <></> }
                     { !!icon && iconSide === 'right'  ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
                 </View>
             </TouchableOpacity>
