@@ -30,7 +30,7 @@ const GameScoresNavBar = ({ backHandler, saveHandler, winningPlayerName }: GameS
                 visible={modalVisible}
             >
                 <View style={[sharedStyles.centeredColumn, { backgroundColor: colors.greyMidTrans }]}>
-                    <Header title={`Congratulations ${winningPlayerName}!`} />
+                    !!winningPlayerName ? <Header title={`Congratulations ${winningPlayerName}!`} /> : null
                     <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt25]}>
                         <IconButton icon={'replay'} title={'Play Again'} clickHandler={() => {
                             modalAction(true);

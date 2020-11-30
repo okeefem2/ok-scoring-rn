@@ -81,12 +81,10 @@ class GameStore implements GameState {
     }
 
     @action
-    setWinningPlayerKey = (key: string) => {
+    setWinningPlayerKey = (key?: string) => {
         this.winningPlayerKey = key;
-        if (key) {
-            const winningPlayer = this.players.find(p => p.key === key);
-            this.winningPlayerName = winningPlayer?.name;
-        }
+        const winningPlayer = this.players.find(p => p.key === key);
+        this.winningPlayerName = winningPlayer?.name;
     }
 
     @action
@@ -104,6 +102,7 @@ class GameStore implements GameState {
             highScoreWins: true,
             // scoreIncreases: true
         };
+        this.setWinningPlayerKey(undefined);
     }
 
     @action
