@@ -21,7 +21,7 @@ const GameScoreListItem = ({player, playerScoreHistory, winning }: GameScoreList
                 }
             </View>
             <View>
-                <Text style={[sharedStyles.bodyText, sharedStyles.ml5]}>{playerScoreHistory.currentScore} points</Text>
+                <Text style={[sharedStyles.bodyText, sharedStyles.ml5]}>{playerScoreHistory?.currentScore ?? 0} points</Text>
             </View>
         </View>
     );

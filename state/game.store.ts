@@ -20,6 +20,8 @@ class GameStore implements GameState {
     @observable
     winningPlayerKey?: string;
     @observable
+    winningPlayerName?: string;
+    @observable
     settings: Settings = {
         key: uuid(),
         // rounds: undefined,
@@ -79,8 +81,10 @@ class GameStore implements GameState {
     }
 
     @action
-    setWinningPlayerKey = (key: string) => {
+    setWinningPlayerKey = (key?: string) => {
         this.winningPlayerKey = key;
+        const winningPlayer = this.players.find(p => p.key === key);
+        this.winningPlayerName = winningPlayer?.name;
     }
 
     @action
@@ -98,6 +102,7 @@ class GameStore implements GameState {
             highScoreWins: true,
             // scoreIncreases: true
         };
+        this.setWinningPlayerKey(undefined);
     }
 
     @action

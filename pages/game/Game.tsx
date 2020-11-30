@@ -14,7 +14,6 @@ import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTab
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { PlayerScoreMode } from '../../model/player-score';
 import { truncateText } from '../../hooks/truncateString';
-import Tooltip from '../../components/Tooltip';
 
 const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const {
