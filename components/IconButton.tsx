@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../styles/colors';
 
@@ -13,6 +13,7 @@ export interface ButtonConfig {
     color?: string;
     width?: string
     alignSelf?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline' | 'auto' | undefined;
+    backgroundColor?: string;
 }
 const IconButton = ({
     icon,
@@ -23,9 +24,13 @@ const IconButton = ({
     size = 24,
     color = colors.primary,
     width,
-    alignSelf = 'center'
+    alignSelf = 'center',
+    backgroundColor,
 }: ButtonConfig) => {
     const textStyles: any[] = [styles.buttonText];
+    if (backgroundColor) {
+        textStyles.push({ backgroundColor });
+    }
     if (disabled) {
         textStyles.push(styles.disabled);
     }
@@ -55,7 +60,6 @@ const styles = StyleSheet.create({
     buttonText: {
         fontFamily: 'Quicksand',
         fontSize: 20,
-        color: colors.primary,
         marginRight: 5,
         marginLeft: 5,
     },

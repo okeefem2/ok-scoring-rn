@@ -7,6 +7,7 @@ import { sharedStyles } from '../../styles/shared';
 import { gameHistoryContext } from '../../state/game-history.store';
 import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTable';
 import GameScoresHeader from '../game-scores/components/GameScoresHeader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const { gameState, setGameState, scoreHistoryRounds } = useContext(gameHistoryContext);
@@ -19,7 +20,7 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>)
         );
     }
     return (
-        <View style={sharedStyles.pageContainer}>
+        <SafeAreaView style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: () => {
                     setGameState(undefined);
@@ -37,7 +38,7 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>)
                 />
             </View>
 
-        </View>
+        </SafeAreaView>
     )
 }
 

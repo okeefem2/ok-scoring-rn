@@ -10,13 +10,14 @@ import { observer } from 'mobx-react';
 import SettingsSection from './components/dumb/SettingsSection';
 import { PageNavigationProps } from '../../navigation';
 import { colors } from '../../styles/colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof RouteName>) => {
 
     const { settings, setSetting } = useContext(gameContext);
 
     return (
-        <View style={sharedStyles.pageContainer}>
+        <SafeAreaView style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: goBack }}
             />
@@ -95,7 +96,7 @@ const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof Rout
                 </SettingsSection>
             </ScrollView>
             <UnderConstruction/>
-        </View>
+        </SafeAreaView>
     );
 }
 

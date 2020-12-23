@@ -12,6 +12,8 @@ import GamePlayerScoresTable from './components/GamePlayerScoresTable'
 import GameScoresHeader from './components/GameScoresHeader'
 import GameScoresNavBar from './GameScoresNavBar'
 import { RouteName as GameRoute } from '../game/Game';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 export type GameScoreProps = {
     gameOver?: boolean;
 }
@@ -71,8 +73,7 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
     // Rename this to game scores or something similar
 
     return (
-        <View style={[sharedStyles.pageContainer]}>
-
+        <SafeAreaView style={[sharedStyles.pageContainer]}>
             <View style={[ styles.gameScoresContainer]}>
                 <View style={[sharedStyles.column]}>
                     <GameScoresNavBar backHandler={navigation.pop} saveHandler={gameOver ? saveAndQuit : null} winningPlayerName={winningPlayerName} />
@@ -113,7 +114,7 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                     }
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
