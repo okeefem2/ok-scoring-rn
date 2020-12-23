@@ -14,6 +14,7 @@ import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTab
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { PlayerScoreMode } from '../../model/player-score';
 import { truncateText } from '../../hooks/truncateString';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const {
@@ -72,7 +73,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const displayName = truncateText(activeGamePlayerScore?.player?.name ?? '', 10);
 
     return ( activeGamePlayerScore ?
-        <View style={sharedStyles.pageContainer}>
+        <SafeAreaView style={sharedStyles.pageContainer}>
             <View style={styles.gameContainer}>
                 <GestureRecognizer onSwipeRight={changePlayerLeft} onSwipeLeft={changePlayerRight}>
                     <NavBar
@@ -90,7 +91,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             </Animated.View>
                         }
                     </View>
-                    <View style={[sharedStyles.spacedEvenlyNoBorder ]}>
+                    <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt10]}>
                         <View style={[styles.buttonRowItem]}>
                             <IconButton icon='chevron-left' clickHandler={changePlayerLeft} width={'100%'} size={34} />
                         </View>
@@ -105,7 +106,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                     </View>
 
                     <Animated.View style={[{ opacity: fadeAnim }, { transform: [{ translateX: slideAnim}]}]}>
-                        <Text style={[styles.turnDetails, sharedStyles.mt15]}>
+                        <Text style={[styles.turnDetails, sharedStyles.mt10]}>
                             Turn {activeGamePlayerScore.scoreIndex + 1}
                         </Text>
                     </Animated.View>
@@ -149,7 +150,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             { !!turnScore ? (turnScore >= 0 ? `+${turnScore}` : turnScore) : '+0'} points
                         </Text>
                     </View>
-                    <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
+                    <View style={[sharedStyles.centeredContent, sharedStyles.mt25, sharedStyles.mb10]}>
                         <IconButton title={playerScoreMode === PlayerScoreMode.Editing ? `Update Turn`: `End Turn`} clickHandler={() => {
                             if (playerScoreMode === PlayerScoreMode.Editing) {
                                 updateRoundScore(activeGamePlayerScore.player.key, activeGamePlayerScore.scoreIndex, turnScore as number);
@@ -168,7 +169,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                     playersSelectable={true}
                 />
             </View>
-        </View>
+        </SafeAreaView>
         : <Text>Loading...</Text>
     );
 };

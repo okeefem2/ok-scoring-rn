@@ -5,8 +5,8 @@ export const sharedStyles = StyleSheet.create({
     pageContainer: {
         paddingLeft: 15,
         paddingRight: 15,
-        paddingBottom: 50,
-        paddingTop: 50,
+        paddingBottom: 15,
+        paddingTop: 5,
         backgroundColor: '#fff',
         flex: 1,
         alignItems: 'flex-start',
@@ -51,8 +51,6 @@ export const sharedStyles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     spacedEvenlyNoBorder: {
-        paddingTop: 15,
-        paddingBottom: 15,
         width: '100%',
         maxWidth: '100%',
         display: 'flex',

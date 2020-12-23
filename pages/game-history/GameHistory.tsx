@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Text, FlatList, View } from 'react-native';
+import { Text, FlatList } from 'react-native';
 import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
 import GameHistoryListItem from './components/dumb/GameHistoryListItem';
@@ -10,6 +10,7 @@ import { PageNavigationProps } from '../../navigation';
 import { RouteName as GameRoute } from '../game/Game';
 import { RouteName as GameScoreHistoryModalRoute } from '../game-score-history/GameScoreHistory';
 import { GameState } from '../../model/game-state';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const {gameHistory, setGameState, setHistorySort, sort } = useContext(gameHistoryContext);
@@ -19,7 +20,7 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
         navigation.navigate(GameScoreHistoryModalRoute);
     }
     return (
-        <View style={sharedStyles.pageContainer}>
+        <SafeAreaView style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: navigation.goBack }}
                 rightButton={{ icon: sort.asc ? 'sort-descending' : 'sort-ascending', title: 'Sort By Date', clickHandler: () => setHistorySort({ ...sort, asc: !sort.asc }) }}
@@ -52,7 +53,7 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                         />
                 }
             />
-        </View>
+        </SafeAreaView>
     );
 }
 

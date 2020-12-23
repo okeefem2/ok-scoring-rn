@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Image, View, Text } from 'react-native'
+import { Image } from 'react-native';
 import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
 import { Settings } from '../../model/settings'
@@ -15,16 +15,17 @@ import { RouteName as GameRoute } from '../game/Game';
 import { RouteName as GameSettingsRoute } from '../game-settings/GameSettings';
 import { PageNavigationProps } from '../../navigation'
 import Header from '../../components/Header'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
 
 const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
-    const { dbInitialized, dbError } = useContext(localDbContext);
+    const { dbInitialized } = useContext(localDbContext);
     const { gameCanStart, description } =  useContext(gameContext);
     const diceIcon = useDiceIcon();
 
     return (
-        <View style={sharedStyles.pageContainer}>
+        <SafeAreaView style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'settings', title: 'Game Settings', clickHandler: () => navigation.navigate(GameSettingsRoute)}}
                 rightButton={{ disabled: !gameCanStart, icon: diceIcon, title: 'Start Game', clickHandler: () => navigation.navigate(GameRoute)}}
@@ -47,7 +48,7 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                     leftButton={{ icon: 'book', title: 'Game History', clickHandler: () => navigation.navigate(GameHistoryRoute)}}
                 />
             }
-        </View>
+        </SafeAreaView>
     );
 }
 

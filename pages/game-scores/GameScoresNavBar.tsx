@@ -10,7 +10,7 @@ import { sharedStyles } from '../../styles/shared';
 interface GameScoresNavbarProps {
     backHandler: () => void;
     saveHandler: ((playAgain: boolean) => void) | null;
-    winningPlayerName: string;
+    winningPlayerName?: string;
 }
 
 const GameScoresNavBar = ({ backHandler, saveHandler, winningPlayerName }: GameScoresNavbarProps) => {
@@ -30,7 +30,7 @@ const GameScoresNavBar = ({ backHandler, saveHandler, winningPlayerName }: GameS
                 visible={modalVisible}
             >
                 <View style={[sharedStyles.centeredColumn, { backgroundColor: colors.greyMidTrans }]}>
-                    !!winningPlayerName ? <Header title={`Congratulations ${winningPlayerName}!`} /> : null
+                    {!!winningPlayerName ? <Header title={`Congratulations ${winningPlayerName}!`} /> : null}
                     <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt25]}>
                         <IconButton icon={'replay'} title={'Play Again'} clickHandler={() => {
                             modalAction(true);
