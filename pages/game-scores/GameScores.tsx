@@ -107,7 +107,7 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                         scoreHistory={scoreHistory}
                         scoreHistoryRounds={scoreHistoryRounds}
                         editable={!gameOver}
-                   />
+                />
                 </View>
                 <View style={[ { alignSelf: 'flex-end' }]}>
                     {
