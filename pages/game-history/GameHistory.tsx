@@ -8,7 +8,7 @@ import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
 import { PageNavigationProps } from '../../navigation';
 import { RouteName as GameRoute } from '../game/Game';
-import { RouteName as GameScoreHistoryModalRoute } from '../game-score-history/GameScoreHistory';
+import { RouteName as GameScoreHistoryRoute } from '../game-score-history/GameScoreHistory';
 import { GameState } from '../../model/game-state';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -17,7 +17,7 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     const {copyGameSetup, initGameState: initNewGame} = useContext(gameContext);
     const showGameState = (gameState: GameState) => {
         setGameState(gameState);
-        navigation.navigate(GameScoreHistoryModalRoute);
+        navigation.navigate(GameScoreHistoryRoute);
     }
     return (
         <SafeAreaView style={sharedStyles.pageContainer}>

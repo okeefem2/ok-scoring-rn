@@ -11,7 +11,7 @@ import IconButton from '../../../../components/IconButton'
 
 const NewGameDescription = () => {
     const {setGameDescription, description} = useContext(gameContext);
-    const { previousGamesSelectable } =  useContext(gameHistoryContext);
+    const { favoriteGames } =  useContext(gameHistoryContext);
 
     const [tempDescription, setTempDescription] = useState('');
     const [showInput, setShowInput] = useState(false);
@@ -44,14 +44,14 @@ const NewGameDescription = () => {
 
             <View style={sharedStyles.spacedRowNoBorder}>
                 {
-                    previousGamesSelectable?.length ?
+                    favoriteGames?.length ?
                     <ModalSelector
                         initValueTextStyle={{ color: colors.primary }}
                         selectTextStyle={{ color: colors.primary }}
                         optionTextStyle={{ color: colors.secondary }}
                         cancelTextStyle={{ color: colors.tertiary }}
-                        data={previousGamesSelectable}
-                        initValue="Previous Games"
+                        data={favoriteGames}
+                        initValue="Favorite Games"
                         selectedKey={tempDescription}
                         onModalOpen={() => {
                             Keyboard.dismiss();

@@ -13,6 +13,7 @@ import { observer } from 'mobx-react'
 import { RouteName as GameHistoryRoute } from '../game-history/GameHistory';
 import { RouteName as GameRoute } from '../game/Game';
 import { RouteName as GameSettingsRoute } from '../game-settings/GameSettings';
+import { RouteName as FavoritesRoute } from '../favorites/Favorites';
 import { PageNavigationProps } from '../../navigation'
 import Header from '../../components/Header'
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -46,6 +47,7 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                 dbInitialized &&
                 <NavBar
                     leftButton={{ icon: 'book', title: 'Game History', clickHandler: () => navigation.navigate(GameHistoryRoute)}}
+                    rightButton={{ icon: 'star', title: 'Favorites', clickHandler: () => navigation.navigate(FavoritesRoute)}}
                 />
             }
         </SafeAreaView>

@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { localDbStore } from './local-db.store';
 import { Player } from '../model/player';
 import { fetchPlayers, insertPlayer } from '../db/db';
@@ -9,12 +9,14 @@ class PlayerHistoryStore {
 
     @observable playerHistory: Player[] = [];
 
-    async savePlayerToDb(player: Player) {
-        try {
-            await insertPlayer(player);
-        } catch(e) {
-            console.error('Error saving player to local db', e);
-        }
+    @computed
+    get favoritePlayers(): Player[] {
+        return this.playerHistory?.filter(p => p.favorite);
+    }
+
+    @computed
+    get playersList(): Player[] {
+        return this.playerHistory.slice()?.sort((a, b) => a.favorite ? -1 : b.favorite ? 1 : 0);
     }
 
     @action savePlayers = (players: Player[]) => {
@@ -34,6 +36,14 @@ class PlayerHistoryStore {
             } catch(e) {
                 console.error('Error loading players from local db', e);
             }
+        }
+    }
+
+    async savePlayerToDb(player: Player) {
+        try {
+            await insertPlayer(player);
+        } catch(e) {
+            console.error('Error saving player to local db', e);
         }
     }
 }

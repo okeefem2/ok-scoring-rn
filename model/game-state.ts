@@ -8,8 +8,13 @@ export interface GameState {
     date: number;
     duration?: number;
     winningPlayerKey?: string;
+    favorite?: boolean;
+
+    // Relationships
     settings?: Settings;
     players: Player[];
     scoreHistory: GameScoreHistory;
+
+    // In app only
     playerNamesForDisplay?: string;
 }

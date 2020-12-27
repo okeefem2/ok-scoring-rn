@@ -19,7 +19,8 @@ export const initSQLLiteDb = () => {
             CREATE TABLE IF NOT EXISTS player
                 (
                     key TEXT PRIMARY KEY NOT NULL,
-                    name TEXT NOT NULL
+                    name TEXT NOT NULL,
+                    favorite INTEGER
                 );`;
             const gameTable = `
             CREATE TABLE IF NOT EXISTS game
@@ -29,6 +30,7 @@ export const initSQLLiteDb = () => {
                     winningPlayerKey TEXT,
                     date INTEGER,
                     duration INTEGER,
+                    favorite INTEGER,
 
                     FOREIGN KEY (winningPlayerKey)
                         REFERENCES player (key)
@@ -67,7 +69,7 @@ export const initSQLLiteDb = () => {
         }, (err) => {
             reject(err);
         }, () => {
-            resolve();
+            resolve(true);
         });
     });
 }
@@ -78,11 +80,11 @@ export const insertPlayer = (player: Player) => {
             const playerInsert = `
                 INSERT OR REPLACE INTO player
                     (
-                        key, name
+                        key, name, favorite
                     )
                 VALUES
                     (
-                        ?, ?
+                        ?, ?, ?
                     )
             `;
 
@@ -90,7 +92,7 @@ export const insertPlayer = (player: Player) => {
                 `
                     ${playerInsert}
                 `,
-                [player.key, player.name],
+                [player.key, player.name, player.favorite],
                 (_, result) => {
                     resolve(result);
                 },
@@ -143,17 +145,17 @@ export const insertGame = (gameState: GameState) => {
             const gameInsert = `
                 INSERT OR REPLACE INTO game
                     (
-                        key, date, duration, winningPlayerKey, description
+                        key, date, duration, winningPlayerKey, description, favorite
                     )
                 VALUES
                     (
-                        ?, ?, ?, ?, ?
+                        ?, ?, ?, ?, ?, ?
                     )
             `;
 
             tx.executeSql(
                 gameInsert,
-                [gameState.key, gameState.date, gameState.duration, gameState.winningPlayerKey, gameState.description]
+                [gameState.key, gameState.date, gameState.duration, gameState.winningPlayerKey, gameState.description, gameState.favorite]
             );
             buildPlayerScoresInserts(gameState.key, gameState.scoreHistory).forEach(
                 (insertData: SQLInsertData) => tx.executeSql(...insertData)
@@ -169,7 +171,7 @@ export const insertGame = (gameState: GameState) => {
             return false;
         },
         () => {
-            resolve();
+            resolve(true);
         });
     });
 }

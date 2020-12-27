@@ -3,7 +3,7 @@ import { action, observable, computed, reaction } from 'mobx';
 import { Settings } from '../model/settings';
 import { v4 as uuid } from 'react-native-uuid';
 import { Player } from '../model/player';
-import { swap } from '../util/array.util';
+import { addOrReplaceByKey, swap } from '../util/array.util';
 import { GameState } from '../model/game-state';
 import { GameScoreHistory, determineWinner, buildInitialHistory, buildScoreHistoryRounds } from '../model/game-score-history';
 import { PlayerScore, PlayerScoreMode } from '../model/player-score';
@@ -115,10 +115,13 @@ class GameStore implements GameState {
         this.settings = { ...this.settings, [key]: setting };
     }
 
+    // Player related functionality, consider moving all of this out to player state...
+
     @action
-    addPlayer = (player: Player) => {
+    addOrReplacePlayer = (player: Player) => {
         if (player && this.players) {
-            this.players = [...this.players, player];
+            this.players = addOrReplaceByKey(this.players, player);
+            // TODO handle updating score history if player does not exist?
         }
     };
 
@@ -126,6 +129,10 @@ class GameStore implements GameState {
     deletePlayer = (playerKey: string) => {
         if (playerKey && this.gameState && this.players) {
             this.players = this.players.filter(p => p.key !== playerKey);
+            delete this.scoreHistory[playerKey];
+        }
+        if (this.activePlayerScore?.player.key === playerKey) {
+            this.changeActivePlayer(1, this.players)
         }
     }
 
@@ -142,6 +149,8 @@ class GameStore implements GameState {
             this.players = swap(this.players, playerIndex, newIndex);
         }
     }
+
+    // End Player functionality
 
     @action
     copyGameSetup = (players: Player[], settings: Settings, description: string) => {

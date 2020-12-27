@@ -5,11 +5,13 @@ import Header from '../../../components/Header'
 import { sharedStyles } from '../../../styles/shared'
 import GameScoreListItem from './GameScoresListItem'
 import { formatDate } from '../../../hooks/formatDate'
+import { Player } from '../../../model/player'
 
 type GameScoresHeaderProps = {
     gameState: GameState;
+    playerUpdated: (p: Player) => void;
 }
-const GameScoresHeader = ({ gameState }: GameScoresHeaderProps) => {
+const GameScoresHeader = ({ gameState, playerUpdated }: GameScoresHeaderProps) => {
     const formattedDate = formatDate(gameState.date);
     return (
         <>
@@ -27,6 +29,7 @@ const GameScoresHeader = ({ gameState }: GameScoresHeaderProps) => {
                             player={itemData.item}
                             playerScoreHistory={gameState.scoreHistory[itemData.item.key]}
                             winning={itemData.item.key === gameState.winningPlayerKey}
+                            playerUpdated={playerUpdated}
                         />
                 }
             />

@@ -8,11 +8,11 @@ import PlayerListItem from '../dumb/PlayerListItem';
 import PlayerInput from '../dumb/PlayerInput';
 
 const NewGamePlayers = () => {
-    const { playerHistory } = useContext(playerHistoryContext);
-    const { players, addPlayer, deletePlayer, shiftPlayer } =  useContext(gameContext);
+    const { favoritePlayers } = useContext(playerHistoryContext);
+    const { players, addOrReplacePlayer, deletePlayer, shiftPlayer } =  useContext(gameContext);
     return (
         <>
-            <PlayerInput onAddPlayer={addPlayer} selectablePlayers={playerHistory}/>
+            <PlayerInput onAddPlayer={addOrReplacePlayer} selectablePlayers={favoritePlayers}/>
             <FlatList
                 style={sharedStyles.scroll}
                 data={players}

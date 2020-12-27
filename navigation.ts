@@ -4,7 +4,8 @@ import { RouteName as GameRoute } from './pages/game/Game';
 import { RouteName as GameHistoryRoute } from './pages/game-history/GameHistory';
 import { RouteName as GameScoresRoute } from './pages/game-scores/GameScores';
 import { RouteName as GameSettingsRoute } from './pages/game-settings/GameSettings';
-import { RouteName as GameScoreHistoryModal } from './pages/game-score-history/GameScoreHistory';
+import { RouteName as GameScoreHistoryRoute } from './pages/game-score-history/GameScoreHistory';
+import { RouteName as FavoritesRoute } from './pages/favorites/Favorites';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 
@@ -14,7 +15,8 @@ export type RootStackParamList = {
     [GameScoresRoute]: GameScoreProps,
     [GameHistoryRoute]: undefined,
     [GameSettingsRoute]: undefined,
-    [GameScoreHistoryModal]: undefined,
+    [GameScoreHistoryRoute]: undefined,
+    [FavoritesRoute]: undefined,
 }
 
 export type PageNavigationProps<TRouteName extends keyof RootStackParamList> = {
