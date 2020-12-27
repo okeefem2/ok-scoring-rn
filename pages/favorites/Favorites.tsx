@@ -1,11 +1,11 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react'
 import Players from './Players';
-import Games from './Games';
+import Games from './components/Games';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../../styles/colors';
-import { TabNavIcons as GamesTabNavIcons } from './Games';
+import { TabNavIcons as GamesTabNavIcons } from './components/Games';
 import { TabNavIcons as PlayersTabNavIcons } from './Players';
 import { PageNavigationProps } from '../../navigation';
 import NavBar from '../../components/NavBar';

@@ -1,13 +1,13 @@
 import { observer } from 'mobx-react'
 import React, { useContext } from 'react'
 import { FlatList, View, Text } from 'react-native'
-import IconButton from '../../components/IconButton'
-import { gameHistoryContext } from '../../state/game-history.store'
-import { sharedStyles } from '../../styles/shared'
+import IconButton from '../../../components/IconButton'
+import { gameHistoryContext } from '../../../state/game-history.store'
+import { sharedStyles } from '../../../styles/shared'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RouteName as FavoritesRoute } from './Favorites'
-import { PageNavigationProps } from '../../navigation'
-import NavBar from '../../components/NavBar'
+import { RouteName as FavoritesRoute } from '../Favorites'
+import { PageNavigationProps } from '../../../navigation'
+import NavBar from '../../../components/NavBar'
 
 const Games = ({ navigation }: PageNavigationProps<typeof FavoritesRoute>) => {
     const { gamesList, toggleFavoriteGame } =  useContext(gameHistoryContext);
