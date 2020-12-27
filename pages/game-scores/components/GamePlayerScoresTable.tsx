@@ -27,7 +27,7 @@ let roundScrollRef: ScrollView;
 export const GamePlayerScoresTable = ({
     players, scoreHistoryRounds, scoreHistory, editable = true, playersSelectable = false
 }: GamePlayerScoresTableProps) => {
-    const {activeGamePlayerScore, addOrReplacePlayer: addPlayer} = useContext(gameContext);
+    const { activeGamePlayerScore } = useContext(gameContext);
 
     useEffect(() => {
         scrollPosition.addListener(position => {
@@ -44,7 +44,7 @@ export const GamePlayerScoresTable = ({
             <View style={[sharedStyles.plainRow]}>
                 <View style={[styles.players]}>
                     <View style={sharedStyles.plainRowBordered}>
-                        {
+                        {/* {
                             editable ?
                             <View style={[sharedStyles.mr5]}>
                                 <IconButton icon={'account-plus-outline'} clickHandler={() => {
@@ -52,7 +52,7 @@ export const GamePlayerScoresTable = ({
                                     }} size={26} />
                             </View> :
                             null
-                        }
+                        } */}
                         <Text style={[sharedStyles.scoreTabelLabel]}>
                             Players
                         </Text>
