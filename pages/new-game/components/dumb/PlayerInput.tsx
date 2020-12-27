@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { View, TextInput, Keyboard } from 'react-native'
 import { v4 as uuid } from 'react-native-uuid';
 import ModalSelector from 'react-native-modal-selector';
@@ -64,7 +64,7 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                         optionTextStyle={{ color: colors.secondary }}
                         cancelTextStyle={{ color: colors.tertiary }}
                         data={selectablePlayers}
-                        initValue="Previous Players"
+                        initValue="Favorite Players"
                         onChange={setNewPlayer}
                         onModalOpen={() => {
                             Keyboard.dismiss();

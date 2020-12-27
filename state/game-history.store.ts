@@ -5,6 +5,7 @@ import { fetchGameStates, insertGame } from '../db/db';
 import { addOrReplaceByKey, commaSeperateWithEllipsis } from '../util/array.util';
 import { GameState } from '../model/game-state';
 import { buildScoreHistoryRounds } from '../model/game-score-history';
+import { Player } from '../model/player';
 
 export interface GameHistorySort { sortProp: keyof GameState, asc: boolean }
 class GameHistoryStore {
@@ -18,8 +19,22 @@ class GameHistoryStore {
     }
 
     @computed
-    get previousGamesSelectable(): { key: number, label: string }[] {
-        return Array.from(new Set(this.gameHistory.map(g => g.description))).map((d, i) => ({ label: d, key: i }));
+    get favoriteGames(): { key: number, label: string }[] {
+        return Array.from(new Set(this.gameHistory.filter(g => g.favorite).map(g => g.description))).map((d, i) => ({ label: d, key: i }));
+    }
+
+    @computed
+    get gamesList(): GameState[] {
+        const uniqueGames = this.gameHistory.reduce(
+            (acc: { games: GameState[], descriptions: { [k: string]: number }}, game) => {
+                if (!acc.descriptions[game.description]) {
+                    acc.games.push(game);
+                    acc.descriptions[game.description] = 1
+                }
+                return acc;
+            }, { games: [], descriptions: {}}).games;
+        uniqueGames.sort((a, b) => a.favorite ? -1 : b.favorite ? 1 : 0);
+        return uniqueGames;
     }
 
     @computed
@@ -70,6 +85,31 @@ class GameHistoryStore {
             // if a should be sorted to a lower index than b, return -1 else 1
             return sortDown ? -1 : 1;
         });
+    }
+
+    @action replaceGameState = (gameState: GameState) => {
+        if (this.gameHistory) {
+            this.gameHistory = addOrReplaceByKey(this.gameHistory, gameState);
+        }
+    }
+
+    @action
+    addOrReplacePlayer = (player: Player) => {
+        if (player && this.gameState) {
+            // TODO maybe I could use an actual game store for the game state here.... something to think about? non singleton stores
+            const players = addOrReplaceByKey(this.gameState.players, player);
+            this.gameState = {
+                ...this.gameState,
+                players,
+            };
+            this.replaceGameState(this.gameState)
+        }
+    };
+
+    toggleFavoriteGame = async (game: GameState) => {
+        game.favorite = !game.favorite;
+        await this.saveGameToDb(game);
+        this.replaceGameState(game);
     }
 
     async saveGameToDb(gameState: GameState) {

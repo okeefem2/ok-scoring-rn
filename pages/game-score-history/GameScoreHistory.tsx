@@ -10,7 +10,7 @@ import GameScoresHeader from '../game-scores/components/GameScoresHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
-    const { gameState, setGameState, scoreHistoryRounds } = useContext(gameHistoryContext);
+    const { gameState, setGameState, scoreHistoryRounds, addOrReplacePlayer } = useContext(gameHistoryContext);
 
     if (!gameState) {
         return (
@@ -28,8 +28,7 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>)
                 }}}
             />
             <View style={[sharedStyles.column]}>
-                <GameScoresHeader gameState={gameState}/>
-
+                <GameScoresHeader gameState={gameState} playerUpdated={addOrReplacePlayer}/>
                 <GamePlayerScoresTable
                     players={gameState.players}
                     editable={false}
@@ -37,10 +36,9 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>)
                     scoreHistoryRounds={scoreHistoryRounds}
                 />
             </View>
-
         </SafeAreaView>
-    )
+    );
 }
 
-export const RouteName = 'GameScoreHistoryModal';
+export const RouteName = 'GameScoreHistory';
 export default observer(GameScoreHistory);

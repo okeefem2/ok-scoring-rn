@@ -100,6 +100,9 @@ export const sharedStyles = StyleSheet.create({
     ml5: {
         marginLeft: 5,
     },
+    ml10: {
+        marginLeft: 10
+    },
     ml20: {
         marginLeft: 20,
     },

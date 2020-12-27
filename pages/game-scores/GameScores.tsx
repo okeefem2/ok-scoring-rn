@@ -31,6 +31,7 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
         copyGameSetup,
         settings,
         description,
+        addOrReplacePlayer,
     } = useContext(gameContext);
     const { saveGame } = useContext(gameHistoryContext);
     const { savePlayers } = useContext(playerHistoryContext);
@@ -77,7 +78,7 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
             <View style={[ styles.gameScoresContainer]}>
                 <View style={[sharedStyles.column]}>
                     <GameScoresNavBar backHandler={navigation.pop} saveHandler={gameOver ? saveAndQuit : null} winningPlayerName={winningPlayerName} />
-                    <GameScoresHeader gameState={gameState}/>
+                    <GameScoresHeader gameState={gameState} playerUpdated={addOrReplacePlayer}/>
                     {
                         editingPlayerScore ? <View style={sharedStyles.spacedRowNoBorder}>
                                 <Text style={[sharedStyles.bodyText]}>
@@ -105,7 +106,8 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                         players={players}
                         scoreHistory={scoreHistory}
                         scoreHistoryRounds={scoreHistoryRounds}
-                    />
+                        editable={!gameOver}
+                />
                 </View>
                 <View style={[ { alignSelf: 'flex-end' }]}>
                     {

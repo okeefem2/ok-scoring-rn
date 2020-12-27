@@ -1,12 +1,14 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { StyleSheet, Text, View, ScrollView, Animated } from 'react-native'
 import { sharedStyles } from '../../../styles/shared';
 import GamePlayerScoresTableRow from './GamePlayerScoresTableRow';
 import { Player } from '../../../model/player';
 import { GameScoreHistory } from '../../../model/game-score-history';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gameContext } from '../../../state/game.store';
 import GamePlayerScoresTablePlayerCell from './GamePlayerScoresTablePlayerCell';
+import IconButton from '../../../components/IconButton';
+import PlayerInput from '../../new-game/components/dumb/PlayerInput';
+import { playerHistoryContext } from '../../../state/players-history.store';
 
 type GamePlayerScoresTableProps = {
     players: Player[],
@@ -25,7 +27,7 @@ let roundScrollRef: ScrollView;
 export const GamePlayerScoresTable = ({
     players, scoreHistoryRounds, scoreHistory, editable = true, playersSelectable = false
 }: GamePlayerScoresTableProps) => {
-    const {activeGamePlayerScore} = useContext(gameContext);
+    const { activeGamePlayerScore } = useContext(gameContext);
 
     useEffect(() => {
         scrollPosition.addListener(position => {
@@ -35,13 +37,24 @@ export const GamePlayerScoresTable = ({
             scrollPosition.removeAllListeners();
         }
     }, [scoreHistory]);
+
+    console.log('building table')
     return (
         <>
             <View style={[sharedStyles.plainRow]}>
                 <View style={[styles.players]}>
                     <View style={sharedStyles.plainRowBordered}>
+                        {/* {
+                            editable ?
+                            <View style={[sharedStyles.mr5]}>
+                                <IconButton icon={'account-plus-outline'} clickHandler={() => {
+                                    console.log('setting add player!');
+                                    }} size={26} />
+                            </View> :
+                            null
+                        } */}
                         <Text style={[sharedStyles.scoreTabelLabel]}>
-                            Rounds
+                            Players
                         </Text>
                     </View>
                 </View>
