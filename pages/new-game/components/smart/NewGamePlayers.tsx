@@ -5,14 +5,14 @@ import { observer } from 'mobx-react';
 import { playerHistoryContext } from '../../../../state/players-history.store'
 import { gameContext } from '../../../../state/game.store'
 import PlayerListItem from '../dumb/PlayerListItem';
-import PlayerInput from '../dumb/PlayerInput';
+import AddPlayer from '../dumb/AddPlayer';
 
 const NewGamePlayers = () => {
     const { favoritePlayers } = useContext(playerHistoryContext);
     const { players, addOrReplacePlayer, deletePlayer, shiftPlayer } =  useContext(gameContext);
     return (
         <>
-            <PlayerInput onAddPlayer={addOrReplacePlayer} selectablePlayers={favoritePlayers}/>
+            <AddPlayer onAddPlayer={addOrReplacePlayer} selectablePlayers={favoritePlayers}/>
             <FlatList
                 style={sharedStyles.scroll}
                 data={players}

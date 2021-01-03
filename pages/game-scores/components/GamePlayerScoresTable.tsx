@@ -7,7 +7,7 @@ import { GameScoreHistory } from '../../../model/game-score-history';
 import { gameContext } from '../../../state/game.store';
 import GamePlayerScoresTablePlayerCell from './GamePlayerScoresTablePlayerCell';
 import IconButton from '../../../components/IconButton';
-import PlayerInput from '../../new-game/components/dumb/PlayerInput';
+import AddPlayer from '../../new-game/components/dumb/AddPlayer';
 import { playerHistoryContext } from '../../../state/players-history.store';
 
 type GamePlayerScoresTableProps = {

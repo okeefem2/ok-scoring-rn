@@ -8,12 +8,12 @@ import { colors } from '../../../../styles/colors';
 import IconButton from '../../../../components/IconButton';
 import { focusInputOnCreation } from '../../../../hooks/focusInputOnCreation';
 
-interface PlayerInputProps {
+interface AddPlayerProps {
     onAddPlayer: (player: Player) => void,
     selectablePlayers?: Player[];
 }
 
-function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
+function AddPlayer({ onAddPlayer, selectablePlayers }: AddPlayerProps) {
     const [newPlayer, setNewPlayer] = useState<Partial<Player>>({});
     const [showInput, setShowInput] = useState(false);
     const focusInput = focusInputOnCreation();
@@ -45,13 +45,13 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
                         onSubmitEditing={() => {
                             if (!!newPlayer) {
                                 addPlayer(newPlayer);
-                                setShowInput(false);
                             }
+                            setShowInput(false);
                         }}
                         onChangeText={(name) => setNewPlayer({ name })}
                         value={newPlayer?.name}
-                        ref={(input: TextInput) => { focusInput(input) }}
-                        />
+                        ref={(input: TextInput) => focusInput(input)}
+                    />
                 </View> : <></>
             }
 
@@ -91,4 +91,4 @@ function PlayerInput({ onAddPlayer, selectablePlayers }: PlayerInputProps) {
     );
 }
 
-export default PlayerInput;
+export default AddPlayer;

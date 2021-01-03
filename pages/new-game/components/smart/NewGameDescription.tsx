@@ -32,8 +32,8 @@ const NewGameDescription = () => {
                         if (!!tempDescription) {
                             setGameDescription(tempDescription as string);
                             setTempDescription('');
-                            setShowInput(false);
                         }
+                        setShowInput(false);
                     }}
                     onChangeText={(description) => setTempDescription(description)}
                     value={tempDescription}
