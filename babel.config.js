@@ -8,8 +8,7 @@ module.exports = function(api) {
         {
           "legacy": true
         }
-      ],
-      'react-native-paper/babel'
+      ]
     ]
   };
 };
