@@ -83,6 +83,7 @@ export const sharedStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        textAlign: 'center',
     },
     scroll: {
         width: '100%',

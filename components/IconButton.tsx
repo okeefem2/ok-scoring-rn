@@ -44,8 +44,7 @@ const IconButton = ({
                 </View>
             </TouchableOpacity>
         </View>
-
-    )
+    );
 }
 
 export default IconButton
