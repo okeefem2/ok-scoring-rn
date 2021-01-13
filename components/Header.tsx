@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-
+import { Text, View } from 'react-native'
+import { sharedStyles } from '../styles/shared'
 
 interface HeaderProps {
     title?: string;
@@ -9,24 +9,10 @@ interface HeaderProps {
 
 const Header = ({ title, fontSize = 30 }: HeaderProps) => {
     return (
-        <View style={[styles.header]}>
-            <Text style={[styles.headerText, { fontSize }]}>{ title }</Text>
+        <View style={[sharedStyles.centeredContent]}>
+            <Text style={[sharedStyles.bodyText, sharedStyles.centeredText, { fontSize }]}>{ title }</Text>
         </View>
     )
 }
 
-export default Header
-
-const styles = StyleSheet.create({
-    header: {
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-    },
-    headerText: {
-        fontFamily: 'Quicksand',
-        textAlign: 'center',
-    }
-})
+export default Header;

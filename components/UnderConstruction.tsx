@@ -1,7 +1,7 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import { Text, View } from 'react-native';
 import { sharedStyles } from '../styles/shared';
-import { SvgXml } from "react-native-svg";
+import { SvgXml } from 'react-native-svg';
 import { workInProgressXML } from '../assets/work-in-progress';
 
 const UnderConstruction = () => {
@@ -14,7 +14,7 @@ const UnderConstruction = () => {
                 Work in progress, Come back soon for more cool features!
             </Text>
         </View>
-    )
+    );
 }
 
-export default UnderConstruction
+export default UnderConstruction;

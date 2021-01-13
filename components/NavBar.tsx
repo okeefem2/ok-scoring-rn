@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react'
-import { StyleSheet, Text, View, Button } from 'react-native'
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import IconButton, { ButtonConfig } from './IconButton';
 
 interface NavBarProps {
@@ -20,7 +20,7 @@ const NavBar = ({ leftButton, rightButton } : NavBarProps) => {
                 }
             </View>
         </View>
-    )
+    );
 }
 
 export default NavBar;
