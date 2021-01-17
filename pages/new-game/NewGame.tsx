@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Image } from 'react-native';
+import { Image, View } from 'react-native';
 import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
 import { Settings } from '../../model/settings'
@@ -14,9 +14,11 @@ import { RouteName as GameHistoryRoute } from '../game-history/GameHistory';
 import { RouteName as GameRoute } from '../game/Game';
 import { RouteName as GameSettingsRoute } from '../game-settings/GameSettings';
 import { RouteName as FavoritesRoute } from '../favorites/Favorites';
+import { RouteName as AuthRoute } from '../auth/Auth';
 import { PageNavigationProps } from '../../navigation'
 import Header from '../../components/Header'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import IconButton from '../../components/IconButton';
 
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
 
@@ -28,7 +30,7 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     return (
         <SafeAreaView style={sharedStyles.pageContainer}>
             <NavBar
-                leftButton={{ icon: 'settings', title: 'Game Settings', clickHandler: () => navigation.navigate(GameSettingsRoute)}}
+                leftButton={{ icon: 'account-outline', title: 'Account', clickHandler: () => navigation.navigate(AuthRoute)}}
                 rightButton={{ disabled: !gameCanStart, icon: diceIcon, title: 'Start Game', clickHandler: () => navigation.navigate(GameRoute)}}
             />
             <CenterContent>
@@ -41,6 +43,10 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
             <CenterContent>
                 <Header title={description || 'New Game'}/>
             </CenterContent>
+            <View style={sharedStyles.spacedRowNoBorder}>
+                <View></View>
+                <IconButton icon='settings' title='Game Settings' clickHandler={() => navigation.navigate(GameSettingsRoute)}/>
+            </View>
             <NewGameDescription/>
             <NewGamePlayers/>
             {

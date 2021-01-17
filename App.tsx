@@ -12,6 +12,7 @@ import GameScores, { RouteName as GameScoresRoute } from './pages/game-scores/Ga
 import GameSettings, { RouteName as GameSettingsRoute } from './pages/game-settings/GameSettings';
 import GameScoreHistory, { RouteName as GameScoreHistoryRoute }  from './pages/game-score-history/GameScoreHistory';
 import Favorites, { RouteName as FavoritesRoute } from './pages/favorites/Favorites';
+import Auth, { RouteName as AuthRoute } from './pages/auth/Auth';
 import CenterContent from './components/CenterContent';
 import { localDbContext } from './state/local-db.store';
 import { sharedStyles } from './styles/shared';
@@ -80,6 +81,7 @@ function App() {
             <Stack.Screen name={GameSettingsRoute} component={GameSettings}/>
             <Stack.Screen name={GameScoreHistoryRoute} component={GameScoreHistory}/>
             <Stack.Screen name={FavoritesRoute} component={Favorites}/>
+            <Stack.Screen name={AuthRoute} component={Auth}/>
           </Stack.Navigator>
         </NavigationContainer>
       </ActionSheetProvider>
