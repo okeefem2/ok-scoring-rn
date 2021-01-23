@@ -1,12 +1,11 @@
 import { observer } from 'mobx-react';
 import React, { useState } from 'react';
-import { StyleSheet, Image, TextInput, View, Switch, Keyboard } from 'react-native';
+import { Image, TextInput, View, Switch, Keyboard } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BodyText from '../../components/BodyText';
 import CenterContent from '../../components/CenterContent';
 import IconButton from '../../components/IconButton';
 import NavBar from '../../components/NavBar';
-import { WrapperComponentProps } from '../../model/component';
 import { PageNavigationProps } from '../../navigation';
 import { colors } from '../../styles/colors';
 import { sharedStyles } from '../../styles/shared';
