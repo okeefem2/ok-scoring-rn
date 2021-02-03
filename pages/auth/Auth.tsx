@@ -14,6 +14,7 @@ type AuthForm = {
     email: string,
     password: string,
     confirmPassword: string,
+    displayName: string,
     syncData: boolean,
 }
 
@@ -21,6 +22,7 @@ const initialFormValues: AuthForm = {
     email: '',
     password: '',
     confirmPassword: '',
+    displayName: '',
     syncData: false,
 }
 
@@ -31,6 +33,7 @@ const Auth = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     // Also if not logged in show information on what an account will do for them... and probably the purchase info of some kind
     const [passInputRef, setPassInputRef] = useState<TextInput>();
     const [confirmPassInputRef, setConfirmPassInputRef] = useState<TextInput>();
+    const [displayNameInputRef, setDisplayNameInputRef] = useState<TextInput>();
     const [formValues, setFormValues] = useState<AuthForm>(initialFormValues);
     const [passVisible, setPassVisible] = useState(false);
     const [confirmPassVisible, setConfirmPassVisible] = useState(false);
@@ -111,6 +114,22 @@ const Auth = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             onChangeText={(pass) => updateFormValue('confirmPassword', pass)}
                             ref={(input: TextInput) => setConfirmPassInputRef(input)}
                             value={formValues.confirmPassword}
+                        />
+                        <IconButton icon={confirmPassVisible ? 'eye-off-outline' : 'eye-outline'} clickHandler={() => setConfirmPassVisible(!confirmPassVisible)} />
+                    </View>
+                    <View style={sharedStyles.spacedRowBordered}>
+                        <TextInput style={[sharedStyles.bodyText, sharedStyles.input]}
+                            placeholder='Display Name'
+                            returnKeyType='done'
+                            autoCorrect={false}
+                            clearButtonMode="while-editing"
+                            blurOnSubmit={false}
+                            onSubmitEditing={() => {
+                                Keyboard.dismiss();
+                            }}
+                            onChangeText={(name) => updateFormValue('displayName', name)}
+                            ref={(input: TextInput) => setDisplayNameInputRef(input)}
+                            value={formValues.displayName}
                         />
                         <IconButton icon={confirmPassVisible ? 'eye-off-outline' : 'eye-outline'} clickHandler={() => setConfirmPassVisible(!confirmPassVisible)} />
                     </View>
