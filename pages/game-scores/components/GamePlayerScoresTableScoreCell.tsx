@@ -42,11 +42,11 @@ const GamePlayerScoresTableScoreCell = ({ playerKey, score, scoreIndex, editable
                 deletePlayerScore({ playerKey, scoreIndex });
             }
         })}>
-            <Text style={[sharedStyles.scoreTabelCell, isBeingEdited ?  sharedStyles.editingCell : sharedStyles.touchableCell ]}>
+            <Text style={[sharedStyles.scoreTabelTopCell, isBeingEdited ?  sharedStyles.editingCell : sharedStyles.touchableCell, sharedStyles.centeredText ]}>
                 {displayScore}
             </Text>
         </TouchableOpacity> :
-        <Text style={[sharedStyles.scoreTabelCell]}>{displayScore}</Text>
+        <Text style={[sharedStyles.scoreTabelTopCell, sharedStyles.centeredText]}>{displayScore}</Text>
     );
 }
 

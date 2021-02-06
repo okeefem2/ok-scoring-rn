@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import {View, Text, TextInput, StyleSheet} from 'react-native'
+import { View, Text, TextInput, StyleSheet } from 'react-native'
 import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
 import { gameContext } from '../../state/game.store'
@@ -75,31 +75,31 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
 
     return (
         <SafeAreaView style={[sharedStyles.pageContainer]}>
-            <View style={[ styles.gameScoresContainer]}>
+            <View style={[styles.gameScoresContainer]}>
                 <View style={[sharedStyles.column]}>
                     <GameScoresNavBar backHandler={navigation.pop} saveHandler={gameOver ? saveAndQuit : null} winningPlayerName={winningPlayerName} />
-                    <GameScoresHeader gameState={gameState} playerUpdated={addOrReplacePlayer}/>
+                    <GameScoresHeader gameState={gameState} playerUpdated={addOrReplacePlayer} />
                     {
                         editingPlayerScore ? <View style={sharedStyles.spacedRowNoBorder}>
-                                <Text style={[sharedStyles.bodyText]}>
-                                    Update Round {editingPlayerScore.scoreIndex + 1} Score For { editingPlayerScore.player.name }:
+                            <Text style={[sharedStyles.bodyText]}>
+                                Update Round {editingPlayerScore.scoreIndex + 1} Score For {editingPlayerScore.player.name}:
                                 </Text>
-                                <TextInput
-                                    style={[]}
-                                    placeholder='Update Score'
-                                    onChangeText={(n) => !!n && setTempNewScore(parseInt(n.replace(/[^0-9]/g, ''), 10))}
-                                    value={tempNewScore?.toString()}
-                                    autoCorrect={false}
-                                    returnKeyType="done"
-                                    clearTextOnFocus={true}
-                                    ref={(input: TextInput) => setPlayerRoundScoreInputRef(input)}
-                                    onEndEditing={() => {
-                                        if (tempNewScore !== undefined) {
-                                            updateRoundScore(editingPlayerScore.player.key, editingPlayerScore.scoreIndex, tempNewScore);
-                                            setTempNewScore(undefined);
-                                        }
-                                    }}
-                                    keyboardType='number-pad'/>
+                            <TextInput
+                                style={[]}
+                                placeholder='Update Score'
+                                onChangeText={(n) => !!n && setTempNewScore(parseInt(n.replace(/[^0-9]/g, ''), 10))}
+                                value={tempNewScore?.toString()}
+                                autoCorrect={false}
+                                returnKeyType="done"
+                                clearTextOnFocus={true}
+                                ref={(input: TextInput) => setPlayerRoundScoreInputRef(input)}
+                                onEndEditing={() => {
+                                    if (tempNewScore !== undefined) {
+                                        updateRoundScore(editingPlayerScore.player.key, editingPlayerScore.scoreIndex, tempNewScore);
+                                        setTempNewScore(undefined);
+                                    }
+                                }}
+                                keyboardType='number-pad' />
                         </View> : null
                     }
                     <GamePlayerScoresTable
@@ -107,12 +107,12 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                         scoreHistory={scoreHistory}
                         scoreHistoryRounds={scoreHistoryRounds}
                         editable={!gameOver}
-                />
+                    />
                 </View>
-                <View style={[ { alignSelf: 'flex-end' }]}>
+                <View style={[{ alignSelf: 'flex-end' }, sharedStyles.mb10]}>
                     {
                         gameOver && <NavBar
-                            leftButton={{ icon: 'delete-outline', title: 'Discard & Quit', clickHandler: exitToNewGame }} />
+                            rightButton={{ icon: 'delete-outline', title: 'Discard & Quit', clickHandler: exitToNewGame }} />
                     }
                 </View>
             </View>
