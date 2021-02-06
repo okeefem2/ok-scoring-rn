@@ -159,7 +159,6 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                             title={playerScoreMode === PlayerScoreMode.Editing ? `Update Turn` : `End Turn`}
                             color={colors.white}
                             backgroundColor={colors.primary}
-                            buttonTextStyles={[sharedStyles.p5]}
                             icon={'chevron-right'}
                             iconSide='right'
                             clickHandler={() => {

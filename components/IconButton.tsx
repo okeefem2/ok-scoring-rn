@@ -14,7 +14,6 @@ export interface ButtonConfig {
     width?: string
     alignSelf?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline' | 'auto' | undefined;
     backgroundColor?: string;
-    buttonTextStyles?: any[];
 }
 const IconButton = ({
     icon,
@@ -27,17 +26,10 @@ const IconButton = ({
     width,
     alignSelf = 'center',
     backgroundColor,
-    buttonTextStyles,
 
 }: ButtonConfig) => {
     let textStyles: any[] = [styles.buttonText];
 
-    if (buttonTextStyles) {
-        textStyles = [...textStyles]
-    }
-    // if (backgroundColor) {
-    //     textStyles.push({ backgroundColor });
-    // }
     if (disabled) {
         textStyles.push(styles.disabled);
     }

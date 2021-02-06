@@ -8,6 +8,7 @@ import { gameContext } from "../../../state/game.store";
 import GamePlayerScoresTablePlayerCell from "./GamePlayerScoresTablePlayerCell";
 import IconButton from "../../../components/IconButton";
 import GamePlayerScoresTableRow from "./GamePlayerScoresTableRow";
+import { colors } from '../../../styles/colors';
 
 type GamePlayerScoresTableProps = {
     players: Player[];
@@ -23,7 +24,7 @@ export const GamePlayerScoresTable = ({
     editable = true,
     playersSelectable = false,
 }: GamePlayerScoresTableProps) => {
-    const { activeGamePlayerScore } = useContext(gameContext);
+    const { activeGamePlayerScore, winningPlayerKey } = useContext(gameContext);
     // TODO break these into components for easier tracking of open state, also animations
 
     return (
@@ -33,6 +34,7 @@ export const GamePlayerScoresTable = ({
                     <GamePlayerScoresTableRow
                         key={player.key}
                         active={activeGamePlayerScore?.player.key === player.key}
+                        winning={winningPlayerKey === player.key}
                         player={player}
                         scoreHistory={scoreHistory}
                         editable={editable}

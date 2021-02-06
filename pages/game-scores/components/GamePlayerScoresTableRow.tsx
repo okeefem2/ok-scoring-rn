@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import IconButton from "../../../components/IconButton";
+import { abbreviateNumber } from '../../../hooks/abbreviateNumber';
 import { GameScoreHistory } from "../../../model/game-score-history";
 import { Player } from "../../../model/player";
-import { PlayerScoreHistory } from "../../../model/player-score-history";
 import { sharedStyles } from "../../../styles/shared";
 import GamePlayerScoresHistoryTableRow from "./GamePlayerScoresHistoryTableRow";
 import GamePlayerScoresTablePlayerCell from "./GamePlayerScoresTablePlayerCell";
@@ -11,6 +11,7 @@ import GamePlayerScoresTablePlayerCell from "./GamePlayerScoresTablePlayerCell";
 type GamePlayerScoresTableRowProps = {
     player: Player;
     active: boolean;
+    winning: boolean;
     editable: boolean;
     selectable: boolean;
     scoreHistory: GameScoreHistory;
@@ -20,12 +21,14 @@ type GamePlayerScoresTableRowProps = {
 const GamePlayerScoresTableRow = ({
     player,
     active,
+    winning,
     editable,
     selectable,
     scoreHistory,
     scoreHistoryRounds,
 }: GamePlayerScoresTableRowProps) => {
     const [roundsShown, setRoundsShown] = useState(false);
+    const currentScore = abbreviateNumber(scoreHistory[player.key]?.currentScore);
     return (
         <>
             <View style={[sharedStyles.plainRow]} key={player.key}>
@@ -33,11 +36,12 @@ const GamePlayerScoresTableRow = ({
                     selectable={selectable}
                     player={player}
                     active={active}
+                    winning={winning}
                 />
                 <Text style={[sharedStyles.scoreTabelTopCell]}>
-                    {scoreHistory[player.key]?.currentScore ?? 0} points
+                    {currentScore} pts
                 </Text>
-                <View style={sharedStyles.scoreTabelTopCell}>
+                <View style={[sharedStyles.scoreTabelTopCell, { display: 'flex', flexDirection: 'row', alignItems: 'center' }]}>
                     <IconButton
                         icon={roundsShown ? 'chevron-down' : 'chevron-up'}
                         iconSide="right"

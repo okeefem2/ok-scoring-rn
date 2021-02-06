@@ -163,6 +163,8 @@ export const sharedStyles = StyleSheet.create({
         marginRight: 20,
         fontFamily: 'Quicksand',
         fontSize: 18,
+        textAlignVertical: 'center',
+        textAlign: 'center',
     },
     touchableCell: {
         backgroundColor: colors.primaryLight,
