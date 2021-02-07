@@ -6,41 +6,37 @@ import { addOrReplaceByKey, commaSeperateWithEllipsis } from '../util/array.util
 import { GameState } from '../model/game-state';
 import { buildScoreHistoryRounds } from '../model/game-score-history';
 import { Player } from '../model/player';
+import { sort, Sort } from './sort';
+import { favoriteGamesStore } from './favorite-games.store';
 
-export interface GameHistorySort { sortProp: keyof GameState, asc: boolean }
 class GameHistoryStore {
 
-    @observable sort: GameHistorySort = { sortProp: 'date', asc: false };
+    @observable sort: Sort<GameState> = { sortProp: 'date', asc: false };
+    @observable favoritesSort: Sort<GameState> = { sortProp: 'favorite', asc: false };
     @observable gameHistory: GameState[] = [];
     @observable gameState?: GameState;
+    @observable gamesList: GameState[] = [];
 
     constructor() {
-        reaction(() => this.sort, () => this.sortAndSetGameHistory([ ...this.gameHistory ]));
-    }
-
-    @computed
-    get favoriteGames(): { key: number, label: string }[] {
-        return Array.from(new Set(this.gameHistory.filter(g => g.favorite).map(g => g.description))).map((d, i) => ({ label: d, key: i }));
-    }
-
-    @computed
-    get gamesList(): GameState[] {
-        const uniqueGames = this.gameHistory.reduce(
-            (acc: { games: GameState[], descriptions: { [k: string]: number }}, game) => {
-                if (!acc.descriptions[game.description]) {
-                    acc.games.push(game);
-                    acc.descriptions[game.description] = 1
-                }
-                return acc;
-            }, { games: [], descriptions: {}}).games;
-        uniqueGames.sort((a, b) => a.favorite ? -1 : b.favorite ? 1 : 0);
-        return uniqueGames;
+        reaction(() => this.sort, () => this.sortAndSetGameHistory([...this.gameHistory]));
+        reaction(() => this.favoritesSort, () => this.sortAndSetFavoriteGames([...this.gameHistory]));
+        reaction(() => this.gameHistory, () => this.sortAndSetFavoriteGames([...this.gameHistory]));
+        reaction(() => favoriteGamesStore.favoriteGames, () => this.setFavorites(favoriteGamesStore.favoriteGames.slice()));
     }
 
     @computed
     get scoreHistoryRounds(): number[] {
         // TODO memo?
         return buildScoreHistoryRounds(this.gameState?.scoreHistory ?? {});
+    }
+
+    @action
+    setFavorites = (favorites: { key: string, description: string }[]) => {
+        console.log('setting favorites!', favorites);
+        this.gameHistory = this.gameHistory.map(g => ({
+            ...g,
+            favorite: favorites.some(f => f.description === g.description)
+        }));
     }
 
     @action loadGames = async () => {
@@ -52,7 +48,7 @@ class GameHistoryStore {
                         games.map(g => this.hydrateGameStateForHistory(g))
                     );
                 }
-            } catch(e) {
+            } catch (e) {
                 console.error('Error loading games from local db', e);
             }
         }
@@ -62,29 +58,20 @@ class GameHistoryStore {
         this.gameState = gameState;
     }
 
-    @action setHistorySort = (sort: GameHistorySort) => {
+    @action setHistorySort = (sort: Sort<GameState>) => {
         this.sort = sort;
     }
 
+    @action setFavoriteSort = (sort: Sort<GameState>) => {
+        this.favoritesSort = sort;
+    }
+
+    @action sortAndSetFavoriteGames = (gameHistory: GameState[]) => {
+        this.gamesList = sort(this.getUniqueGames(gameHistory), this.favoritesSort)
+    }
+
     @action sortAndSetGameHistory = (gameHistory: GameState[]) => {
-        const { asc, sortProp } = this.sort;
-        this.gameHistory = gameHistory.sort((a, b) => {
-            if (a.key === b.key) {
-                return 0;
-            }
-            const aValue = a[sortProp];
-            const bValue = b[sortProp];
-            let sortDown; // Whether a should be set to a lower index than b
-            if (!aValue || !bValue) {
-                // If we are ascending, the undefined values should be pushed to the start of the array
-                sortDown = asc ? !!bValue && !aValue : false;
-            } else {
-                // If we want ascending, the lower value should be pushed to the front of the array
-                sortDown = asc ? aValue < bValue : aValue > bValue;
-            }
-            // if a should be sorted to a lower index than b, return -1 else 1
-            return sortDown ? -1 : 1;
-        });
+        this.gameHistory = sort(gameHistory, this.sort)
     }
 
     @action replaceGameState = (gameState: GameState) => {
@@ -106,16 +93,10 @@ class GameHistoryStore {
         }
     };
 
-    toggleFavoriteGame = async (game: GameState) => {
-        game.favorite = !game.favorite;
-        await this.saveGameToDb(game);
-        this.replaceGameState(game);
-    }
-
     async saveGameToDb(gameState: GameState) {
         try {
             await insertGame(gameState);
-        } catch(e) {
+        } catch (e) {
             console.error('Error saving game to local db', e);
         }
     }
@@ -148,6 +129,17 @@ class GameHistoryStore {
         const playerNames = gameState.players.map(p => p.name);
         gameState.playerNamesForDisplay = commaSeperateWithEllipsis(playerNames);
         return gameState;
+    }
+
+    getUniqueGames(gameHistory: GameState[]): GameState[] {
+        return gameHistory.reduce(
+            (acc: { games: GameState[], descriptions: { [k: string]: number } }, game) => {
+                if (!acc.descriptions[game.description]) {
+                    acc.games.push(game);
+                    acc.descriptions[game.description] = 1
+                }
+                return acc;
+            }, { games: [], descriptions: {} }).games;
     }
 }
 

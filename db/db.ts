@@ -22,6 +22,7 @@ export const initSQLLiteDb = () => {
                     name TEXT NOT NULL,
                     favorite INTEGER
                 );`;
+            // Could I just foreign key this to favorites instead? mmmm
             const gameTable = `
             CREATE TABLE IF NOT EXISTS game
                 (
@@ -30,7 +31,6 @@ export const initSQLLiteDb = () => {
                     winningPlayerKey TEXT,
                     date INTEGER,
                     duration INTEGER,
-                    favorite INTEGER,
 
                     FOREIGN KEY (winningPlayerKey)
                         REFERENCES player (key)
@@ -61,15 +61,77 @@ export const initSQLLiteDb = () => {
                     FOREIGN KEY (gameKey)
                         REFERENCES game (key)
                 );`;
+            const favoriteGamesTable = `
+            CREATE TABLE IF NOT EXISTS favoriteGame
+                (
+                    key TEXT PRIMARY KEY NOT NULL,
+                    description TEXT NOT NULL UNIQUE
+                );`;
             tx.executeSql(foreignKeysOn);
             tx.executeSql(playerTable);
             tx.executeSql(gameTable);
             tx.executeSql(gameSettingsTable);
             tx.executeSql(playerScoreHistoryTable);
+            tx.executeSql(favoriteGamesTable);
         }, (err) => {
             reject(err);
         }, () => {
             resolve(true);
+        });
+    });
+}
+
+export const insertFavoriteGame = ({ key, description }: { key: string, description: string }) => {
+    return new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            const favoriteGameInsert = `
+                INSERT OR REPLACE INTO favoriteGame
+                    (
+                        key, description
+                    )
+                VALUES
+                    (
+                        ?, ?
+                    )
+            `;
+
+            tx.executeSql(
+                `
+                    ${favoriteGameInsert}
+                `,
+                [key, description],
+                (_, result) => {
+                    resolve(result);
+                },
+                (_, err): boolean => {
+                    reject(err);
+                    return false;
+                },
+            );
+        });
+    });
+}
+
+export const deleteFavoriteGame = (description: string) => {
+    return new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            const favoriteGameDelete = `
+                DELETE FROM favoriteGame WHERE description = ?
+            `;
+
+            tx.executeSql(
+                `
+                    ${favoriteGameDelete}
+                `,
+                [description],
+                (_, result) => {
+                    resolve(result);
+                },
+                (_, err): boolean => {
+                    reject(err);
+                    return false;
+                },
+            );
         });
     });
 }
@@ -136,7 +198,7 @@ export const buildPlayerScoreInsert = (playerKey: string, gameKey: string, score
             (
                 ?, ?, ?, ?, ?
             )
-    `, [ uuid(), playerKey, gameKey, JSON.stringify(scoreHistory.scores), scoreHistory.currentScore]];
+    `, [uuid(), playerKey, gameKey, JSON.stringify(scoreHistory.scores), scoreHistory.currentScore]];
 }
 
 export const insertGame = (gameState: GameState) => {
@@ -166,19 +228,19 @@ export const insertGame = (gameState: GameState) => {
                 );
             }
         },
-        (err): boolean => {
-            reject(err);
-            return false;
-        },
-        () => {
-            resolve(true);
-        });
+            (err): boolean => {
+                reject(err);
+                return false;
+            },
+            () => {
+                resolve(true);
+            });
     });
 }
 
 const unwrapResult = (resultSet: SQLResultSet): any[] => {
     const results = [];
-    for (let i = 0; i < resultSet.rows.length; i ++) {
+    for (let i = 0; i < resultSet.rows.length; i++) {
         results.push(resultSet.rows.item(i));
     }
     return results;
@@ -275,6 +337,30 @@ export const fetchGameSettings = (gameKey: string): Promise<Settings> => {
         });
     });
 };
+
+export const fetchFavoriteGames = (): Promise<{ key: string, description: string }[]> => {
+    return new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            const favoriteGamesSelect = `
+                SELECT * FROM favoriteGame fg;
+            `;
+
+            tx.executeSql(
+                favoriteGamesSelect,
+                [],
+                (_, result) => {
+                    console.log('loading favorite games!', result);
+                    resolve(unwrapResult(result));
+                },
+                (_, err): boolean => {
+                    reject(err);
+                    return false;
+                },
+            );
+        });
+    });
+};
+
 
 export const fetchPlayerScores = (gameKey: string): Promise<PlayerScoreHistory[]> => {
     return new Promise((resolve, reject) => {

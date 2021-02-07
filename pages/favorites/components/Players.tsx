@@ -12,31 +12,26 @@ import { sharedStyles } from '../../../styles/shared';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Players = ({ navigation }: PageNavigationProps<typeof FavoritesRoute>) => {
-    const { playersList, savePlayers } = useContext(playerHistoryContext);
+    const { playersList, toggleFavoriteForPlayer, favoritesSort, setFavoriteSort } = useContext(playerHistoryContext);
 
-    const toggleFavoriteForPlayer = (player: Player) => {
-        const newPlayer = {
-            ...player,
-            favorite: !player.favorite,
-        };
-        savePlayers([
-            newPlayer
-        ]);
+    const toggleFavorite = (player: Player) => {
+        toggleFavoriteForPlayer(player);
     }
     return (
         <SafeAreaView style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: navigation.pop }}
+                rightButton={{ icon: favoritesSort.asc ? 'sort-descending' : 'sort-ascending', title: 'Sort Favorites', clickHandler: () => setFavoriteSort({ ...favoritesSort, asc: !favoritesSort.asc }) }}
             />
             <FlatList
                 style={[sharedStyles.scroll, sharedStyles.mb25]}
                 data={playersList}
                 renderItem={
                     ({ item: player }) =>
-                        <TouchableOpacity onPress={() => toggleFavoriteForPlayer(player)}>
+                        <TouchableOpacity onPress={() => toggleFavorite(player)}>
                             <View style={sharedStyles.spacedRowNoBorder} key={player.key}>
                                 <View style={sharedStyles.rowGroup}>
-                                    <IconButton size={28} clickHandler={() => toggleFavoriteForPlayer(player)} icon={player.favorite ? 'star' : 'star-outline'} />
+                                    <IconButton size={28} clickHandler={() => toggleFavorite(player)} icon={player.favorite ? 'star' : 'star-outline'} />
                                     <Text style={[sharedStyles.bodyText, sharedStyles.mr5]}>{player.name}</Text>
                                 </View>
                             </View>

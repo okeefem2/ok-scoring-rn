@@ -10,7 +10,7 @@ import Game, { RouteName as GameRoute } from './pages/game/Game';
 import GameHistory, { RouteName as GameHistoryRoute } from './pages/game-history/GameHistory';
 import GameScores, { RouteName as GameScoresRoute } from './pages/game-scores/GameScores';
 import GameSettings, { RouteName as GameSettingsRoute } from './pages/game-settings/GameSettings';
-import GameScoreHistory, { RouteName as GameScoreHistoryRoute }  from './pages/game-score-history/GameScoreHistory';
+import GameScoreHistory, { RouteName as GameScoreHistoryRoute } from './pages/game-score-history/GameScoreHistory';
 import Favorites, { RouteName as FavoritesRoute } from './pages/favorites/Favorites';
 import CenterContent from './components/CenterContent';
 import { localDbContext } from './state/local-db.store';
@@ -18,12 +18,14 @@ import { sharedStyles } from './styles/shared';
 import { gameHistoryContext } from './state/game-history.store';
 import { playerHistoryContext } from './state/players-history.store';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
+import { favoriteGamesContext } from './state/favorite-games.store';
 
 function App() {
 
   const { dbInitialized, initLocalDb } = useContext(localDbContext);
   const { loadGames } = useContext(gameHistoryContext);
   const { loadPlayers } = useContext(playerHistoryContext);
+  const { loadFavoriteGames } = useContext(favoriteGamesContext);
 
   const [fontsLoaded, error] = useFonts({
     Quicksand: require('./assets/fonts/Quicksand/static/Quicksand-Regular.ttf'),
@@ -33,6 +35,7 @@ function App() {
     await initLocalDb();
     loadGames();
     loadPlayers();
+    loadFavoriteGames();
   }
 
   useEffect(() => {
@@ -49,12 +52,12 @@ function App() {
     return <>
       <View style={sharedStyles.column}>
         <CenterContent>
-            <Image
-                source={require('./assets/icon.png')}
-                style={sharedStyles.logoImage}
-                resizeMode='contain'
-            />
-          </CenterContent>
+          <Image
+            source={require('./assets/icon.png')}
+            style={sharedStyles.logoImage}
+            resizeMode='contain'
+          />
+        </CenterContent>
         <Text style={[sharedStyles.centeredText]}>...Loading</Text>
       </View>
     </>;
@@ -69,17 +72,17 @@ function App() {
 
   return (
     <>
-      <StatusBar  barStyle="dark-content" translucent={true} />
+      <StatusBar barStyle="dark-content" translucent={true} />
       <ActionSheetProvider>
         <NavigationContainer>
           <Stack.Navigator initialRouteName={NewGameRoute} screenOptions={{ headerShown: false, gestureEnabled: false }}>
-            <Stack.Screen name={NewGameRoute} component={NewGame}/>
-            <Stack.Screen name={GameRoute} component={Game}/>
-            <Stack.Screen name={GameHistoryRoute} component={GameHistory}/>
-            <Stack.Screen name={GameScoresRoute} component={GameScores}/>
-            <Stack.Screen name={GameSettingsRoute} component={GameSettings}/>
-            <Stack.Screen name={GameScoreHistoryRoute} component={GameScoreHistory}/>
-            <Stack.Screen name={FavoritesRoute} component={Favorites}/>
+            <Stack.Screen name={NewGameRoute} component={NewGame} />
+            <Stack.Screen name={GameRoute} component={Game} />
+            <Stack.Screen name={GameHistoryRoute} component={GameHistory} />
+            <Stack.Screen name={GameScoresRoute} component={GameScores} />
+            <Stack.Screen name={GameSettingsRoute} component={GameSettings} />
+            <Stack.Screen name={GameScoreHistoryRoute} component={GameScoreHistory} />
+            <Stack.Screen name={FavoritesRoute} component={Favorites} />
           </Stack.Navigator>
         </NavigationContainer>
       </ActionSheetProvider>

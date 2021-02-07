@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import IconButton from "../../../components/IconButton";
 import { abbreviateNumber } from '../../../hooks/abbreviateNumber';
 import { GameScoreHistory } from "../../../model/game-score-history";
@@ -43,7 +43,7 @@ const GamePlayerScoresTableRow = ({
                 </Text>
                 <View style={[sharedStyles.scoreTabelTopCell, { display: 'flex', flexDirection: 'row', alignItems: 'center' }]}>
                     <IconButton
-                        icon={roundsShown ? 'chevron-down' : 'chevron-up'}
+                        icon={roundsShown ? 'chevron-up' : 'chevron-down'}
                         iconSide="right"
                         title="Rounds"
                         clickHandler={() => { setRoundsShown(!roundsShown); }}
@@ -83,5 +83,3 @@ const GamePlayerScoresTableRow = ({
 };
 
 export default GamePlayerScoresTableRow;
-
-const styles = StyleSheet.create({});

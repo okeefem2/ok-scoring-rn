@@ -8,24 +8,26 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteName as FavoritesRoute } from '../Favorites'
 import { PageNavigationProps } from '../../../navigation'
 import NavBar from '../../../components/NavBar'
+import { favoriteGamesContext } from '../../../state/favorite-games.store'
 
 const Games = ({ navigation }: PageNavigationProps<typeof FavoritesRoute>) => {
-    const { gamesList, toggleFavoriteGame } = useContext(gameHistoryContext);
-
+    const { gamesList, favoritesSort, setFavoriteSort } = useContext(gameHistoryContext);
+    const { toggleFavorite } = useContext(favoriteGamesContext);
     return (
         <SafeAreaView style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: navigation.pop }}
+                rightButton={{ icon: favoritesSort.asc ? 'sort-descending' : 'sort-ascending', title: 'Sort Favorites', clickHandler: () => setFavoriteSort({ ...favoritesSort, asc: !favoritesSort.asc }) }}
             />
             <FlatList
                 style={[sharedStyles.scroll, sharedStyles.mb25]}
                 data={gamesList}
                 renderItem={
                     ({ item: game }) =>
-                        <TouchableOpacity onPress={() => toggleFavoriteGame(game)}>
+                        <TouchableOpacity onPress={() => toggleFavorite(game.description, !game.favorite)}>
                             <View style={sharedStyles.spacedRowNoBorder} key={game.key}>
                                 <View style={sharedStyles.rowGroup}>
-                                    <IconButton size={28} clickHandler={() => toggleFavoriteGame(game)} icon={game.favorite ? 'star' : 'star-outline'} />
+                                    <IconButton size={28} clickHandler={() => toggleFavorite(game.description, !game.favorite)} icon={game.favorite ? 'star' : 'star-outline'} />
                                     <Text style={[sharedStyles.bodyText, sharedStyles.mr5]}>{game.description}</Text>
                                 </View>
                             </View>
