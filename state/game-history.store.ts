@@ -19,9 +19,17 @@ class GameHistoryStore {
 
     constructor() {
         reaction(() => this.sort, () => this.sortAndSetGameHistory([...this.gameHistory]));
-        reaction(() => this.favoritesSort, () => this.sortAndSetFavoriteGames([...this.gameHistory]));
-        reaction(() => this.gameHistory, () => this.sortAndSetFavoriteGames([...this.gameHistory]));
-        reaction(() => favoriteGamesStore.favoriteGames, () => this.setFavorites(favoriteGamesStore.favoriteGames.slice()));
+        reaction(() => this.favoritesSort, () => this.sortAndSetFavoriteGames(
+            this.setFavorites(this.gameHistory, favoriteGamesStore.favoriteGames)
+        ));
+        reaction(() => this.gameHistory, () => {
+            this.sortAndSetFavoriteGames(
+                this.setFavorites(this.gameHistory, favoriteGamesStore.favoriteGames),
+            );
+        });
+        reaction(() => favoriteGamesStore.favoriteGames, () => this.sortAndSetFavoriteGames(
+            this.setFavorites(this.gameHistory, favoriteGamesStore.favoriteGames),
+        ));
     }
 
     @computed
@@ -30,10 +38,8 @@ class GameHistoryStore {
         return buildScoreHistoryRounds(this.gameState?.scoreHistory ?? {});
     }
 
-    @action
-    setFavorites = (favorites: { key: string, description: string }[]) => {
-        console.log('setting favorites!', favorites);
-        this.gameHistory = this.gameHistory.map(g => ({
+    setFavorites = (gameHistory: GameState[], favorites: { key: string, description: string }[]) => {
+        return gameHistory.map(g => ({
             ...g,
             favorite: favorites.some(f => f.description === g.description)
         }));
@@ -104,7 +110,6 @@ class GameHistoryStore {
     saveGame = (gameState: GameState) => {
         gameState = this.hydrateGameStateForHistory(gameState);
         const gameHistory = addOrReplaceByKey(this.gameHistory, gameState);
-        console.log('New game history!', gameHistory);
         this.sortAndSetGameHistory(gameHistory)
         this.saveGameToDb(gameState);
     }

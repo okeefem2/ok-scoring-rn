@@ -109,12 +109,12 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                         editable={!gameOver}
                     />
                 </View>
-                <View style={[{ alignSelf: 'flex-end' }, sharedStyles.mb10]}>
+                {/* <View style={[{ alignSelf: 'flex-end' }, sharedStyles.mb10]}>
                     {
                         gameOver && <NavBar
                             rightButton={{ icon: 'delete-outline', title: 'Discard & Quit', clickHandler: exitToNewGame }} />
                     }
-                </View>
+                </View> */}
             </View>
         </SafeAreaView>
     );

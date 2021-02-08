@@ -34,7 +34,10 @@ export const initSQLLiteDb = () => {
 
                     FOREIGN KEY (winningPlayerKey)
                         REFERENCES player (key)
-                );`;
+                );
+
+            UPDATE game SET favorite = null;
+                `;
             const gameSettingsTable = `
             CREATE TABLE IF NOT EXISTS gameSettings
                 (
@@ -349,7 +352,6 @@ export const fetchFavoriteGames = (): Promise<{ key: string, description: string
                 favoriteGamesSelect,
                 [],
                 (_, result) => {
-                    console.log('loading favorite games!', result);
                     resolve(unwrapResult(result));
                 },
                 (_, err): boolean => {
