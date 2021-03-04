@@ -15,22 +15,16 @@ interface GameScoreListItemProps {
     playerUpdated: (p: Player) => void;
 }
 const GameScoreListItem = ({player, playerScoreHistory, winning, playerUpdated }: GameScoreListItemProps) => {
-    const { savePlayers } = useContext(playerHistoryContext);
+    const { toggleFavoriteForPlayer } = useContext(playerHistoryContext);
 
-    const toggleFavoriteForPlayer = () => {
-        const newPlayer = {
-            ...player,
-            favorite: !player.favorite,
-        };
-        savePlayers([
-            newPlayer
-        ]);
+    const toggleFavorite = () => {
+        const newPlayer = toggleFavoriteForPlayer(player);
         playerUpdated(newPlayer);
     }
     return (
         <View style={sharedStyles.spacedRowNoBorder} key={player.key}>
             <View style={sharedStyles.rowGroup}>
-                <IconButton size={28} clickHandler={toggleFavoriteForPlayer} icon={player.favorite ? 'star' : 'star-outline'} />
+                <IconButton size={28} clickHandler={toggleFavorite} icon={player.favorite ? 'star' : 'star-outline'} />
                 <Text style={[sharedStyles.bodyText, sharedStyles.mr5]}>{player.name}</Text>
                 {
                     winning && <MaterialCommunityIcons name='crown' size={28} color={colors.tertiary} />

@@ -1,29 +1,51 @@
 import { createContext } from 'react';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, reaction } from 'mobx';
 import { localDbStore } from './local-db.store';
 import { Player } from '../model/player';
 import { fetchPlayers, insertPlayer } from '../db/db';
 import { addOrReplaceByKey } from '../util/array.util';
+import { sort, Sort } from './sort';
 
 class PlayerHistoryStore {
 
     @observable playerHistory: Player[] = [];
+    @observable favoritesSort: Sort<Player> = { sortProp: 'favorite', asc: false };
+    @observable playersList: Player[] = [];
+
+    constructor() {
+        reaction(() => this.favoritesSort, () => this.sortAndSetFavoritePlayers([...this.playerHistory]));
+        reaction(() => this.playerHistory, () => this.sortAndSetFavoritePlayers([...this.playerHistory]));
+    }
 
     @computed
     get favoritePlayers(): Player[] {
         return this.playerHistory?.filter(p => p.favorite);
     }
 
-    @computed
-    get playersList(): Player[] {
-        return this.playerHistory.slice()?.sort((a, b) => a.favorite ? -1 : b.favorite ? 1 : 0);
+    @action sortAndSetFavoritePlayers = (players: Player[]) => {
+        this.playersList = sort(players, this.favoritesSort)
     }
 
     @action savePlayers = (players: Player[]) => {
         this.playerHistory = players.reduce((newPlayers: Player[], player) => {
             this.savePlayerToDb(player);
             return addOrReplaceByKey(newPlayers, player);
-        }, [ ...this.playerHistory]);
+        }, [...this.playerHistory]);
+    }
+
+    @action setFavoriteSort = (sort: Sort<Player>) => {
+        this.favoritesSort = sort;
+    }
+
+    toggleFavoriteForPlayer = (player: Player) => {
+        const newPlayer = {
+            ...player,
+            favorite: !player.favorite,
+        };
+        this.savePlayers([
+            newPlayer
+        ]);
+        return newPlayer;
     }
 
     @action loadPlayers = async () => {
@@ -33,7 +55,7 @@ class PlayerHistoryStore {
                 if (players?.length) {
                     this.playerHistory = players;
                 }
-            } catch(e) {
+            } catch (e) {
                 console.error('Error loading players from local db', e);
             }
         }
@@ -42,7 +64,7 @@ class PlayerHistoryStore {
     async savePlayerToDb(player: Player) {
         try {
             await insertPlayer(player);
-        } catch(e) {
+        } catch (e) {
             console.error('Error saving player to local db', e);
         }
     }

@@ -5,6 +5,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../../styles/colors';
 import Games, { TabNavIcons as GamesTabNavIcons } from './components/Games';
 import Players, { TabNavIcons as PlayersTabNavIcons } from './components/Players';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { sharedStyles } from '../../styles/shared';
 
 export type TabIcons = { active: string, inactive: string };
 const favoriteTabs: { [k: string]: TabIcons } = {
@@ -14,27 +16,30 @@ const favoriteTabs: { [k: string]: TabIcons } = {
 const Favorites = () => {
     const Tab = createBottomTabNavigator();
     return (
-        <>
-            <NavigationContainer independent={true}>
-                <Tab.Navigator
-                    screenOptions={({ route }) => ({
-                        tabBarIcon: ({ focused, color }) => {
-                            const tabIcons = favoriteTabs[route.name];
-                            const iconName = focused ? tabIcons.active : tabIcons.inactive;
-                            // You can return any component that you like here!
-                            return <MaterialCommunityIcons name={iconName} size={28} color={color} />;
-                        },
-                    })}
-                    tabBarOptions={{
-                        activeTintColor: colors.primary,
-                        inactiveTintColor: colors.greyLight,
-                    }}
-                >
-                    <Tab.Screen name='Players' component={Players} />
-                    <Tab.Screen name='Games' component={Games} />
-                </Tab.Navigator>
-            </NavigationContainer>
-        </>
+        <NavigationContainer independent={true}>
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+
+                    tabBarIcon: ({ focused, color }) => {
+                        const tabIcons = favoriteTabs[route.name];
+                        const iconName = focused ? tabIcons.active : tabIcons.inactive;
+                        // You can return any component that you like here!
+                        return <MaterialCommunityIcons name={iconName} size={28} color={color} />;
+                    },
+                })}
+                tabBarOptions={{
+                    activeTintColor: colors.white,
+                    inactiveTintColor: colors.primary,
+                    activeBackgroundColor: colors.primary,
+                    tabStyle: {
+                        paddingVertical: 5
+                    }
+                }}
+            >
+                <Tab.Screen name='Players' component={Players} />
+                <Tab.Screen name='Games' component={Games} />
+            </Tab.Navigator>
+        </NavigationContainer>
     );
 }
 

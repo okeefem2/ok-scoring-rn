@@ -1,27 +1,34 @@
 import { useActionSheet } from '@expo/react-native-action-sheet'
 import React, { useContext } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { truncateText } from '../../../hooks/truncateString'
 import { Player } from '../../../model/player'
 import { gameContext } from '../../../state/game.store'
 import { colors } from '../../../styles/colors'
 import { sharedStyles } from '../../../styles/shared'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type GamePlayerScoresTablePlayerCellProps = {
     selectable: boolean;
     player: Player;
     active: boolean;
+    winning: boolean;
 }
 
-const GamePlayerScoresTablePlayerCell = ({ selectable, player, active }: GamePlayerScoresTablePlayerCellProps) => {
-    const {setActivePlayer, deletePlayer} = useContext(gameContext);
+const GamePlayerScoresTablePlayerCell = ({
+    selectable,
+    player,
+    active,
+    winning
+}: GamePlayerScoresTablePlayerCellProps) => {
+    const { setActivePlayer, deletePlayer } = useContext(gameContext);
 
     const displayName = truncateText(player.name, 7);
 
     const { showActionSheetWithOptions } = useActionSheet();
 
     const showActionSheetForPlayer = () => showActionSheetWithOptions({
-        options: [ 'Delete', 'Cancel'],
+        options: ['Delete', 'Cancel'],
         tintColor: colors.primary,
         cancelButtonIndex: 1,
         destructiveButtonIndex: 0,
@@ -33,17 +40,25 @@ const GamePlayerScoresTablePlayerCell = ({ selectable, player, active }: GamePla
     })
 
     return (
-        <View style={[sharedStyles.plainRow, { minWidth: 50 }]} key={player.key}>
+        <View key={player.key}>
             {
                 selectable ?
-                <TouchableOpacity onPress={() => setActivePlayer(player)} onLongPress={showActionSheetForPlayer}>
-                    <Text style={[sharedStyles.bodyText, active ? sharedStyles.editingCell : sharedStyles.touchableCell, sharedStyles.p5, { minWidth: 50 }]}>
+                    <TouchableOpacity onPress={() => setActivePlayer(player)} onLongPress={showActionSheetForPlayer}
+                        style={[active ? sharedStyles.editingCell : sharedStyles.touchableCell, sharedStyles.scoreTabelTopCell, { display: 'flex', flexDirection: 'row', alignItems: 'center' }]}>
+                        <Text style={[{
+                            fontFamily: 'Quicksand',
+                            fontSize: 18
+                        }]}>
+                            {displayName}
+                        </Text>
+                        {winning && <MaterialCommunityIcons
+                            name={'crown'} size={18}
+                            style={sharedStyles.ml5}
+                            color={winning ? colors.tertiary : colors.white} />}
+                    </TouchableOpacity> :
+                    <Text style={[sharedStyles.scoreTabelTopCell]}>
                         {displayName}
                     </Text>
-                </TouchableOpacity> :
-                <Text style={[sharedStyles.bodyText, sharedStyles.p5, { minWidth: 50 }]}>
-                    {displayName}
-                </Text>
             }
         </View>
     )

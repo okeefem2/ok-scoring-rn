@@ -1,30 +1,85 @@
-import React from 'react'
-import { Text, View } from 'react-native'
-import { PlayerScoreHistory } from '../../../model/player-score-history'
-import { sharedStyles } from '../../../styles/shared'
-import GamePlayerScoresTableScoreCell from './GamePlayerScoresTableScoreCell'
+import React, { useState } from "react";
+import { ScrollView, Text, View } from "react-native";
+import IconButton from "../../../components/IconButton";
+import { abbreviateNumber } from '../../../hooks/abbreviateNumber';
+import { GameScoreHistory } from "../../../model/game-score-history";
+import { Player } from "../../../model/player";
+import { sharedStyles } from "../../../styles/shared";
+import GamePlayerScoresHistoryTableRow from "./GamePlayerScoresHistoryTableRow";
+import GamePlayerScoresTablePlayerCell from "./GamePlayerScoresTablePlayerCell";
 
-type GamePlayerScoresTableProps = {
-    playerScoreHistory: PlayerScoreHistory;
+type GamePlayerScoresTableRowProps = {
+    player: Player;
+    active: boolean;
+    winning: boolean;
     editable: boolean;
-}
-const GamePlayerScoresTableRow = ({ playerScoreHistory, editable }: GamePlayerScoresTableProps) => {
-    return playerScoreHistory ? (
-        <View style={[sharedStyles.plainRow]} key={playerScoreHistory.key}>
+    selectable: boolean;
+    scoreHistory: GameScoreHistory;
+    scoreHistoryRounds: number[];
+};
+
+const GamePlayerScoresTableRow = ({
+    player,
+    active,
+    winning,
+    editable,
+    selectable,
+    scoreHistory,
+    scoreHistoryRounds,
+}: GamePlayerScoresTableRowProps) => {
+    const [roundsShown, setRoundsShown] = useState(false);
+    const currentScore = abbreviateNumber(scoreHistory[player.key]?.currentScore);
+    return (
+        <>
+            <View style={[sharedStyles.plainRow]} key={player.key}>
+                <GamePlayerScoresTablePlayerCell
+                    selectable={selectable}
+                    player={player}
+                    active={active}
+                    winning={winning}
+                />
+                <Text style={[sharedStyles.scoreTabelTopCell]}>
+                    {currentScore} pts
+                </Text>
+                <View style={[sharedStyles.scoreTabelTopCell, { display: 'flex', flexDirection: 'row', alignItems: 'center' }]}>
+                    <IconButton
+                        icon={roundsShown ? 'chevron-up' : 'chevron-down'}
+                        iconSide="right"
+                        title="Rounds"
+                        clickHandler={() => { setRoundsShown(!roundsShown); }}
+                    ></IconButton>
+                </View>
+            </View>
             {
-                playerScoreHistory.scores.length ?
-                playerScoreHistory.scores.map((s, i) => (
-                    <GamePlayerScoresTableScoreCell
-                        score={s}
-                        scoreIndex={i}
-                        playerKey={playerScoreHistory.playerKey}
-                        key={`${playerScoreHistory.key}-${s}-${i}`}
-                        editable={editable}
-                    />
-                )) : <View style={[sharedStyles.scoreTabelCell]}></View>
+                roundsShown ?
+                    <ScrollView
+                        horizontal={true}
+                        style={[sharedStyles.mb10, sharedStyles.ml10]}
+                    >
+                        <View style={[sharedStyles.column]}>
+                            <View style={[sharedStyles.plainRowBordered]}>
+                                {scoreHistoryRounds.map((r) => (
+                                    <Text
+                                        style={[
+                                            sharedStyles.scoreTabelTopCell,
+                                            sharedStyles.centeredText,
+                                        ]}
+                                        key={r}
+                                    >
+                                        {r}
+                                    </Text>
+                                ))}
+                            </View>
+                            <GamePlayerScoresHistoryTableRow
+                                editable={editable}
+                                playerScoreHistory={scoreHistory[player.key]}
+                                key={player.key}
+                            />
+                        </View>
+                    </ScrollView> : null
             }
-        </View>
-    ) : null;
-}
+        </>
+    );
+};
 
 export default GamePlayerScoresTableRow;

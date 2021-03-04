@@ -26,21 +26,20 @@ const IconButton = ({
     width,
     alignSelf = 'center',
     backgroundColor,
+
 }: ButtonConfig) => {
-    const textStyles: any[] = [styles.buttonText];
-    if (backgroundColor) {
-        textStyles.push({ backgroundColor });
-    }
+    let textStyles: any[] = [styles.buttonText];
+
     if (disabled) {
         textStyles.push(styles.disabled);
     }
     return (
-        <View style={{ alignSelf: alignSelf, display: 'flex', width: width }}>
+        <View style={{ alignSelf: alignSelf, display: 'flex', width: width, backgroundColor, padding: 5 }}>
             <TouchableOpacity onPress={() => !disabled && clickHandler()} disabled={disabled} style={{ width: width, }}>
                 <View style={styles.buttonRow}>
-                    { !!icon && iconSide === 'left' ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
-                    { !!title ? <Text style={[textStyles, { color: disabled ? colors.greyMid : color }]}>{title}</Text> : <></> }
-                    { !!icon && iconSide === 'right'  ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
+                    {!!icon && iconSide === 'left' ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
+                    {!!title ? <Text style={[textStyles, { color: disabled ? colors.greyMid : color }]}>{title}</Text> : <></>}
+                    {!!icon && iconSide === 'right' ? <MaterialCommunityIcons name={icon} size={size} color={disabled ? colors.greyMid : color} /> : <></>}
                 </View>
             </TouchableOpacity>
         </View>

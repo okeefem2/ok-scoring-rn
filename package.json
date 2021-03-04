@@ -2,6 +2,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "tunnel": "expo start --tunnel",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -14,10 +15,10 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.8.0",
+    "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.2",
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
-    "@react-native-community/masked-view": "0.1.10",
     "buffer": "^5.6.0",
     "date-fns": "^2.16.1",
     "expo": "^38.0.0",
@@ -30,6 +31,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-modal-selector": "^2.0.2",
+    "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "~2.9.0",
     "react-native-svg": "12.1.0",

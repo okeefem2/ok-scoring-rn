@@ -1,150 +1,50 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { StyleSheet, Text, View, ScrollView, Animated } from 'react-native'
-import { sharedStyles } from '../../../styles/shared';
-import GamePlayerScoresTableRow from './GamePlayerScoresTableRow';
-import { Player } from '../../../model/player';
-import { GameScoreHistory } from '../../../model/game-score-history';
-import { gameContext } from '../../../state/game.store';
-import GamePlayerScoresTablePlayerCell from './GamePlayerScoresTablePlayerCell';
-import IconButton from '../../../components/IconButton';
-import AddPlayer from '../../new-game/components/dumb/AddPlayer';
-import { playerHistoryContext } from '../../../state/players-history.store';
+import React, { useContext } from "react";
+import { Text, View, ScrollView } from "react-native";
+import { sharedStyles } from "../../../styles/shared";
+import GamePlayerScoresHistoryTableRow from "./GamePlayerScoresHistoryTableRow";
+import { Player } from "../../../model/player";
+import { GameScoreHistory } from "../../../model/game-score-history";
+import { gameContext } from "../../../state/game.store";
+import GamePlayerScoresTablePlayerCell from "./GamePlayerScoresTablePlayerCell";
+import IconButton from "../../../components/IconButton";
+import GamePlayerScoresTableRow from "./GamePlayerScoresTableRow";
+import { colors } from '../../../styles/colors';
 
 type GamePlayerScoresTableProps = {
-    players: Player[],
-    scoreHistoryRounds: number[],
-    scoreHistory: GameScoreHistory,
-    editable?: boolean,
-    playersSelectable?: boolean,
-}
-const scrollPosition = new Animated.Value(0);
-const scrollEvent = Animated.event(
-    [{ nativeEvent: { contentOffset: { x: scrollPosition } } }],
-    { useNativeDriver: false },
-);
-let roundScrollRef: ScrollView;
-
+    players: Player[];
+    scoreHistoryRounds: number[];
+    scoreHistory: GameScoreHistory;
+    editable?: boolean;
+    playersSelectable?: boolean;
+};
 export const GamePlayerScoresTable = ({
-    players, scoreHistoryRounds, scoreHistory, editable = true, playersSelectable = false
+    players,
+    scoreHistoryRounds,
+    scoreHistory,
+    editable = true,
+    playersSelectable = false,
 }: GamePlayerScoresTableProps) => {
-    const { activeGamePlayerScore } = useContext(gameContext);
+    const { activeGamePlayerScore, winningPlayerKey } = useContext(gameContext);
+    // TODO break these into components for easier tracking of open state, also animations
 
-    useEffect(() => {
-        scrollPosition.addListener(position => {
-            roundScrollRef.scrollTo({ x: position.value, animated: false });
-        });
-        return () => {
-            scrollPosition.removeAllListeners();
-        }
-    }, [scoreHistory]);
-
-    console.log('building table')
     return (
         <>
-            <View style={[sharedStyles.plainRow]}>
-                <View style={[styles.players]}>
-                    <View style={sharedStyles.plainRowBordered}>
-                        {/* {
-                            editable ?
-                            <View style={[sharedStyles.mr5]}>
-                                <IconButton icon={'account-plus-outline'} clickHandler={() => {
-                                    console.log('setting add player!');
-                                    }} size={26} />
-                            </View> :
-                            null
-                        } */}
-                        <Text style={[sharedStyles.scoreTabelLabel]}>
-                            Players
-                        </Text>
-                    </View>
-                </View>
-                <View style={styles.scores}>
-                    <ScrollView
-                        horizontal={true}
-                        ref={(scrollViewRef: ScrollView) => roundScrollRef = scrollViewRef}
-                        scrollEnabled={false}
-                        scrollEventThrottle={16}
-                    >
-                        <View style={sharedStyles.plainRowBordered}>
-                                {
-                                    scoreHistoryRounds.map(
-                                        r =>
-                                            <Text style={[sharedStyles.scoreTabelCell]} key={r}>
-                                                {r}
-                                            </Text>
-                                    )
-                                }
-                        </View>
-                    </ScrollView>
-                </View>
-                <View style={[styles.players]}>
-                    <View style={sharedStyles.plainRowBordered}>
-                        <Text style={[sharedStyles.scoreTabelLabel]}>
-                            Total
-                        </Text>
-                    </View>
-                </View>
-            </View>
-            <ScrollView>
-                <View style={[sharedStyles.plainRow]}>
-                    <View style={[styles.players]}>
-                        {
-                            players.map(player => (
-                                <GamePlayerScoresTablePlayerCell
-                                    key={player.key}
-                                    selectable={playersSelectable}
-                                    player={player}
-                                    active={activeGamePlayerScore?.player.key === player.key}
-                                />
-                            ))
-                        }
-                    </View>
-                    <View style={styles.scores}>
-                        <ScrollView
-                            horizontal={true}
-                            onScroll={scrollEvent}
-                            scrollEventThrottle={16}
-                        >
-                            <View style={[sharedStyles.column]}>
-                                {
-                                    players.map(
-                                        player => <GamePlayerScoresTableRow
-                                            editable={editable}
-                                            playerScoreHistory={scoreHistory[player.key]}
-                                            key={player.key} />
-                                    )
-                                }
-                            </View>
-                        </ScrollView>
-                    </View>
-                    <View style={[styles.players]}>
-                        {
-                            players.map(player => (
-                                <View style={[sharedStyles.plainRow, { minWidth: 50 }]} key={player.key}>
-                                    <Text style={[sharedStyles.bodyText, sharedStyles.p5, { minWidth: 50 }]} key={player.key}>
-                                        {scoreHistory[player.key]?.currentScore ?? 0}
-                                    </Text>
-                                </View>
-                            ))
-                        }
-                    </View>
-                </View>
+            <ScrollView style={[sharedStyles.mt25]}>
+                {players.map((player) => (
+                    <GamePlayerScoresTableRow
+                        key={player.key}
+                        active={activeGamePlayerScore?.player.key === player.key}
+                        winning={winningPlayerKey === player.key}
+                        player={player}
+                        scoreHistory={scoreHistory}
+                        editable={editable}
+                        selectable={playersSelectable}
+                        scoreHistoryRounds={scoreHistoryRounds}
+                    />
+                ))}
             </ScrollView>
         </>
     );
-}
+};
 
 export default GamePlayerScoresTable;
-
-const styles = StyleSheet.create({
-    table: {
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    players: {
-        flex: 1
-    },
-    scores: {
-        flex: 4
-    }
-});

@@ -8,6 +8,7 @@ import { GameState } from '../model/game-state';
 import { GameScoreHistory, determineWinner, buildInitialHistory, buildScoreHistoryRounds } from '../model/game-score-history';
 import { PlayerScore, PlayerScoreMode } from '../model/player-score';
 import { reCalcCurrentScore } from '../model/player-score-history';
+import { favoriteGamesStore } from './favorite-games.store';
 
 class GameStore implements GameState {
     key = uuid();
@@ -17,6 +18,8 @@ class GameStore implements GameState {
     // Observable props
     @observable
     description = '';
+    @observable
+    favorite?: boolean;
     @observable
     winningPlayerKey?: string;
     @observable
@@ -44,6 +47,7 @@ class GameStore implements GameState {
         reaction(() => this.activePlayerScore, () => {
             this.setWinningPlayerKey(determineWinner(this.scoreHistory, this.settings.highScoreWins));
         });
+        reaction(() => favoriteGamesStore.favoriteGames, () => this.setFavorite(favoriteGamesStore.favoriteGames.slice()));
     }
 
     @computed
@@ -70,7 +74,8 @@ class GameStore implements GameState {
             date: this.date,
             players: this.players,
             settings: this.settings,
-            winningPlayerKey: this.winningPlayerKey
+            winningPlayerKey: this.winningPlayerKey,
+            favorite: this.favorite
         };
     }
 
@@ -94,6 +99,7 @@ class GameStore implements GameState {
         this.scoreHistory = gameState?.scoreHistory ?? {};
         this.date = gameState?.date ?? new Date().getTime();
         this.players = gameState?.players ?? [];
+        this.favorite = gameState?.favorite ?? false;
         this.settings = gameState?.settings ?? {
             key: uuid(),
             // rounds: undefined;
@@ -202,7 +208,7 @@ class GameStore implements GameState {
     }
 
     @action
-    deletePlayerScore = ({playerKey, scoreIndex}: { playerKey: string, scoreIndex: number}) => {
+    deletePlayerScore = ({ playerKey, scoreIndex }: { playerKey: string, scoreIndex: number }) => {
         if (this.scoreHistory) {
             this.scoreHistory[playerKey].scores.splice(scoreIndex, 1);
             this.scoreHistory[playerKey] = reCalcCurrentScore(this.scoreHistory[playerKey]);
@@ -222,6 +228,11 @@ class GameStore implements GameState {
         }
         this.date = new Date().getTime();
         this.setActivePlayer(this.players[0]);
+    }
+
+    @action
+    setFavorite = (favorites: { key: string, description: string }[]) => {
+        this.favorite = favorites.some(f => f.description === this.description);
     }
 
     changeActivePlayer = (n: 1 | -1, gamePlayers: Player[]) => {
@@ -247,7 +258,7 @@ class GameStore implements GameState {
                 playerScore.scores.length ?? 0;
             let roundScore = this.settings.defaultScoreStep || 0;
             if (round !== undefined) {
-                roundScore =  playerScore?.scores[round];
+                roundScore = playerScore?.scores[round];
             }
             return {
                 playerScore,

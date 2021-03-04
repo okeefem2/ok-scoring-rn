@@ -70,24 +70,28 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
         runFadeAnimation(1);
     };
 
-    const displayName = truncateText(activeGamePlayerScore?.player?.name ?? '', 10);
+    const displayName = truncateText(activeGamePlayerScore?.player?.name ?? '', 7);
 
-    return ( activeGamePlayerScore ?
+    return (activeGamePlayerScore ?
         <SafeAreaView style={sharedStyles.pageContainer}>
             <View style={styles.gameContainer}>
                 <GestureRecognizer onSwipeRight={changePlayerLeft} onSwipeLeft={changePlayerRight}>
                     <NavBar
-                        leftButton={{ icon: 'book', title: 'Scores', clickHandler: () => {
-                            navigation.navigate(GameScoresRoute, { gameOver: false });
-                        }}}
-                        rightButton={{ icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => {
-                            navigation.navigate(GameScoresRoute, { gameOver: true });
-                        }}}
+                        leftButton={{
+                            icon: 'book', title: 'Scores', clickHandler: () => {
+                                navigation.navigate(GameScoresRoute, { gameOver: false });
+                            }
+                        }}
+                        rightButton={{
+                            icon: 'exit-to-app', title: 'Finish Game', clickHandler: () => {
+                                navigation.navigate(GameScoresRoute, { gameOver: true });
+                            }
+                        }}
                     />
-                    <View style={[sharedStyles.centeredContent, sharedStyles.mt10 ]}>
+                    <View style={[sharedStyles.centeredContent, sharedStyles.mt10]}>
                         {
-                            <Animated.View style={[{ transform: [{ translateX: slideAnim}]}, { opacity: fadeAnim }]}>
-                                <MaterialCommunityIcons name={'crown'} size={28} color={winningPlayerKey === activeGamePlayerScore.player.key ? colors.tertiary : colors.white } />
+                            <Animated.View style={[{ transform: [{ translateX: slideAnim }] }, { opacity: fadeAnim }]}>
+                                <MaterialCommunityIcons name={'crown'} size={28} color={winningPlayerKey === activeGamePlayerScore.player.key ? colors.tertiary : colors.white} />
                             </Animated.View>
                         }
                     </View>
@@ -95,9 +99,9 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                         <View style={[styles.buttonRowItem]}>
                             <IconButton icon='chevron-left' clickHandler={changePlayerLeft} width={'100%'} size={34} />
                         </View>
-                        <Animated.View style={[styles.buttonRowItem, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim}]}]}>
+                        <Animated.View style={[styles.buttonRowItem, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim }] }]}>
                             {/* <Tooltip text={activeGamePlayerScore.player.name}> */}
-                            <Header title={displayName}/>
+                            <Header title={displayName} />
                             {/* </Tooltip> */}
                         </Animated.View>
                         <View style={[styles.buttonRowItem]}>
@@ -105,23 +109,23 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                         </View>
                     </View>
 
-                    <Animated.View style={[{ opacity: fadeAnim }, { transform: [{ translateX: slideAnim}]}]}>
+                    <Animated.View style={[{ opacity: fadeAnim }, { transform: [{ translateX: slideAnim }] }]}>
                         <Text style={[styles.turnDetails, sharedStyles.mt10]}>
                             Turn {activeGamePlayerScore.scoreIndex + 1}
                         </Text>
                     </Animated.View>
-                    <Animated.View style={[styles.scoreContainer, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim}]}]}>
+                    <Animated.View style={[styles.scoreContainer, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim }] }]}>
                         <View style={styles.middleTextInner}>
                             <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
                                 {activeGamePlayerScore.playerScore.currentScore?.toString() || '0'}
                             </Text>
                         </View>
                     </Animated.View>
-                    <View style={[sharedStyles.spacedEvenlyNoBorder ]}>
+                    <View style={[sharedStyles.spacedEvenlyNoBorder]}>
                         <View style={[styles.buttonRowItem]}>
-                            <IconButton icon='plus-minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} size={34}/>
+                            <IconButton icon='plus-minus' clickHandler={() => turnScore && updateTurnScore(turnScore * -1)} size={34} />
                         </View>
-                        <View style={[ styles.buttonRowItem ]}>
+                        <View style={[styles.buttonRowItem]}>
                             <TextInput
                                 style={[styles.scoreInput]}
                                 onChangeText={(n) => {
@@ -145,20 +149,27 @@ const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
                         <View style={[styles.buttonRowItem]}>
                         </View>
                     </View>
-                    <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
+                    {/* <View style={[sharedStyles.centeredContent, sharedStyles.mt25]}>
                         <Text style={[styles.turnDetails]}>
-                            { !!turnScore ? (turnScore >= 0 ? `+${turnScore}` : turnScore) : '+0'} points
+                            {!!turnScore ? (turnScore >= 0 ? `+${turnScore}` : turnScore) : '+0'} points
                         </Text>
-                    </View>
+                    </View> */}
                     <View style={[sharedStyles.centeredContent, sharedStyles.mt25, sharedStyles.mb10]}>
-                        <IconButton title={playerScoreMode === PlayerScoreMode.Editing ? `Update Turn`: `End Turn`} clickHandler={() => {
-                            if (playerScoreMode === PlayerScoreMode.Editing) {
-                                updateRoundScore(activeGamePlayerScore.player.key, activeGamePlayerScore.scoreIndex, turnScore as number);
-                            } else {
-                                endPlayerTurn(turnScore, players);
-                            }
-                            runFadeAnimation(1);
-                        }}/>
+                        <IconButton
+                            title={playerScoreMode === PlayerScoreMode.Editing ? `Update Turn` : `End Turn`}
+                            color={colors.white}
+                            backgroundColor={colors.primary}
+                            icon={'chevron-right'}
+                            iconSide='right'
+                            clickHandler={() => {
+                                if (playerScoreMode === PlayerScoreMode.Editing) {
+                                    updateRoundScore(activeGamePlayerScore.player.key, activeGamePlayerScore.scoreIndex, turnScore as number);
+                                } else {
+                                    endPlayerTurn(turnScore, players);
+                                }
+                                runFadeAnimation(1);
+                            }}
+                        />
                     </View>
                 </GestureRecognizer>
                 <GamePlayerScoresTable

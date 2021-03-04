@@ -1,16 +1,22 @@
 import { StyleSheet, } from 'react-native';
 import { colors } from './colors';
-
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 export const sharedStyles = StyleSheet.create({
     pageContainer: {
         paddingLeft: 15,
         paddingRight: 15,
         paddingBottom: 15,
-        paddingTop: 5,
+        paddingTop: 10,
         backgroundColor: '#fff',
         flex: 1,
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
+    },
+    plainRowNoPadding: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     plainRow: {
         paddingTop: 10,
@@ -94,6 +100,7 @@ export const sharedStyles = StyleSheet.create({
     },
     bodyText: {
         fontFamily: 'Quicksand',
+        fontSize: 20,
     },
     p5: {
         padding: 5,
@@ -149,24 +156,20 @@ export const sharedStyles = StyleSheet.create({
         width: '80%',
         height: 150
     },
-    scoreTabelCell: {
-        minWidth: 60,
-        minHeight: 28,
+    scoreTabelTopCell: {
+        minWidth: 100,
+        maxWidth: wp('25%'),
         padding: 5,
         marginRight: 20,
-        textAlign: 'center',
         fontFamily: 'Quicksand',
+        fontSize: 18,
+        textAlignVertical: 'center',
+        textAlign: 'center',
     },
     touchableCell: {
         backgroundColor: colors.primaryLight,
     },
     editingCell: {
         backgroundColor: colors.warning,
-    },
-    scoreTabelLabel: {
-        paddingTop: 5,
-        paddingBottom: 5,
-        minHeight: 28,
-        fontFamily: 'Quicksand',
     }
 });
