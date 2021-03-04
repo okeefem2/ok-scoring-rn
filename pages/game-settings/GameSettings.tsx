@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, ScrollView, TextInput, Switch } from 'react-native'
+import { StyleSheet, View, ScrollView, TextInput, Switch } from 'react-native'
 import Header from '../../components/Header';
 import { sharedStyles } from '../../styles/shared';
 import BodyText from '../../components/BodyText';
@@ -56,22 +56,28 @@ const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof Rout
                     <View style={sharedStyles.spacedRowNoBorder}>
                         <BodyText>Starting Score</BodyText>
                         <TextInput
+                            style={[ styles.settingsInput ]}
                             placeholder='0'
                             onChangeText={(n) => setSetting('startingScore', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 0)}
                             value={settings?.startingScore?.toString()}
                             autoCorrect={false}
                             returnKeyType="done"
-                            keyboardType='number-pad'/>
+                            keyboardType='number-pad'
+                            clearTextOnFocus={true}
+                        />
                     </View>
                     <View style={sharedStyles.spacedRowNoBorder}>
                         <BodyText>Default Score Step</BodyText>
                         <TextInput
+                            style={[ styles.settingsInput ]}
                             placeholder='1'
                             onChangeText={(n) => setSetting('defaultScoreStep', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 0)}
                             returnKeyType="done"
                             value={settings?.defaultScoreStep?.toString()}
                             autoCorrect={false}
-                            keyboardType='number-pad'/>
+                            keyboardType='number-pad'
+                            clearTextOnFocus={true}
+                        />
                     </View>
                     <View style={sharedStyles.spacedRowNoBorder}>
                         <BodyText>High Score Wins</BodyText>
@@ -99,6 +105,16 @@ const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof Rout
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    settingsInput: {
+        fontFamily: 'Quicksand',
+        borderBottomColor: colors.greyMid,
+        borderBottomWidth: 1,
+        textAlign: 'center',
+        minWidth: 50,
+    }
+})
 
 export const RouteName = 'GameSettings';
 export default observer(GameSettings);
