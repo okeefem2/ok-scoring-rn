@@ -1,24 +1,21 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { View, Text, TextInput, StyleSheet } from 'react-native'
-import NavBar from '../../components/NavBar'
 import { sharedStyles } from '../../styles/shared'
 import { gameContext } from '../../state/game.store'
 import { observer } from 'mobx-react'
-import { PageNavigationProps } from '../../navigation'
-import { RouteName as NewGameRoute } from '../new-game/NewGame';
+import { GameRoute, GameScoresRoute, NewGameRoute, PageNavigationProps } from '../../navigation'
 import { gameHistoryContext } from '../../state/game-history.store'
 import { playerHistoryContext } from '../../state/players-history.store'
 import GamePlayerScoresTable from './components/GamePlayerScoresTable'
 import GameScoresHeader from './components/GameScoresHeader'
 import GameScoresNavBar from './GameScoresNavBar'
-import { RouteName as GameRoute } from '../game/Game';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export type GameScoreProps = {
     gameOver?: boolean;
 }
 
-const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigationProps<typeof RouteName>) => {
+const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigationProps<typeof GameScoresRoute>) => {
     const {
         players,
         gameState,
@@ -130,5 +127,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export const RouteName = 'GameScore';
 export default observer(GameScores);

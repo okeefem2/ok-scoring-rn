@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Text, View } from 'react-native'
 import { observer } from 'mobx-react';
-import { PageNavigationProps } from '../../navigation';
+import { GameScoreHistoryRoute, PageNavigationProps } from '../../navigation';
 import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
 import { gameHistoryContext } from '../../state/game-history.store';
@@ -9,7 +9,7 @@ import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTab
 import GameScoresHeader from '../game-scores/components/GameScoresHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
+const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof GameScoreHistoryRoute>) => {
     const { gameState, setGameState, scoreHistoryRounds, addOrReplacePlayer } = useContext(gameHistoryContext);
 
     if (!gameState) {
@@ -40,5 +40,4 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>)
     );
 }
 
-export const RouteName = 'GameScoreHistory';
 export default observer(GameScoreHistory);

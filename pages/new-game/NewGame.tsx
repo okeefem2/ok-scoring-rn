@@ -10,18 +10,14 @@ import CenterContent from '../../components/CenterContent'
 import NewGamePlayers from './components/smart/NewGamePlayers'
 import NewGameDescription from './components/smart/NewGameDescription'
 import { observer } from 'mobx-react'
-import { RouteName as GameHistoryRoute } from '../game-history/GameHistory';
-import { RouteName as GameRoute } from '../game/Game';
-import { RouteName as GameSettingsRoute } from '../game-settings/GameSettings';
-import { RouteName as FavoritesRoute } from '../favorites/Favorites';
-import { PageNavigationProps } from '../../navigation'
+import { FavoritesRoute, GameHistoryRoute, GameRoute, GameSettingsRoute, NewGameRoute, PageNavigationProps } from '../../navigation'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconButton from '../../components/IconButton';
 import { favoriteGamesContext } from '../../state/favorite-games.store';
 
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
 
-const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
+const NewGame = ({ navigation }: PageNavigationProps<typeof NewGameRoute>) => {
     const { dbInitialized } = useContext(localDbContext);
     const { gameCanStart, description, favorite } = useContext(gameContext);
     const { toggleFavorite } = useContext(favoriteGamesContext);
@@ -66,5 +62,4 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     );
 }
 
-export const RouteName = 'NewGame';
 export default observer(NewGame);
