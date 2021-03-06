@@ -36,8 +36,6 @@ export const initSQLLiteDb = () => {
                     FOREIGN KEY (winningPlayerKey)
                         REFERENCES player (key)
                 );
-
-            UPDATE game SET favorite = null;
                 `;
             const gameSettingsTable = `
             CREATE TABLE IF NOT EXISTS gameSettings

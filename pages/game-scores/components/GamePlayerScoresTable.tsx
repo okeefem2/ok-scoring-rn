@@ -1,14 +1,10 @@
 import React, { useContext } from "react";
-import { Text, View, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { sharedStyles } from "../../../styles/shared";
-import GamePlayerScoresHistoryTableRow from "./GamePlayerScoresHistoryTableRow";
 import { Player } from "../../../model/player";
 import { GameScoreHistory } from "../../../model/game-score-history";
 import { gameContext } from "../../../state/game.store";
-import GamePlayerScoresTablePlayerCell from "./GamePlayerScoresTablePlayerCell";
-import IconButton from "../../../components/IconButton";
 import GamePlayerScoresTableRow from "./GamePlayerScoresTableRow";
-import { colors } from '../../../styles/colors';
 
 type GamePlayerScoresTableProps = {
     players: Player[];
@@ -25,7 +21,6 @@ export const GamePlayerScoresTable = ({
     playersSelectable = false,
 }: GamePlayerScoresTableProps) => {
     const { activeGamePlayerScore, winningPlayerKey } = useContext(gameContext);
-    // TODO break these into components for easier tracking of open state, also animations
 
     return (
         <>

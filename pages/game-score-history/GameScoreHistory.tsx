@@ -21,14 +21,16 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof GameScoreHi
     }
     return (
         <SafeAreaView style={sharedStyles.pageContainer}>
-            <NavBar
-                leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: () => {
-                    setGameState(undefined);
-                    navigation.pop();
-                }}}
-            />
-            <View style={[sharedStyles.column]}>
-                <GameScoresHeader gameState={gameState} playerUpdated={addOrReplacePlayer}/>
+            <View style={sharedStyles.spacedColumn}>
+                <NavBar
+                    leftButton={{
+                        icon: 'chevron-left', title: 'Back from score history', clickHandler: () => {
+                            setGameState(undefined);
+                            navigation.pop();
+                        }
+                    }}
+                />
+                <GameScoresHeader gameState={gameState} playerUpdated={addOrReplacePlayer} />
                 <GamePlayerScoresTable
                     players={gameState.players}
                     editable={false}
@@ -36,6 +38,7 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof GameScoreHi
                     scoreHistoryRounds={scoreHistoryRounds}
                 />
             </View>
+
         </SafeAreaView>
     );
 }
