@@ -8,6 +8,7 @@ import { buildScoreHistoryRounds } from '../model/game-score-history';
 import { Player } from '../model/player';
 import { sort, Sort } from './sort';
 import { favoriteGamesStore } from './favorite-games.store';
+import { playerHistoryStore } from './players-history.store';
 
 class GameHistoryStore {
 
@@ -30,6 +31,11 @@ class GameHistoryStore {
         reaction(() => favoriteGamesStore.favoriteGames, () => this.sortAndSetFavoriteGames(
             this.setFavorites(this.gameHistory, favoriteGamesStore.favoriteGames),
         ));
+        reaction(() => playerHistoryStore.favoritePlayers, (favoritePlayers) => {
+            this.sortAndSetGameHistory(
+                this.setPlayerFavorites(favoritePlayers)
+            );
+        });
     }
 
     @computed
@@ -97,6 +103,21 @@ class GameHistoryStore {
             };
             this.replaceGameState(this.gameState)
         }
+    };
+
+    @action
+    setPlayerFavorites = (favoritePlayers: Player[]): GameState[] => {
+        console.log('Setting player favorites!');
+        return this.gameHistory.map(g => {
+            const players = g.players.map(p => ({
+                ...p,
+                favorite: favoritePlayers?.some(f => f.key === p.key)
+            }));
+            return {
+                ...g,
+                players
+            };
+        });
     };
 
     async saveGameToDb(gameState: GameState) {

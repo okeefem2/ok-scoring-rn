@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Text, View } from 'react-native'
 import { observer } from 'mobx-react';
-import { PageNavigationProps } from '../../navigation';
+import { GameScoreHistoryRoute, PageNavigationProps } from '../../navigation';
 import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
 import { gameHistoryContext } from '../../state/game-history.store';
@@ -9,7 +9,7 @@ import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTab
 import GameScoresHeader from '../game-scores/components/GameScoresHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
+const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof GameScoreHistoryRoute>) => {
     const { gameState, setGameState, scoreHistoryRounds, addOrReplacePlayer } = useContext(gameHistoryContext);
 
     if (!gameState) {
@@ -21,14 +21,16 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>)
     }
     return (
         <SafeAreaView style={sharedStyles.pageContainer}>
-            <NavBar
-                leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: () => {
-                    setGameState(undefined);
-                    navigation.pop();
-                }}}
-            />
-            <View style={[sharedStyles.column]}>
-                <GameScoresHeader gameState={gameState} playerUpdated={addOrReplacePlayer}/>
+            <View style={sharedStyles.spacedColumn}>
+                <NavBar
+                    leftButton={{
+                        icon: 'chevron-left', title: 'Back from score history', clickHandler: () => {
+                            setGameState(undefined);
+                            navigation.pop();
+                        }
+                    }}
+                />
+                <GameScoresHeader gameState={gameState} playerUpdated={addOrReplacePlayer} />
                 <GamePlayerScoresTable
                     players={gameState.players}
                     editable={false}
@@ -36,9 +38,9 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof RouteName>)
                     scoreHistoryRounds={scoreHistoryRounds}
                 />
             </View>
+
         </SafeAreaView>
     );
 }
 
-export const RouteName = 'GameScoreHistory';
 export default observer(GameScoreHistory);

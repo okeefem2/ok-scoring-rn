@@ -6,13 +6,11 @@ import GameHistoryListItem from './components/dumb/GameHistoryListItem';
 import { gameHistoryContext } from '../../state/game-history.store';
 import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
-import { PageNavigationProps } from '../../navigation';
-import { RouteName as GameRoute } from '../game/Game';
-import { RouteName as GameScoreHistoryRoute } from '../game-score-history/GameScoreHistory';
+import { GameRoute, GameHistoryRoute, GameScoreHistoryRoute, PageNavigationProps } from '../../navigation';
 import { GameState } from '../../model/game-state';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
+const GameHistory = ({ navigation }: PageNavigationProps<typeof GameHistoryRoute>) => {
     const {gameHistory, setGameState, setHistorySort, sort } = useContext(gameHistoryContext);
     const {copyGameSetup, initGameState: initNewGame} = useContext(gameContext);
     const showGameState = (gameState: GameState) => {
@@ -57,5 +55,4 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
     );
 }
 
-export const RouteName = 'GameHistory';
 export default observer(GameHistory);

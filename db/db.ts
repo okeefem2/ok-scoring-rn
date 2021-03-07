@@ -21,7 +21,8 @@ export const initSQLLiteDb = () => {
                     key TEXT PRIMARY KEY NOT NULL,
                     name TEXT NOT NULL,
                     favorite INTEGER
-                );`;
+                );
+                `;
             // Could I just foreign key this to favorites instead? mmmm
             const gameTable = `
             CREATE TABLE IF NOT EXISTS game
@@ -35,8 +36,6 @@ export const initSQLLiteDb = () => {
                     FOREIGN KEY (winningPlayerKey)
                         REFERENCES player (key)
                 );
-
-            UPDATE game SET favorite = null;
                 `;
             const gameSettingsTable = `
             CREATE TABLE IF NOT EXISTS gameSettings

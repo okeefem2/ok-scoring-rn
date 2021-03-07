@@ -5,13 +5,13 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
-import NewGame, { RouteName as NewGameRoute } from './pages/new-game/NewGame';
-import Game, { RouteName as GameRoute } from './pages/game/Game';
-import GameHistory, { RouteName as GameHistoryRoute } from './pages/game-history/GameHistory';
-import GameScores, { RouteName as GameScoresRoute } from './pages/game-scores/GameScores';
-import GameSettings, { RouteName as GameSettingsRoute } from './pages/game-settings/GameSettings';
-import GameScoreHistory, { RouteName as GameScoreHistoryRoute } from './pages/game-score-history/GameScoreHistory';
-import Favorites, { RouteName as FavoritesRoute } from './pages/favorites/Favorites';
+import NewGame from './pages/new-game/NewGame';
+import Game from './pages/game/Game';
+import GameHistory from './pages/game-history/GameHistory';
+import GameScores from './pages/game-scores/GameScores';
+import GameSettings from './pages/game-settings/GameSettings';
+import GameScoreHistory from './pages/game-score-history/GameScoreHistory';
+import Favorites from './pages/favorites/Favorites';
 import CenterContent from './components/CenterContent';
 import { localDbContext } from './state/local-db.store';
 import { sharedStyles } from './styles/shared';
@@ -19,6 +19,7 @@ import { gameHistoryContext } from './state/game-history.store';
 import { playerHistoryContext } from './state/players-history.store';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import { favoriteGamesContext } from './state/favorite-games.store';
+import { NewGameRoute, GameRoute, GameHistoryRoute, GameScoresRoute, GameSettingsRoute, GameScoreHistoryRoute, FavoritesRoute } from './navigation';
 
 function App() {
 

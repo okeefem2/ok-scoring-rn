@@ -8,11 +8,11 @@ import UnderConstruction from '../../components/UnderConstruction';
 import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
 import SettingsSection from './components/dumb/SettingsSection';
-import { PageNavigationProps } from '../../navigation';
+import { GameSettingsRoute, PageNavigationProps } from '../../navigation';
 import { colors } from '../../styles/colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof RouteName>) => {
+const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof GameSettingsRoute>) => {
 
     const { settings, setSetting } = useContext(gameContext);
 
@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         minWidth: 50,
     }
-})
+});
 
-export const RouteName = 'GameSettings';
 export default observer(GameSettings);

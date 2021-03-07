@@ -196,6 +196,11 @@ class GameStore implements GameState {
     }
 
     @action
+    cancelEditPlayerScore = () => {
+        this.editingPlayerScore = undefined;
+    }
+
+    @action
     editPlayerScore = (data: {
         playerKey: string;
         scoreIndex: number;

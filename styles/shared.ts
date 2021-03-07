@@ -83,6 +83,13 @@ export const sharedStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    spacedColumn: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: '100%',
+        width: '100%'
+    },
     centeredContent: {
         width: '100%',
         display: 'flex',
@@ -104,6 +111,9 @@ export const sharedStyles = StyleSheet.create({
     },
     p5: {
         padding: 5,
+    },
+    p20: {
+        padding: 20,
     },
     ml5: {
         marginLeft: 5,

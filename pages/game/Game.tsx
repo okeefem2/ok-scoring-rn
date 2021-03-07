@@ -8,15 +8,14 @@ import { colors } from '../../styles/colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { gameContext } from '../../state/game.store';
 import { observer } from 'mobx-react';
-import { PageNavigationProps } from '../../navigation';
-import { RouteName as GameScoresRoute } from '../game-scores/GameScores';
+import { GameRoute, GameScoresRoute, PageNavigationProps } from '../../navigation';
 import GamePlayerScoresTable from '../game-scores/components/GamePlayerScoresTable';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import { PlayerScoreMode } from '../../model/player-score';
 import { truncateText } from '../../hooks/truncateString';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Game = ({ navigation }: PageNavigationProps<typeof RouteName>) => {
+const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
     const {
         settings,
         players,
@@ -229,5 +228,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export const RouteName = 'Game';
 export default observer(Game);

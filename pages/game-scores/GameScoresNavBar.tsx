@@ -29,15 +29,17 @@ const GameScoresNavBar = ({ backHandler, saveHandler, winningPlayerName }: GameS
                 transparent={true}
                 visible={modalVisible}
             >
-                <View style={[sharedStyles.centeredColumn, { backgroundColor: colors.greyMidTrans }]}>
-                    {!!winningPlayerName ? <Header title={`Congratulations ${winningPlayerName}!`} /> : null}
-                    <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt25]}>
-                        <IconButton icon={'replay'} title={'Play Again'} clickHandler={() => {
-                            modalAction(true);
-                        }} iconSide='left' color={colors.tertiary} />
-                        <IconButton icon={diceIcon} title={'New Game'} clickHandler={() => {
-                            modalAction(false);
-                        }} iconSide='right' color={colors.tertiary} />
+                <View style={[sharedStyles.p20, { backgroundColor: colors.greyMidTrans, height: '100%' }]}>
+                    <View style={[{ backgroundColor: colors.white }, sharedStyles.p20, sharedStyles.mt25]}>
+                        {!!winningPlayerName ? <Header title={`Congratulations ${winningPlayerName}!`} /> : null}
+                        <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt25]}>
+                            <IconButton icon={'replay'} title={'Play Again'} clickHandler={() => {
+                                modalAction(true);
+                            }} iconSide='left' color={colors.primary} />
+                            <IconButton icon={diceIcon} title={'New Game'} clickHandler={() => {
+                                modalAction(false);
+                            }} iconSide='right' color={colors.primary} />
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -45,9 +47,11 @@ const GameScoresNavBar = ({ backHandler, saveHandler, winningPlayerName }: GameS
                 leftButton={
                     { icon: 'chevron-left', title: 'Back', clickHandler: backHandler }
                 }
-                rightButton={!!saveHandler ? { icon: 'content-save-outline', title: 'Save & Quit', clickHandler: () => {
-                    setModalVisible(true);
-                }} : undefined}
+                rightButton={!!saveHandler ? {
+                    icon: 'content-save-outline', title: 'Save & Quit', clickHandler: () => {
+                        setModalVisible(true);
+                    }
+                } : undefined}
             />
         </View>
     )

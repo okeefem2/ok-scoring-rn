@@ -5,8 +5,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../../styles/colors';
 import Games, { TabNavIcons as GamesTabNavIcons } from './components/Games';
 import Players, { TabNavIcons as PlayersTabNavIcons } from './components/Players';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { sharedStyles } from '../../styles/shared';
 
 export type TabIcons = { active: string, inactive: string };
 const favoriteTabs: { [k: string]: TabIcons } = {
@@ -43,5 +41,4 @@ const Favorites = () => {
     );
 }
 
-export const RouteName = 'Favorites';
 export default Favorites;
