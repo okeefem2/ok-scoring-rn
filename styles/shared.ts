@@ -112,6 +112,9 @@ export const sharedStyles = StyleSheet.create({
     p5: {
         padding: 5,
     },
+    p20: {
+        padding: 20,
+    },
     ml5: {
         marginLeft: 5,
     },
