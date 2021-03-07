@@ -1,10 +1,7 @@
 import React, { useState } from 'react'
 import { KeyboardType, Modal, StyleSheet, Text, TextInput, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { colors } from '../styles/colors'
 import { sharedStyles } from '../styles/shared'
-import BodyText from './BodyText'
-import Header from './Header'
 import IconButton from './IconButton'
 
 type PromptModalProps = {
