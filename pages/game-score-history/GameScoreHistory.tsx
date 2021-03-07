@@ -24,7 +24,7 @@ const GameScoreHistory = ({ navigation }: PageNavigationProps<typeof GameScoreHi
             <View style={sharedStyles.spacedColumn}>
                 <NavBar
                     leftButton={{
-                        icon: 'chevron-left', title: 'Back from score history', clickHandler: () => {
+                        icon: 'chevron-left', title: 'Back', clickHandler: () => {
                             setGameState(undefined);
                             navigation.pop();
                         }
