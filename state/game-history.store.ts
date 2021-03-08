@@ -107,7 +107,6 @@ class GameHistoryStore {
 
     @action
     setPlayerFavorites = (favoritePlayers: Player[]): GameState[] => {
-        console.log('Setting player favorites!');
         return this.gameHistory.map(g => {
             const players = g.players.map(p => ({
                 ...p,

@@ -209,17 +209,17 @@ export const insertGame = (gameState: GameState) => {
             const gameInsert = `
                 INSERT OR REPLACE INTO game
                     (
-                        key, date, duration, winningPlayerKey, description, favorite
+                        key, date, duration, winningPlayerKey, description
                     )
                 VALUES
                     (
-                        ?, ?, ?, ?, ?, ?
+                        ?, ?, ?, ?, ?
                     )
             `;
 
             tx.executeSql(
                 gameInsert,
-                [gameState.key, gameState.date, gameState.duration, gameState.winningPlayerKey, gameState.description, gameState.favorite]
+                [gameState.key, gameState.date, gameState.duration, gameState.winningPlayerKey, gameState.description]
             );
             buildPlayerScoresInserts(gameState.key, gameState.scoreHistory).forEach(
                 (insertData: SQLInsertData) => tx.executeSql(...insertData)
