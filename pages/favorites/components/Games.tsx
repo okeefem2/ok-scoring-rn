@@ -5,8 +5,7 @@ import IconButton from '../../../components/IconButton'
 import { gameHistoryContext } from '../../../state/game-history.store'
 import { sharedStyles } from '../../../styles/shared'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RouteName as FavoritesRoute } from '../Favorites'
-import { PageNavigationProps } from '../../../navigation'
+import { FavoritesRoute, PageNavigationProps } from '../../../navigation'
 import NavBar from '../../../components/NavBar'
 import { favoriteGamesContext } from '../../../state/favorite-games.store'
 
@@ -25,7 +24,7 @@ const Games = ({ navigation }: PageNavigationProps<typeof FavoritesRoute>) => {
                 renderItem={
                     ({ item: game }) =>
                         <TouchableOpacity onPress={() => toggleFavorite(game.description, !game.favorite)}>
-                            <View style={sharedStyles.spacedRowNoBorder} key={game.key}>
+                            <View style={sharedStyles.spacedRowNoBorder} key={game.description}>
                                 <View style={sharedStyles.rowGroup}>
                                     <IconButton size={28} clickHandler={() => toggleFavorite(game.description, !game.favorite)} icon={game.favorite ? 'star' : 'star-outline'} />
                                     <Text style={[sharedStyles.bodyText, sharedStyles.mr5]}>{game.description}</Text>

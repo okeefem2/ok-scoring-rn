@@ -1,27 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Animated, Text, View, ViewStyle } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { Animated, Text, View } from 'react-native'
 import { sharedStyles } from '../../../../styles/shared'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { commaSeperateWithEllipsis } from '../../../../util/array.util';
 import { colors } from '../../../../styles/colors';
 import IconButton from '../../../../components/IconButton';
 import { Player } from '../../../../model/player';
 import { Settings } from '../../../../model/settings';
 import { useDiceIcon } from '../../../../hooks/useDiceIcon';
 import { GameState } from '../../../../model/game-state';
-import { GameHistorySort } from '../../../../state/game-history.store';
 import { formatDate } from '../../../../hooks/formatDate';
+import { Sort } from '../../../../state/sort';
 
 interface GameHistoryListItemProps {
     index: number;
     game: GameState;
-    sort: GameHistorySort;
+    sort: Sort<GameState>;
     copyGameSetup: (players: Player[], settings: Settings, description: string) => void;
     continueGame: (game: GameState) => void;
     showGameState: (gameState: GameState) => void;
+    deleteGame: (gameKey: string) => void
 };
 
-const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, showGameState }: GameHistoryListItemProps) => {
+const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, showGameState, deleteGame }: GameHistoryListItemProps) => {
     // TODO set state score history and navigate
     const diceIcon = useDiceIcon();
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -38,10 +38,10 @@ const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, s
 
     return (
         <Animated.View
-        style={[
-            sharedStyles.spacedRowBordered,
-            { opacity: fadeAnim },
-        ]}
+            style={[
+                sharedStyles.spacedRowBordered,
+                { opacity: fadeAnim },
+            ]}
         >
             <View style={sharedStyles.column}>
                 <View style={sharedStyles.plainRow}>
@@ -65,10 +65,13 @@ const GameHistoryListItem = ({ sort, index, game, copyGameSetup, continueGame, s
                     <IconButton icon='replay' title='Copy Game Setup' clickHandler={() => copyGameSetup(game.players, game.settings as Settings, game.description)} color={colors.primary} />
                 </View>
                 <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
-                    <IconButton icon={diceIcon} title='Continue Game' clickHandler={() => continueGame(game)} color={colors.primary}  />
+                    <IconButton icon={diceIcon} title='Continue Game' clickHandler={() => continueGame(game)} color={colors.primary} />
                 </View>
                 <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
                     <IconButton icon='book' title='View Scores' clickHandler={() => showGameState(game)} />
+                </View>
+                <View style={[sharedStyles.ml20, sharedStyles.plainRow]}>
+                    <IconButton icon='delete' title='Delete Game' clickHandler={() => deleteGame(game.key)} color={colors.tertiary} />
                 </View>
             </View>
         </Animated.View>

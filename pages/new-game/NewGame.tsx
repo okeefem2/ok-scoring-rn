@@ -19,13 +19,8 @@ export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K
 
 const NewGame = ({ navigation }: PageNavigationProps<typeof NewGameRoute>) => {
     const { dbInitialized } = useContext(localDbContext);
-    const { gameCanStart, description, favorite } = useContext(gameContext);
-    const { toggleFavorite } = useContext(favoriteGamesContext);
+    const { gameCanStart, description } = useContext(gameContext);
     const diceIcon = useDiceIcon();
-
-    const toggleFavoriteGame = () => {
-        toggleFavorite(description, !favorite);
-    };
 
     return (
         <SafeAreaView style={sharedStyles.pageContainer}>
@@ -44,10 +39,6 @@ const NewGame = ({ navigation }: PageNavigationProps<typeof NewGameRoute>) => {
                 <Text style={[sharedStyles.bodyText, sharedStyles.centeredText, { fontSize: 30 }]}>
                     {description || 'New Game'}
                 </Text>
-                {
-                    !!description &&
-                    <IconButton size={28} clickHandler={toggleFavoriteGame} icon={favorite ? 'star' : 'star-outline'} />
-                }
             </CenterContent>
             <NewGameDescription />
             <NewGamePlayers />

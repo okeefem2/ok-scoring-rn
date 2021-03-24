@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Text, FlatList } from 'react-native';
+import { Text, FlatList, Alert } from 'react-native';
 import NavBar from '../../components/NavBar';
 import { sharedStyles } from '../../styles/shared';
 import GameHistoryListItem from './components/dumb/GameHistoryListItem';
@@ -11,18 +11,33 @@ import { GameState } from '../../model/game-state';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const GameHistory = ({ navigation }: PageNavigationProps<typeof GameHistoryRoute>) => {
-    const {gameHistory, setGameState, setHistorySort, sort } = useContext(gameHistoryContext);
-    const {copyGameSetup, initGameState: initNewGame} = useContext(gameContext);
+    const { gameHistory, setGameState, setHistorySort, sort, deleteGame } = useContext(gameHistoryContext);
+    const { copyGameSetup, initGameState: initNewGame } = useContext(gameContext);
     const showGameState = (gameState: GameState) => {
         setGameState(gameState);
         navigation.navigate(GameScoreHistoryRoute);
     }
+
+    const confirmDeleteGame = (gameKey: string) =>
+        Alert.alert(
+            'Are you sure?',
+            'Deleting this game will be permanent',
+            [
+                {
+                    text: "Nevermind",
+                    onPress: () => { },
+                    style: "cancel"
+                },
+                { text: `I'm Sure`, onPress: () => deleteGame(gameKey) }
+            ]
+        );
     return (
         <SafeAreaView style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: navigation.goBack }}
                 rightButton={{ icon: sort.asc ? 'sort-descending' : 'sort-ascending', title: 'Sort By Date', clickHandler: () => setHistorySort({ ...sort, asc: !sort.asc }) }}
             />
+
             <FlatList
                 style={sharedStyles.scroll}
                 data={gameHistory}
@@ -46,6 +61,7 @@ const GameHistory = ({ navigation }: PageNavigationProps<typeof GameHistoryRoute
                                     routes: [{ name: GameRoute }],
                                 })
                             }}
+                            deleteGame={confirmDeleteGame}
                             showGameState={showGameState}
                             key={itemData.item.key}
                         />

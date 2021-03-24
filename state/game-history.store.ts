@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 import { observable, action, computed, reaction } from 'mobx';
 import { localDbStore } from './local-db.store';
-import { fetchGameStates, insertGame } from '../db/db';
-import { addOrReplaceByKey, commaSeperateWithEllipsis } from '../util/array.util';
+import { deleteGame, fetchGameStates, insertGame } from '../db/db';
+import { addOrReplaceByKey, commaSeperateWithEllipsis, removeByKey } from '../util/array.util';
 import { GameState } from '../model/game-state';
 import { buildScoreHistoryRounds } from '../model/game-score-history';
 import { Player } from '../model/player';
@@ -10,26 +10,31 @@ import { sort, Sort } from './sort';
 import { favoriteGamesStore } from './favorite-games.store';
 import { playerHistoryStore } from './players-history.store';
 
+export interface GamesListItem {
+    description: string;
+    favorite: boolean;
+}
+
 class GameHistoryStore {
 
     @observable sort: Sort<GameState> = { sortProp: 'date', asc: false };
-    @observable favoritesSort: Sort<GameState> = { sortProp: 'favorite', asc: false };
+    @observable favoritesSort: Sort<GamesListItem> = { sortProp: 'favorite', asc: false };
     @observable gameHistory: GameState[] = [];
     @observable gameState?: GameState;
-    @observable gamesList: GameState[] = [];
+    @observable gamesList: GamesListItem[] = [];
 
     constructor() {
         reaction(() => this.sort, () => this.sortAndSetGameHistory([...this.gameHistory]));
         reaction(() => this.favoritesSort, () => this.sortAndSetFavoriteGames(
-            this.setFavorites(this.gameHistory, favoriteGamesStore.favoriteGames)
+            this.gamesList.slice()
         ));
         reaction(() => this.gameHistory, () => {
             this.sortAndSetFavoriteGames(
-                this.setFavorites(this.gameHistory, favoriteGamesStore.favoriteGames),
+                this.buildGamesList(this.gameHistory, favoriteGamesStore.favoriteGames),
             );
         });
         reaction(() => favoriteGamesStore.favoriteGames, () => this.sortAndSetFavoriteGames(
-            this.setFavorites(this.gameHistory, favoriteGamesStore.favoriteGames),
+            this.buildGamesList(this.gameHistory, favoriteGamesStore.favoriteGames),
         ));
         reaction(() => playerHistoryStore.favoritePlayers, (favoritePlayers) => {
             this.sortAndSetGameHistory(
@@ -42,6 +47,18 @@ class GameHistoryStore {
     get scoreHistoryRounds(): number[] {
         // TODO memo?
         return buildScoreHistoryRounds(this.gameState?.scoreHistory ?? {});
+    }
+
+    buildGamesList = (gameHistory: GameState[], favorites: { key: string, description: string }[]) => {
+        const uniqueNonFavoriteGames: GamesListItem[] = this.getUniqueGames(gameHistory)
+            .reduce((acc: GamesListItem[], g) => {
+                if (!favorites.some(f => f.description === g.description)) {
+                    acc.push({ description: g.description, favorite: false });
+                }
+                return acc;
+            }, []);
+        favorites.forEach(f => uniqueNonFavoriteGames.push({ description: f.description, favorite: true }));
+        return uniqueNonFavoriteGames;
     }
 
     setFavorites = (gameHistory: GameState[], favorites: { key: string, description: string }[]) => {
@@ -74,12 +91,13 @@ class GameHistoryStore {
         this.sort = sort;
     }
 
-    @action setFavoriteSort = (sort: Sort<GameState>) => {
+    @action setFavoriteSort = (sort: Sort<GamesListItem>) => {
         this.favoritesSort = sort;
     }
 
-    @action sortAndSetFavoriteGames = (gameHistory: GameState[]) => {
-        this.gamesList = sort(this.getUniqueGames(gameHistory), this.favoritesSort)
+    @action sortAndSetFavoriteGames = (gameList: GamesListItem[]) => {
+        const sortedList = sort(gameList, this.favoritesSort)
+        this.gamesList = sortedList;
     }
 
     @action sortAndSetGameHistory = (gameHistory: GameState[]) => {
@@ -107,7 +125,6 @@ class GameHistoryStore {
 
     @action
     setPlayerFavorites = (favoritePlayers: Player[]): GameState[] => {
-        console.log('Setting player favorites!');
         return this.gameHistory.map(g => {
             const players = g.players.map(p => ({
                 ...p,
@@ -128,11 +145,25 @@ class GameHistoryStore {
         }
     }
 
+    async deleteGameFromDb(gameKey: string) {
+        try {
+            deleteGame(gameKey);
+        } catch (e) {
+            console.error('Error saving game to local db', e);
+        }
+    }
+
     saveGame = (gameState: GameState) => {
         gameState = this.hydrateGameStateForHistory(gameState);
         const gameHistory = addOrReplaceByKey(this.gameHistory, gameState);
-        this.sortAndSetGameHistory(gameHistory)
+        this.sortAndSetGameHistory(gameHistory);
         this.saveGameToDb(gameState);
+    }
+
+    deleteGame = (gameKey: string) => {
+        const gameHistory = removeByKey(this.gameHistory, gameKey);
+        this.sortAndSetGameHistory(gameHistory);
+        this.deleteGameFromDb(gameKey);
     }
 
     hydrateGameStateForHistory(gameState: GameState): GameState {

@@ -38,7 +38,7 @@ const PromptModal = ({
                                 styles.input
                             ]}
                             placeholder={placeHolder}
-                            onChangeText={(n) => !!n && setTempValue(n)}
+                            onChangeText={(n) => setTempValue(n)}
                             value={tempValue?.toString()}
                             autoFocus={true}
                             autoCorrect={false}
