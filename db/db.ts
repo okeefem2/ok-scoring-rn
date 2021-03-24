@@ -240,6 +240,46 @@ export const insertGame = (gameState: GameState) => {
     });
 }
 
+export const deleteGame = (gameKey: string) => {
+    return new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            const playerScoreHistoryDelete = `
+                DELETE from playerScoreHistory where gameKey = ?;
+            `;
+
+            const gameSettingsDelete = `
+                DELETE from gameSettings where gameKey = ?;
+            `;
+
+            const gameDelete = `
+                DELETE from game where key = ?;
+            `;
+
+            tx.executeSql(
+                playerScoreHistoryDelete,
+                [gameKey]
+            );
+
+            tx.executeSql(
+                gameSettingsDelete,
+                [gameKey]
+            );
+
+            tx.executeSql(
+                gameDelete,
+                [gameKey]
+            );
+        },
+            (err): boolean => {
+                reject(err);
+                return false;
+            },
+            () => {
+                resolve(true);
+            });
+    });
+}
+
 const unwrapResult = (resultSet: SQLResultSet): any[] => {
     const results = [];
     for (let i = 0; i < resultSet.rows.length; i++) {

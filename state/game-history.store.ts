@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 import { observable, action, computed, reaction } from 'mobx';
 import { localDbStore } from './local-db.store';
-import { fetchGameStates, insertGame } from '../db/db';
-import { addOrReplaceByKey, commaSeperateWithEllipsis } from '../util/array.util';
+import { deleteGame, fetchGameStates, insertGame } from '../db/db';
+import { addOrReplaceByKey, commaSeperateWithEllipsis, removeByKey } from '../util/array.util';
 import { GameState } from '../model/game-state';
 import { buildScoreHistoryRounds } from '../model/game-score-history';
 import { Player } from '../model/player';
@@ -127,11 +127,25 @@ class GameHistoryStore {
         }
     }
 
+    async deleteGameFromDb(gameKey: string) {
+        try {
+            deleteGame(gameKey);
+        } catch (e) {
+            console.error('Error saving game to local db', e);
+        }
+    }
+
     saveGame = (gameState: GameState) => {
         gameState = this.hydrateGameStateForHistory(gameState);
         const gameHistory = addOrReplaceByKey(this.gameHistory, gameState);
-        this.sortAndSetGameHistory(gameHistory)
+        this.sortAndSetGameHistory(gameHistory);
         this.saveGameToDb(gameState);
+    }
+
+    deleteGame(gameKey: string) {
+        const gameHistory = removeByKey(this.gameHistory, gameKey);
+        this.sortAndSetGameHistory(gameHistory);
+        this.deleteGameFromDb(gameKey);
     }
 
     hydrateGameStateForHistory(gameState: GameState): GameState {
