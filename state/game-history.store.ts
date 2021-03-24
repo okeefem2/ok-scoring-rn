@@ -142,7 +142,7 @@ class GameHistoryStore {
         this.saveGameToDb(gameState);
     }
 
-    deleteGame(gameKey: string) {
+    deleteGame = (gameKey: string) => {
         const gameHistory = removeByKey(this.gameHistory, gameKey);
         this.sortAndSetGameHistory(gameHistory);
         this.deleteGameFromDb(gameKey);
