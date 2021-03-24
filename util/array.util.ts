@@ -45,3 +45,7 @@ export function addOrReplaceByKey<T extends { key: string }>(arr: T[], item: T):
     }
     return arrCopy;
 }
+
+export function removeByKey<T extends { key: string }>(arr: T[], key: string): T[] {
+    return arr.filter(i => i.key !== key);
+}
