@@ -68,6 +68,10 @@ class PlayerHistoryStore {
             console.error('Error saving player to local db', e);
         }
     }
+
+    getPlayerByName(name: string): Player | undefined {
+        return this.playerHistory?.find(p => p.name === name);
+    }
 }
 
 export const playerHistoryStore = new PlayerHistoryStore();

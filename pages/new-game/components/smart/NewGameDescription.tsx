@@ -1,14 +1,13 @@
 import React, { useContext, useState } from 'react'
-import { View, TextInput, Keyboard } from 'react-native'
+import { View, Keyboard } from 'react-native'
 import { sharedStyles } from '../../../../styles/shared'
 import ModalSelector from 'react-native-modal-selector'
 import { colors } from '../../../../styles/colors'
 import { gameContext } from '../../../../state/game.store'
-import { gameHistoryContext } from '../../../../state/game-history.store'
 import { observer } from 'mobx-react'
-import { focusInputOnCreation } from '../../../../hooks/focusInputOnCreation'
 import IconButton from '../../../../components/IconButton'
 import { favoriteGamesContext } from '../../../../state/favorite-games.store'
+import PromptModal from '../../../../components/PromptModal'
 
 const NewGameDescription = () => {
     const { setGameDescription, description, setFavorite } = useContext(gameContext);
@@ -16,33 +15,23 @@ const NewGameDescription = () => {
 
     const [tempDescription, setTempDescription] = useState('');
     const [showInput, setShowInput] = useState(false);
-    const focusInput = focusInputOnCreation();
 
     return (
         <>
-            {
-                showInput ?
-                    <View style={sharedStyles.spacedRowBordered}>
-                        <TextInput style={[sharedStyles.bodyText, sharedStyles.input]}
-                            placeholder='What are we playing?'
-                            autoCapitalize='words'
-                            returnKeyType="done"
-                            clearButtonMode="while-editing"
-                            autoCorrect={false}
-                            onSubmitEditing={() => {
-                                if (!!tempDescription) {
-                                    setFavorite(favoriteGames);
-                                    setGameDescription(tempDescription as string);
-                                    setTempDescription('');
-                                }
-                                setShowInput(false);
-                            }}
-                            onChangeText={(description) => setTempDescription(description)}
-                            value={tempDescription}
-                            ref={(input: TextInput) => focusInput(input)}
-                        />
-                    </View> : <></>
-            }
+            <PromptModal
+                modalVisible={!!showInput}
+                inputProps={{
+                    placeholder: 'Game Description',
+                    autoCapitalize: 'words',
+                }}
+                title={`What are we playing?`}
+                onCancel={() => setShowInput(false)}
+                onSave={(value) => {
+                    if (!!value) {
+                        setGameDescription(value);
+                        setShowInput(false);
+                    }
+                }} />
 
             <View style={sharedStyles.spacedRowNoBorder}>
                 {
@@ -75,7 +64,7 @@ const NewGameDescription = () => {
                 }
                 {
                     !showInput ?
-                        <IconButton icon='pencil-outline' title='Edit Game Name' alignSelf={'center'} clickHandler={() => {
+                        <IconButton icon='pencil-outline' title='Game Name' alignSelf={'center'} clickHandler={() => {
                             if (description) {
                                 setTempDescription(description);
                             }

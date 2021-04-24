@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { StyleSheet, Text, View, FlatList } from 'react-native'
+import { Text, FlatList } from 'react-native'
 import { sharedStyles } from '../../../../styles/shared'
 import { observer } from 'mobx-react';
 import { playerHistoryContext } from '../../../../state/players-history.store'

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { KeyboardType, Modal, StyleSheet, Text, TextInput, View } from 'react-native'
+import { KeyboardType, Modal, StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native'
 import { colors } from '../styles/colors'
 import { sharedStyles } from '../styles/shared'
 import IconButton from './IconButton'
@@ -7,19 +7,29 @@ import IconButton from './IconButton'
 type PromptModalProps = {
     modalVisible: boolean;
     title: string;
-    placeHolder: string;
-    keyboardType: KeyboardType;
+    inputProps: TextInputProps;
+    saveButtonText?: string;
+    cancelButtonText?: string;
     onCancel: () => void;
     onSave: (value?: string) => void;
 }
 
+const defaultInputProps: TextInputProps = {
+    keyboardType: 'default',
+    returnKeyType: 'done',
+    clearTextOnFocus: true,
+    autoCorrect: false,
+    autoFocus: true,
+};
+
 const PromptModal = ({
     modalVisible,
     title,
-    placeHolder,
-    keyboardType = 'default',
+    inputProps = defaultInputProps,
     onCancel,
-    onSave
+    onSave,
+    cancelButtonText = 'Cancel',
+    saveButtonText = 'Save',
 }: PromptModalProps) => {
     const [tempValue, setTempValue] = useState<string | undefined>();
 
@@ -34,21 +44,19 @@ const PromptModal = ({
                     <View style={[{ backgroundColor: colors.white }, sharedStyles.p20, sharedStyles.mt25]}>
                         <Text style={[sharedStyles.centeredText, sharedStyles.bodyText]}>{title}</Text>
                         <TextInput
+                            {...defaultInputProps}
+                            {...inputProps}
                             style={[
                                 styles.input
                             ]}
-                            placeholder={placeHolder}
                             onChangeText={(n) => setTempValue(n)}
                             value={tempValue?.toString()}
-                            autoFocus={true}
-                            autoCorrect={false}
-                            returnKeyType="done"
-                            clearTextOnFocus={true}
-                            keyboardType={keyboardType} />
+                        />
                         <View style={[sharedStyles.spacedEvenlyNoBorder, { width: '100%' }]}>
-                            <IconButton title={'Cancel'} clickHandler={onCancel} color={colors.tertiary} />
-                            <IconButton title={'Save'} clickHandler={() => {
-                                onSave(tempValue)
+                            <IconButton title={cancelButtonText} clickHandler={onCancel} color={colors.tertiary} />
+                            <IconButton title={saveButtonText} clickHandler={() => {
+                                onSave(tempValue);
+                                setTempValue(undefined);
                             }} color={colors.primary} />
                         </View>
                     </View>

@@ -12,8 +12,6 @@ import NewGameDescription from './components/smart/NewGameDescription'
 import { observer } from 'mobx-react'
 import { FavoritesRoute, GameHistoryRoute, GameRoute, GameSettingsRoute, NewGameRoute, PageNavigationProps } from '../../navigation'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import IconButton from '../../components/IconButton';
-import { favoriteGamesContext } from '../../state/favorite-games.store';
 
 export type SetSettingFunction = <K extends keyof Settings, T extends Settings[K]>(key: K, setting: T) => void;
 

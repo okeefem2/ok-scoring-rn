@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, Text, TextInput } from 'react-native'
+import { View } from 'react-native'
 import { sharedStyles } from '../../styles/shared'
 import { gameContext } from '../../state/game.store'
 import { observer } from 'mobx-react'
@@ -67,8 +67,10 @@ const GameScores = ({ route: { params: { gameOver } }, navigation }: PageNavigat
                 <PromptModal
                     modalVisible={!!editingPlayerScore}
                     title={`Update Round ${editingPlayerScore?.scoreIndex ?? 0 + 1} Score For ${editingPlayerScore?.player.name}`}
-                    placeHolder='Update Score'
-                    keyboardType='number-pad'
+                    inputProps={{
+                        placeholder: 'Update Score',
+                        keyboardType: 'number-pad',
+                    }}
                     onCancel={cancelEditPlayerScore}
                     onSave={(value) => {
                         if (value !== undefined && editingPlayerScore) {

@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import { View, TextInput, Keyboard } from 'react-native'
-import { v4 as uuid } from 'react-native-uuid';
+import { View, Keyboard } from 'react-native'
 import ModalSelector from 'react-native-modal-selector';
 import { Player } from '../../../../model/player';
 import { sharedStyles } from '../../../../styles/shared';
 import { colors } from '../../../../styles/colors';
 import IconButton from '../../../../components/IconButton';
-import { focusInputOnCreation } from '../../../../hooks/focusInputOnCreation';
+import PromptModal from '../../../../components/PromptModal';
 
 interface AddPlayerProps {
     onAddPlayer: (player: Player) => void,
@@ -14,48 +13,25 @@ interface AddPlayerProps {
 }
 
 function AddPlayer({ onAddPlayer, selectablePlayers }: AddPlayerProps) {
-    const [newPlayer, setNewPlayer] = useState<Partial<Player>>({ favorite: true });
+    const [newPlayer, setNewPlayer] = useState<Player>();
     const [showInput, setShowInput] = useState(false);
-    const focusInput = focusInputOnCreation();
-
-    const addPlayer = (player: Partial<Player>) => {
-        // TODO check if name matches an existing player...?
-        if (!player?.name) {
-            return;
-        }
-        if (!player.key) {
-            player.key = uuid();
-        }
-        onAddPlayer(player as Player);
-        setNewPlayer({});
-        Keyboard.dismiss();
-    }
 
     return (
         <>
-            {
-                showInput ?
-                    <View style={sharedStyles.spacedRowBordered}>
-                        <TextInput
-                            autoCapitalize='words'
-                            style={[sharedStyles.bodyText, sharedStyles.input]}
-                            placeholder='New Player'
-                            returnKeyType='done'
-                            clearButtonMode="while-editing"
-                            autoCorrect={false}
-                            onSubmitEditing={() => {
-                                if (!!newPlayer) {
-                                    addPlayer(newPlayer);
-                                }
-                                setShowInput(false);
-                            }}
-                            onChangeText={(name) => setNewPlayer({ name })}
-                            value={newPlayer?.name}
-                            ref={(input: TextInput) => focusInput(input)}
-                        />
-                    </View> : <></>
-            }
-
+            {/* TODO fuzzy search? */}
+            <PromptModal
+                modalVisible={!!showInput}
+                title={`New Player`}
+                inputProps={{
+                    placeholder: 'Player Name'
+                }}
+                onCancel={() => setShowInput(false)}
+                onSave={(value) => {
+                    if (!!value) {
+                        onAddPlayer({ name: value } as Player);
+                        setShowInput(false);
+                    }
+                }} />
             <View style={[sharedStyles.spacedRowNoBorder]}>
                 {
                     selectablePlayers?.length ?
@@ -67,12 +43,9 @@ function AddPlayer({ onAddPlayer, selectablePlayers }: AddPlayerProps) {
                             data={selectablePlayers}
                             initValue="Favorite Players"
                             onChange={setNewPlayer}
-                            onModalOpen={() => {
-                                Keyboard.dismiss();
-                            }}
                             onModalClose={() => {
-                                addPlayer(newPlayer);
-                                setShowInput(false);
+                                onAddPlayer(newPlayer as Player);
+                                setNewPlayer(undefined);
                             }}
                             keyExtractor={player => player.key}
                             labelExtractor={player => player.name}

@@ -9,12 +9,14 @@ import { GameScoreHistory, determineWinner, buildInitialHistory, buildScoreHisto
 import { PlayerScore, PlayerScoreMode } from '../model/player-score';
 import { reCalcCurrentScore } from '../model/player-score-history';
 import { favoriteGamesStore } from './favorite-games.store';
+import { playerHistoryStore } from './players-history.store';
 
 class GameStore implements GameState {
     key = uuid();
     date = 0;
     duration = 0;
 
+    // TODO add a dealer functionality
     // Observable props
     @observable
     description = '';
@@ -125,10 +127,20 @@ class GameStore implements GameState {
 
     @action
     addOrReplacePlayer = (player: Player) => {
-        if (player && this.players) {
-            this.players = addOrReplaceByKey(this.players, player);
-            // TODO handle updating score history if player does not exist?
+        if (!player?.name || !this.players) {
+            return;
         }
+        if (!player.key) {
+            // If the user is entering a new player name that matches an existing player name exactly, just use that
+            const existingPlayer = playerHistoryStore.getPlayerByName(player.name);
+            player = existingPlayer ?? { ...player, key: uuid() };
+        }
+        // Don't add a player that already is in the game
+        if (this.players.some(p => p.key === player.key)) {
+            return;
+        }
+        this.players = addOrReplaceByKey(this.players, player);
+        // TODO handle updating score history if player does not exist?
     };
 
     @action
