@@ -11,17 +11,18 @@ import SettingsSection from './components/dumb/SettingsSection';
 import { GameSettingsRoute, PageNavigationProps } from '../../navigation';
 import { colors } from '../../styles/colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import RadioButtons from '../../components/RadioButtons';
 
-const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof GameSettingsRoute>) => {
+const GameSettings = ({ navigation: { goBack } }: PageNavigationProps<typeof GameSettingsRoute>) => {
 
-    const { settings, setSetting } = useContext(gameContext);
+    const { settings, setSetting, dealerSettingsItems } = useContext(gameContext);
 
     return (
         <SafeAreaView style={sharedStyles.pageContainer}>
             <NavBar
                 leftButton={{ icon: 'chevron-left', title: 'Back', clickHandler: goBack }}
             />
-            <Header title='Game Settings'/>
+            <Header title='Game Settings' />
             <ScrollView style={sharedStyles.scroll} keyboardShouldPersistTaps='always'>
                 {/* <SettingsSection sectionTitle='Round Settings'>
                     <View style={sharedStyles.rowNoBorder}>
@@ -56,7 +57,7 @@ const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof Game
                     <View style={sharedStyles.spacedRowNoBorder}>
                         <BodyText>Starting Score</BodyText>
                         <TextInput
-                            style={[ styles.settingsInput ]}
+                            style={[styles.settingsInput]}
                             placeholder='0'
                             onChangeText={(n) => setSetting('startingScore', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 0)}
                             value={settings?.startingScore?.toString()}
@@ -69,7 +70,7 @@ const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof Game
                     <View style={sharedStyles.spacedRowNoBorder}>
                         <BodyText>Default Score Step</BodyText>
                         <TextInput
-                            style={[ styles.settingsInput ]}
+                            style={[styles.settingsInput]}
                             placeholder='1'
                             onChangeText={(n) => setSetting('defaultScoreStep', n ? parseInt(n.replace(/[^0-9]/g, ''), 10) : 0)}
                             returnKeyType="done"
@@ -100,8 +101,13 @@ const GameSettings = ({ navigation: { goBack }}: PageNavigationProps<typeof Game
                         />
                     </View> */}
                 </SettingsSection>
+                <SettingsSection sectionTitle='Dealer Settings'>
+                    <View style={sharedStyles.spacedRowNoBorder}>
+                        <RadioButtons items={dealerSettingsItems}></RadioButtons>
+                    </View>
+                </SettingsSection>
             </ScrollView>
-            <UnderConstruction/>
+            <UnderConstruction />
         </SafeAreaView>
     );
 }

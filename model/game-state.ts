@@ -8,6 +8,7 @@ export interface GameState {
     date: number;
     duration?: number;
     winningPlayerKey?: string;
+    dealingPlayerKey?: string;
     favorite?: boolean;
 
     // Relationships

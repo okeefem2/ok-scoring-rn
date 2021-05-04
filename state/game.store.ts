@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import { action, observable, computed, reaction } from 'mobx';
-import { Settings } from '../model/settings';
+import { DealerSettings, DealerSettingsText, Settings } from '../model/settings';
 import { v4 as uuid } from 'react-native-uuid';
 import { Player } from '../model/player';
 import { addOrReplaceByKey, swap } from '../util/array.util';
@@ -10,6 +10,7 @@ import { PlayerScore, PlayerScoreMode } from '../model/player-score';
 import { reCalcCurrentScore } from '../model/player-score-history';
 import { favoriteGamesStore } from './favorite-games.store';
 import { playerHistoryStore } from './players-history.store';
+import { RadioItem } from '../components/RadioButtons';
 
 class GameStore implements GameState {
     key = uuid();
@@ -85,6 +86,15 @@ class GameStore implements GameState {
     get scoreHistoryRounds(): number[] {
         // TODO memo?
         return buildScoreHistoryRounds(this.scoreHistory);
+    }
+
+    @computed
+    get dealerSettingsItems(): RadioItem[] {
+        return [undefined, ...Object.values(DealerSettings)].map(s => ({
+            text: !s ? 'None' : DealerSettingsText[s],
+            selected: this.settings.dealerSettings === s,
+            onPress: () => this.setSetting('dealerSettings', s),
+        }));
     }
 
     @action
