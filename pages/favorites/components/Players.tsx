@@ -1,12 +1,11 @@
 import { observer } from 'mobx-react'
 import React, { useContext } from 'react'
 import { FlatList, View, Text } from 'react-native'
-import { RouteName as FavoritesRoute } from '../Favorites';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconButton from '../../../components/IconButton';
 import NavBar from '../../../components/NavBar';
 import { Player } from '../../../model/player';
-import { PageNavigationProps } from '../../../navigation';
+import { FavoritesRoute, PageNavigationProps } from '../../../navigation';
 import { playerHistoryContext } from '../../../state/players-history.store';
 import { sharedStyles } from '../../../styles/shared';
 import { TouchableOpacity } from 'react-native-gesture-handler';

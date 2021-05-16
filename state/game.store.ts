@@ -26,6 +26,8 @@ class GameStore implements GameState {
     @observable
     winningPlayerKey?: string;
     @observable
+    dealingPlayerKey?: string;
+    @observable
     winningPlayerName?: string;
     @observable
     settings: Settings = {
@@ -89,6 +91,11 @@ class GameStore implements GameState {
     }
 
     @computed
+    get hasDealerSettings(): boolean {
+        return !!this.settings?.dealerSettings;
+    }
+
+    @computed
     get dealerSettingsItems(): RadioItem[] {
         return [undefined, ...Object.values(DealerSettings)].map(s => ({
             text: !s ? 'None' : DealerSettingsText[s],
@@ -96,6 +103,20 @@ class GameStore implements GameState {
             onPress: () => this.setSetting('dealerSettings', s),
         }));
     }
+
+    @action
+    setDealer = (playerKey: string) => {
+        if (!!playerKey && this.hasDealerSettings) {
+            console.log('setting dealer', playerKey);
+            this.dealingPlayerKey = playerKey;
+        }
+    }
+
+    @action
+    clearDealer = () => {
+        this.dealingPlayerKey = undefined;
+    }
+
 
     @action
     setWinningPlayerKey = (key?: string) => {
@@ -295,6 +316,10 @@ class GameStore implements GameState {
                 score: roundScore,
             };
         }
+    }
+
+    isDealer = (playerKey?: string): boolean => {
+        return !!this.dealingPlayerKey && this.dealingPlayerKey === playerKey;
     }
 }
 

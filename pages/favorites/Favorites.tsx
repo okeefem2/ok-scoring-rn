@@ -17,7 +17,6 @@ const Favorites = () => {
         <NavigationContainer independent={true}>
             <Tab.Navigator
                 screenOptions={({ route }) => ({
-
                     tabBarIcon: ({ focused, color }) => {
                         const tabIcons = favoriteTabs[route.name];
                         const iconName = focused ? tabIcons.active : tabIcons.inactive;
