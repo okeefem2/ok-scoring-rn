@@ -16,6 +16,7 @@ type GamePlayerScoresTableRowProps = {
     selectable: boolean;
     scoreHistory: GameScoreHistory;
     scoreHistoryRounds: number[];
+    isDealer: boolean;
 };
 
 const GamePlayerScoresTableRow = ({
@@ -26,26 +27,25 @@ const GamePlayerScoresTableRow = ({
     selectable,
     scoreHistory,
     scoreHistoryRounds,
+    isDealer,
 }: GamePlayerScoresTableRowProps) => {
     const [roundsShown, setRoundsShown] = useState(false);
     const currentScore = abbreviateNumber(scoreHistory[player.key]?.currentScore);
     return (
         <>
-            <View style={[sharedStyles.plainRow]} key={player.key}>
+            <View style={[sharedStyles.spacedRowNoBorder]} key={player.key}>
                 <GamePlayerScoresTablePlayerCell
                     selectable={selectable}
                     player={player}
                     active={active}
                     winning={winning}
+                    isDealer={isDealer}
                 />
-                <Text style={[sharedStyles.scoreTabelTopCell]}>
-                    {currentScore} pts
-                </Text>
                 <View style={[sharedStyles.scoreTabelTopCell, { display: 'flex', flexDirection: 'row', alignItems: 'center' }]}>
                     <IconButton
                         icon={roundsShown ? 'chevron-up' : 'chevron-down'}
                         iconSide="right"
-                        title="Rounds"
+                        title={` ${currentScore} pts`}
                         clickHandler={() => { setRoundsShown(!roundsShown); }}
                     ></IconButton>
                 </View>

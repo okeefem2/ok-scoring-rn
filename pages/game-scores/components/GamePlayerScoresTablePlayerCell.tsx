@@ -13,18 +13,18 @@ type GamePlayerScoresTablePlayerCellProps = {
     player: Player;
     active: boolean;
     winning: boolean;
+    isDealer: boolean;
 }
 
 const GamePlayerScoresTablePlayerCell = ({
     selectable,
     player,
     active,
-    winning
+    winning,
+    isDealer,
 }: GamePlayerScoresTablePlayerCellProps) => {
     const { setActivePlayer, deletePlayer } = useContext(gameContext);
-
-    const displayName = truncateText(player.name, 7);
-
+    const displayName = truncateText(player.name, 14);
     const { showActionSheetWithOptions } = useActionSheet();
 
     const showActionSheetForPlayer = () => showActionSheetWithOptions({
@@ -44,7 +44,7 @@ const GamePlayerScoresTablePlayerCell = ({
             {
                 selectable ?
                     <TouchableOpacity onPress={() => setActivePlayer(player)} onLongPress={showActionSheetForPlayer}
-                        style={[active ? sharedStyles.editingCell : sharedStyles.touchableCell, sharedStyles.scoreTabelTopCell, { display: 'flex', flexDirection: 'row', alignItems: 'center' }]}>
+                        style={[active ? sharedStyles.editingCell : sharedStyles.touchableCell, sharedStyles.scoreTabelTopCellPlayer, { display: 'flex', flexDirection: 'row', alignItems: 'center' }]}>
                         <Text style={[{
                             fontFamily: 'Quicksand',
                             fontSize: 18
@@ -55,6 +55,10 @@ const GamePlayerScoresTablePlayerCell = ({
                             name={'crown'} size={18}
                             style={sharedStyles.ml5}
                             color={winning ? colors.tertiary : colors.white} />}
+                        {isDealer && <MaterialCommunityIcons
+                            name={'cards'} size={18}
+                            style={sharedStyles.ml5}
+                            color={isDealer ? colors.tertiary : colors.white} />}
                     </TouchableOpacity> :
                     <Text style={[sharedStyles.scoreTabelTopCell]}>
                         {displayName}

@@ -166,10 +166,20 @@ export const sharedStyles = StyleSheet.create({
         width: '80%',
         height: 150
     },
+    scoreTabelTopCellPlayer: {
+        minWidth: 200,
+        maxWidth: wp('50%'),
+        padding: 10,
+        marginRight: 20,
+        fontFamily: 'Quicksand',
+        fontSize: 18,
+        textAlignVertical: 'center',
+        textAlign: 'center',
+    },
     scoreTabelTopCell: {
         minWidth: 100,
         maxWidth: wp('25%'),
-        padding: 5,
+        padding: 10,
         marginRight: 20,
         fontFamily: 'Quicksand',
         fontSize: 18,

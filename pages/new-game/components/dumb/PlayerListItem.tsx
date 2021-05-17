@@ -16,9 +16,7 @@ interface PlayerListItemProps {
 
 const PlayerListItem = ({ player, onDeletePlayer, onShiftPlayer }: PlayerListItemProps) => {
     const { toggleFavoriteForPlayer } = useContext(playerHistoryContext);
-    const { addOrReplacePlayer, hasDealerSettings, dealingPlayerKey, setDealer, clearDealer, isDealer } = useContext(gameContext);
-
-    console.log('dealing player key', dealingPlayerKey);
+    const { addOrReplacePlayer, hasDealerSettings, setDealer, clearDealer, isDealer } = useContext(gameContext);
 
     const playerIsDealer = isDealer(player?.key);
 

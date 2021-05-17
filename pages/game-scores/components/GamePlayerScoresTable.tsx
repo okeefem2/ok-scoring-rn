@@ -20,7 +20,7 @@ export const GamePlayerScoresTable = ({
     editable = true,
     playersSelectable = false,
 }: GamePlayerScoresTableProps) => {
-    const { activeGamePlayerScore, winningPlayerKey } = useContext(gameContext);
+    const { activeGamePlayerScore, winningPlayerKey, dealingPlayerKey } = useContext(gameContext);
 
     return (
         <>
@@ -35,6 +35,7 @@ export const GamePlayerScoresTable = ({
                         editable={editable}
                         selectable={playersSelectable}
                         scoreHistoryRounds={scoreHistoryRounds}
+                        isDealer={dealingPlayerKey === player.key}
                     />
                 ))}
             </ScrollView>
