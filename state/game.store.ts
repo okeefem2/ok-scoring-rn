@@ -7,7 +7,7 @@ import { addOrReplaceByKey, swap } from '../util/array.util';
 import { GameState } from '../model/game-state';
 import { GameScoreHistory, determineWinner, buildInitialHistory, buildScoreHistoryRounds } from '../model/game-score-history';
 import { PlayerScore, PlayerScoreMode } from '../model/player-score';
-import { reCalcCurrentScore } from '../model/player-score-history';
+import { PlayerScoreHistory, reCalcCurrentScore } from '../model/player-score-history';
 import { favoriteGamesStore } from './favorite-games.store';
 import { playerHistoryStore } from './players-history.store';
 import { RadioItem } from '../components/RadioButtons';
@@ -80,6 +80,7 @@ class GameStore implements GameState {
             players: this.players,
             settings: this.settings,
             winningPlayerKey: this.winningPlayerKey,
+            dealingPlayerKey: this.dealingPlayerKey,
             favorite: this.favorite
         };
     }
@@ -135,6 +136,7 @@ class GameStore implements GameState {
         this.favorite = gameState?.favorite ?? false;
         this.settings = gameState?.settings ?? {
             key: uuid(),
+            gameKey: this.key,
             // rounds: undefined;
             startingScore: 0,
             defaultScoreStep: 0,
@@ -230,6 +232,13 @@ class GameStore implements GameState {
             playerScore.currentScore += (turnScore);
             this.scoreHistory[player.key] = playerScore;
             this.changeActivePlayer(1, gamePlayers);
+            if (this.settings?.dealerSettings === DealerSettings.NewPerRound &&
+                this.fullRoundComplete(this.scoreHistory)
+            ) {
+                const dealerIndex = this.players.findIndex(p => p.key === this.dealingPlayerKey);
+                const newDealer = this.getNextPlayer(1, dealerIndex, this.players);
+                this.setDealer(newDealer.key);
+            }
         }
     }
 
@@ -285,16 +294,20 @@ class GameStore implements GameState {
 
     changeActivePlayer = (n: 1 | -1, gamePlayers: Player[]) => {
         if (this.scoreHistory && this.activePlayerScore) {
-            const { playerIndex: index } = this.activePlayerScore;
-            let newIndex = index + n;
-            if (newIndex >= gamePlayers.length) {
-                newIndex = 0;
-            } else if (newIndex < 0) {
-                newIndex = gamePlayers.length - 1;
-            }
-            const player = gamePlayers[newIndex];
+            const { playerIndex } = this.activePlayerScore;
+            const player = this.getNextPlayer(n, playerIndex, gamePlayers);
             this.setActivePlayer(player);
         }
+    }
+
+    getNextPlayer = (n: 1 | -1, playerIndex: number, gamePlayers: Player[]): Player => {
+        let newIndex = playerIndex + n;
+        if (newIndex >= gamePlayers.length) {
+            newIndex = 0;
+        } else if (newIndex < 0) {
+            newIndex = gamePlayers.length - 1;
+        }
+        return gamePlayers[newIndex];
     }
 
     createPlayerScore = (player: Player, round?: number) => {
@@ -320,6 +333,21 @@ class GameStore implements GameState {
 
     isDealer = (playerKey?: string): boolean => {
         return !!this.dealingPlayerKey && this.dealingPlayerKey === playerKey;
+    }
+
+    fullRoundComplete = (scoreHistory: GameScoreHistory) => {
+        const roundsCompleted = new Set<number>();
+        for (let playerKey in scoreHistory) {
+            if (roundsCompleted.size > 1) {
+                return false;
+            }
+            const playerScoreHistory = scoreHistory[playerKey];
+            const playerRoundsCompleted = playerScoreHistory.scores.length;
+            if (playerRoundsCompleted > 0) {
+                roundsCompleted.add(playerRoundsCompleted);
+            }
+        }
+        return roundsCompleted.size === 1;
     }
 }
 

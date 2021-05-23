@@ -177,7 +177,7 @@ export const sharedStyles = StyleSheet.create({
         textAlign: 'center',
     },
     scoreTabelTopCell: {
-        minWidth: 100,
+        minWidth: 150,
         maxWidth: wp('25%'),
         padding: 10,
         marginRight: 20,

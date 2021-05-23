@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { observable, action, computed, reaction } from 'mobx';
+import { observable, action, computed, reaction, toJS } from 'mobx';
 import { localDbStore } from './local-db.store';
 import { deleteGame, fetchGameStates, insertGame } from '../db/db';
 import { addOrReplaceByKey, commaSeperateWithEllipsis, removeByKey } from '../util/array.util';
@@ -157,6 +157,7 @@ class GameHistoryStore {
         gameState = this.hydrateGameStateForHistory(gameState);
         const gameHistory = addOrReplaceByKey(this.gameHistory, gameState);
         this.sortAndSetGameHistory(gameHistory);
+        console.log('save game!', toJS(gameState));
         this.saveGameToDb(gameState);
     }
 
