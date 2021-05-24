@@ -56,12 +56,18 @@ class GameStore implements GameState {
     }
 
     @computed
+    get canSetDealer(): boolean {
+        return this.settings?.dealerSettings === DealerSettings.Manual;
+    }
+
+    @computed
     get playerScoreMode(): PlayerScoreMode {
         return !!this.editingPlayerScore ? PlayerScoreMode.Editing : PlayerScoreMode.Current;
     }
 
     @computed
     get activeGamePlayerScore(): PlayerScore | undefined {
+        console.log('computing active player');
         return !!this.editingPlayerScore ? this.editingPlayerScore : this.activePlayerScore;
     }
 
@@ -244,7 +250,10 @@ class GameStore implements GameState {
 
     @action
     setActivePlayer = (player: Player) => {
-        this.activePlayerScore = this.createPlayerScore(player);
+        console.log('setting active player');
+        if (player?.key !== this.activePlayerScore?.player?.key) {
+            this.activePlayerScore = this.createPlayerScore(player);
+        }
     }
 
     @action

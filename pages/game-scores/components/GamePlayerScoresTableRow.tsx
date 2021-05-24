@@ -41,7 +41,7 @@ const GamePlayerScoresTableRow = ({
                     winning={winning}
                     isDealer={isDealer}
                 />
-                <View style={[sharedStyles.scoreTabelTopCell, { display: 'flex', flexDirection: 'row', alignItems: 'center' }]}>
+                <View style={[sharedStyles.scoreTabelTopCell, { display: 'flex', flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end' }]}>
                     <IconButton
                         icon={roundsShown ? 'chevron-up' : 'chevron-down'}
                         iconSide="right"

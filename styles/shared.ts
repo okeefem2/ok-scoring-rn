@@ -119,13 +119,22 @@ export const sharedStyles = StyleSheet.create({
         marginLeft: 5,
     },
     ml10: {
-        marginLeft: 10
+        marginLeft: 10,
+    },
+    ml15: {
+        marginLeft: 15,
     },
     ml20: {
         marginLeft: 20,
     },
     mr5: {
         marginRight: 5,
+    },
+    mr10: {
+        marginRight: 10,
+    },
+    mr15: {
+        marginRight: 15,
     },
     mt5: {
         marginTop: 5,
@@ -167,7 +176,7 @@ export const sharedStyles = StyleSheet.create({
         height: 150
     },
     scoreTabelTopCellPlayer: {
-        minWidth: 200,
+        minWidth: 180,
         maxWidth: wp('50%'),
         padding: 10,
         marginRight: 20,
@@ -178,7 +187,7 @@ export const sharedStyles = StyleSheet.create({
     },
     scoreTabelTopCell: {
         minWidth: 150,
-        maxWidth: wp('25%'),
+        maxWidth: wp('50%'),
         padding: 10,
         marginRight: 20,
         fontFamily: 'Quicksand',

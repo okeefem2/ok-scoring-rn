@@ -29,45 +29,49 @@ const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
         playerScoreMode,
         updateRoundScore,
         dealingPlayerKey,
+        canSetDealer,
+        setDealer,
     } = useContext(gameContext);
-    const slideAnim = useRef(new Animated.Value(0)).current;
+    // const slideAnim = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
-    const runFadeAnimation = (fromDirection: 1 | -1) => {
-        slideAnim.setValue(100 * fromDirection);
+    const runFadeAnimation = (fromDirection: 1 | -1 | 0) => {
+        // slideAnim.setValue(100 * fromDirection);
         fadeAnim.setValue(0);
-        Animated.timing(slideAnim, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: true
-        }).start();
+        // Animated.timing(slideAnim, {
+        //     toValue: 0,
+        //     duration: 500,
+        //     useNativeDriver: true
+        // }).start();
         Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 500,
+            duration: 750,
             useNativeDriver: true
         }).start();
     }
 
     let turnScoreInputRef: TextInput;
     useEffect(() => {
+        console.log('active player changed'); // Current runs 3 times in a row
         updateTurnScore(activeGamePlayerScore?.score);
+        runFadeAnimation(0);
     }, [activeGamePlayerScore]);
 
     useEffect(() => {
         startGame();
-        runFadeAnimation(1);
+        // runFadeAnimation(0);
     }, []);
 
     const [turnScore, updateTurnScore] = useState<number | undefined>(settings?.defaultScoreStep ?? 0);
 
     const changePlayerLeft = () => {
         changeActivePlayer(-1, players);
-        runFadeAnimation(-1);
+        // runFadeAnimation(-1);
     };
 
     const changePlayerRight = () => {
         changeActivePlayer(1, players);
-        runFadeAnimation(1);
+        // runFadeAnimation(1);
     };
 
     const displayName = truncateText(activeGamePlayerScore?.player?.name ?? '', 7);
@@ -88,22 +92,11 @@ const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
                             }
                         }}
                     />
-                    <View style={[sharedStyles.centeredContent, sharedStyles.mt10]}>
-                        {
-                            dealingPlayerKey === activeGamePlayerScore.player.key ?
-                                <Animated.View style={[{ transform: [{ translateX: slideAnim }] }, { opacity: fadeAnim }]}>
-                                    <MaterialCommunityIcons name={'cards'} size={28} color={colors.tertiary} />
-                                </Animated.View> :
-                                <Animated.View style={[{ transform: [{ translateX: slideAnim }] }, { opacity: fadeAnim }]}>
-                                    <MaterialCommunityIcons name={'crown'} size={28} color={winningPlayerKey === activeGamePlayerScore.player.key ? colors.tertiary : colors.white} />
-                                </Animated.View>
-                        }
-                    </View>
                     <View style={[sharedStyles.spacedEvenlyNoBorder, sharedStyles.mt10]}>
                         <View style={[styles.buttonRowItem]}>
                             <IconButton icon='chevron-left' clickHandler={changePlayerLeft} width={'100%'} size={34} />
                         </View>
-                        <Animated.View style={[styles.buttonRowItem, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim }] }]}>
+                        <Animated.View style={[styles.buttonRowItem, { opacity: fadeAnim }]}>
                             <Header title={displayName} />
                         </Animated.View>
                         <View style={[styles.buttonRowItem]}>
@@ -111,12 +104,19 @@ const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
                         </View>
                     </View>
 
-                    <Animated.View style={[{ opacity: fadeAnim }, { transform: [{ translateX: slideAnim }] }]}>
-                        <Text style={[styles.turnDetails, sharedStyles.mt10]}>
+                    <Animated.View style={[sharedStyles.mt25, { width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }, { opacity: fadeAnim }]}>
+                        <MaterialCommunityIcons name={'crown'} size={28} color={winningPlayerKey === activeGamePlayerScore.player.key ? colors.tertiary : colors.white} />
+                        <Text style={[styles.turnDetails, sharedStyles.ml15, sharedStyles.mr15]}>
                             Turn {activeGamePlayerScore.scoreIndex + 1}
                         </Text>
+                        {
+                            canSetDealer ?
+                                <IconButton icon={dealingPlayerKey === activeGamePlayerScore.player.key ? 'cards' : 'cards-outline'} clickHandler={() => setDealer(activeGamePlayerScore.player.key)} size={28} color={colors.primary} /> :
+                                <MaterialCommunityIcons name='cards' size={28} color={dealingPlayerKey === activeGamePlayerScore.player.key ? colors.tertiary : colors.white} />
+
+                        }
                     </Animated.View>
-                    <Animated.View style={[styles.scoreContainer, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim }] }]}>
+                    <Animated.View style={[styles.scoreContainer, { opacity: fadeAnim }]}>
                         <View style={styles.middleTextInner}>
                             <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
                                 {activeGamePlayerScore.playerScore.currentScore?.toString() || '0'}
@@ -165,7 +165,6 @@ const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
                                 } else {
                                     endPlayerTurn(turnScore, players);
                                 }
-                                runFadeAnimation(1);
                             }}
                         />
                     </View>
@@ -204,7 +203,7 @@ const styles = StyleSheet.create({
     },
     turnDetails: {
         fontFamily: 'Quicksand',
-        fontSize: 18,
+        fontSize: 28,
         color: colors.tertiary,
         alignSelf: 'center'
     },
