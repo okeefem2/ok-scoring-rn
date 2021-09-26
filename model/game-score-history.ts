@@ -1,9 +1,4 @@
-import { PlayerScoreHistory } from './player-score-history';
-import { Player } from './player';
-
-export interface GameScoreHistory {
-    [TPlayerKey: string]: PlayerScoreHistory;
-}
+import { GameScoreHistory, PlayerScoreHistory, Player } from '@ok-scoring-web/game-models';
 
 function scoreBeatsWinner(winningScore: number, score: number, highScoreWins: boolean): boolean {
     return (highScoreWins && score > winningScore) || (!highScoreWins && score < winningScore)
@@ -38,5 +33,5 @@ export function buildInitialHistory(players: Player[], startingScore: number): G
 
 export function buildScoreHistoryRounds(scoreHistory: GameScoreHistory): number[] {
     const numberRounds = Math.max(...Object.values(scoreHistory).map(v => v.scores.length));
-    return Array.from({length: numberRounds}, (_, i) => i + 1);
+    return Array.from({ length: numberRounds }, (_, i) => i + 1);
 }

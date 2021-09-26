@@ -32,17 +32,21 @@ const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
         canSetDealer,
         setDealer,
     } = useContext(gameContext);
-    // const slideAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(0)).current;
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
-    const runFadeAnimation = (fromDirection: 1 | -1 | 0) => {
-        // slideAnim.setValue(100 * fromDirection);
+    // TODO add this to the functions that move player forward/backward
+    const runSlideAnimation = (fromDirection: 1 | -1) => {
+        slideAnim.setValue(100 * fromDirection);
+        Animated.timing(slideAnim, {
+            toValue: 0,
+            duration: 750,
+            useNativeDriver: true
+        }).start();
+    }
+
+    const runFadeAnimation = () => {
         fadeAnim.setValue(0);
-        // Animated.timing(slideAnim, {
-        //     toValue: 0,
-        //     duration: 500,
-        //     useNativeDriver: true
-        // }).start();
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 750,
@@ -54,24 +58,23 @@ const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
     useEffect(() => {
         console.log('active player changed'); // Current runs 3 times in a row
         updateTurnScore(activeGamePlayerScore?.score);
-        runFadeAnimation(0);
+        runFadeAnimation();
     }, [activeGamePlayerScore]);
 
     useEffect(() => {
         startGame();
-        // runFadeAnimation(0);
     }, []);
 
     const [turnScore, updateTurnScore] = useState<number | undefined>(settings?.defaultScoreStep ?? 0);
 
     const changePlayerLeft = () => {
         changeActivePlayer(-1, players);
-        // runFadeAnimation(-1);
+        // runSlideAnimation(-1);
     };
 
     const changePlayerRight = () => {
         changeActivePlayer(1, players);
-        // runFadeAnimation(1);
+        // runSlideAnimation(1);
     };
 
     const displayName = truncateText(activeGamePlayerScore?.player?.name ?? '', 7);
@@ -96,7 +99,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
                         <View style={[styles.buttonRowItem]}>
                             <IconButton icon='chevron-left' clickHandler={changePlayerLeft} width={'100%'} size={34} />
                         </View>
-                        <Animated.View style={[styles.buttonRowItem, { opacity: fadeAnim }]}>
+                        <Animated.View style={[styles.buttonRowItem, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim }] }]}>
                             <Header title={displayName} />
                         </Animated.View>
                         <View style={[styles.buttonRowItem]}>
@@ -104,7 +107,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
                         </View>
                     </View>
 
-                    <Animated.View style={[sharedStyles.mt25, { width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }, { opacity: fadeAnim }]}>
+                    <Animated.View style={[sharedStyles.mt25, { width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim }] }]}>
                         <MaterialCommunityIcons name={'crown'} size={28} color={winningPlayerKey === activeGamePlayerScore.player.key ? colors.tertiary : colors.white} />
                         <Text style={[styles.turnDetails, sharedStyles.ml15, sharedStyles.mr15]}>
                             Turn {activeGamePlayerScore.scoreIndex + 1}
@@ -116,7 +119,7 @@ const Game = ({ navigation }: PageNavigationProps<typeof GameRoute>) => {
 
                         }
                     </Animated.View>
-                    <Animated.View style={[styles.scoreContainer, { opacity: fadeAnim }]}>
+                    <Animated.View style={[styles.scoreContainer, { opacity: fadeAnim }, { transform: [{ translateX: slideAnim }] }]}>
                         <View style={styles.middleTextInner}>
                             <Text style={[sharedStyles.headerText, sharedStyles.centeredText]}>
                                 {activeGamePlayerScore.playerScore.currentScore?.toString() || '0'}

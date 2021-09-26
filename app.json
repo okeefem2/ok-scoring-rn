@@ -3,7 +3,6 @@
     "name": "OK Scoring",
     "description": "A simple but elegant application for keeping track of game scores of all kinds.",
     "version": "1.0.2",
-    "sdkVersion": "38.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
